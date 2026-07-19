@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー作成画面</title>
+	<link th:href="@{/style/style.css}" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+
+</head>
+<body>
+	<div class="container">
+		<h1>ユーザー作成</h1>
+		<div id="create">
+			<form method="post" th:action="@{/api/users/create}" th:object="${user}">
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>ユーザー名</th>
+							<th><input type="text" name="userName"/></span></th>
+						</tr>
+						<tr>
+							<th>メールアドレス</th>
+							<th><input type="email" name="email" /></span></th>
+						</tr>
+						<tr>
+							<th>パスワード</th>
+							<th><input type="password" name="password" /></span></th>
+						</tr>
+						<tr>
+							<th>ロール</th>
+							<th>
+								<select name="role">
+									<option value="">--選択してください--</option>
+									<option value="Admin">Admin</option>
+									<option value="General">General</option>
+								</select>
+							</th>							
+						</tr>
+		
+					</tbody>
+				</table>
+				<a class="link-list" th:href="@{/api/users/user}">戻る</a>
+				<input class="link-update" type="submit" value="作成"/>
+			</form>		
+		</div>
+	</div>
+	
+</body>
+

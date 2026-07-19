@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー詳細画面</title>
+	<link th:href="@{/style/style.css}" rel="stylesheet">
+	<script th:src="@{/js/index.js}" charset="utf-8"></script>
+	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+</head>
+<body>
+	<div class="container">
+		<h1>ユーザー詳細</h1>
+		<div id="detail">
+			<form method="post" th:action="@{/api/users/user/{id}(id=${user.id})}">
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>ID</th>
+							<th><span th:text="${user?.id}"></span></th>							
+						</tr>
+						<tr>
+							<th>ユーザー名</th>
+							<th><input type="text" name="userName" th:value="${user?.userName}"/></span></th>
+						</tr>
+						<tr>
+							<th>メールアドレス</th>
+							<th><input type="email" name="email" th:value="${user?.email}"/></span></th>
+						</tr>
+						<tr>
+							<th>ロール</th>
+							<th><span th:text="${user?.role}"></span></th>
+						</tr>
+						<tr>
+							<th>作成日時</th>
+							<th><span th:text="${user?.createdAt}"></span></th>
+						</tr>
+						<tr>
+							<th>最終更新日時</th>
+							<th><span th:text="${user?.updatedAt}"></span></th>
+						</tr>		
+					</tbody>
+				</table>
+				<a class="link-list" th:href="@{/api/users/user}">戻る</a>
+				<input class="link-update" type="submit" value="更新"/>
+				<input class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
+			</form>		
+		</div>
+	</div>
+	<dialog>
+		<p>本当にユーザー情報を削除しますか？</p>
+		<div id="dialog">
+			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeDialog()"/>
+			<form method="post" th:action="@{/api/users/user/{id}/delete(id=${user.id})}" id="delete-btn">
+				<input class="link-delete" type="submit" id="delete" value="削除" />
+			</form>			
+		</div>
+	</dialog>
+	
+</body>
+
