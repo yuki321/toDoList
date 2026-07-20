@@ -82,11 +82,9 @@ public class UserService {
 		User updatingUser = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 		
-		LocalDateTime now = LocalDateTime.now(); 
-		
 		updatingUser.setUserName(user.getUserName());
 		updatingUser.setEmail(user.getEmail());
-		updatingUser.setUpdatedAt(now);		
+		updatingUser.setUpdatedAt(LocalDateTime.now());		
 		
 		return userRepository.save(updatingUser);
 	}
