@@ -79,6 +79,13 @@ public class UserService {
 	 */
 	public User updateUser(Long id, User user) {
 		
+		if(userRepository.existsByUserName(user.getUserName())) {
+			throw new IllegalArgumentException("すでにそのユーザー名は存在しています");			
+		}
+		if(userRepository.existsByEmail(user.getEmail())) {
+			throw new IllegalArgumentException("すでにそのメールアドレスは存在しています");			
+		}
+		
 		User updatingUser = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 		
