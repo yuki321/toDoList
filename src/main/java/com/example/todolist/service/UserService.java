@@ -104,7 +104,6 @@ public class UserService {
 			updatingUser.setRole(user.getRole());
 		}
 		
-//		updatingUser.setRole(user.getRole());
 		updatingUser.setUpdatedAt(LocalDateTime.now());		
 		
 		return userRepository.save(updatingUser);
