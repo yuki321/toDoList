@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.User;
 import com.example.todolist.service.UserService;
@@ -91,12 +92,15 @@ public class userController {
 	 * 更新
 	 * @param Long id
 	 * @param User user
+	 * @param String userName
+	 * @param String email
+	 * @param BindingResult bindingResult
 	 * @param Model model
 	 * @return String
 	 */
 	@PostMapping("user/{id}")
 	public String updateUser(@PathVariable Long id,
-			@Validated(User.Update.class) @ModelAttribute("user") User user,
+			@Validated(User.Update.class) @ModelAttribute User user,
 			BindingResult bindingResult, Model model){
 
 		if (bindingResult.hasErrors()) {

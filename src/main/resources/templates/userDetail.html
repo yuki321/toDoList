@@ -41,7 +41,15 @@
 							</tr>
 							<tr>
 								<th>ロール</th>
-								<th><span th:text="*{role}"></span></th>
+								<th>
+									<select th:field="*{role}">
+										<option value="">--選択してください--</option>
+										<option value="Admin">Admin</option>
+										<option value="General">General</option>
+									</select>
+									<span class="error" th:errors="*{role}"></span>
+								</th> 
+<!--								<th><span th:text="*{role}"></span></th>  -->
 							</tr>
 							<tr>
 								<th>作成日時</th>

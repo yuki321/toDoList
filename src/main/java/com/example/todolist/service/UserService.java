@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.UserRepository;
@@ -75,22 +76,28 @@ public class UserService {
 	 * 更新
 	 * @param Long id
 	 * @param User user
+	 * @param String userName
+	 * @param String email
 	 * @return User
 	 */
 	public User updateUser(Long id, User user) {
 		
-		if(userRepository.existsByUserName(user.getUserName())) {
+		User updatingUser = userRepository.findById(id)
+		        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+		
+		if(!updatingUser.getUserName().equals(user.getUserName())
+		        && userRepository.existsByUserName(user.getUserName())) {
 			throw new IllegalArgumentException("すでにそのユーザー名は存在しています");			
 		}
-		if(userRepository.existsByEmail(user.getEmail())) {
+		if(!updatingUser.getEmail().equals(user.getEmail())
+		        && userRepository.existsByEmail(user.getEmail())) {
 			throw new IllegalArgumentException("すでにそのメールアドレスは存在しています");			
 		}
 		
-		User updatingUser = userRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 		
 		updatingUser.setUserName(user.getUserName());
 		updatingUser.setEmail(user.getEmail());
+		updatingUser.setRole(user.getRole());
 		updatingUser.setUpdatedAt(LocalDateTime.now());		
 		
 		return userRepository.save(updatingUser);
