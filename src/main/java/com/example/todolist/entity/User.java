@@ -1,7 +1,10 @@
 package com.example.todolist.entity;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
@@ -55,6 +59,21 @@ public class User {
 	@Column(name = "updated_at", nullable = false, updatable = true)
 	private LocalDateTime updatedAt;
 
+	// アカウントの有効期限が切れていない場合はtrueに設定
+	@Column(name = "account_non_expired", nullable = false, updatable = true)
+	private boolean accountNonExpired = true;
+	
+	// 資格情報の有効期限が切れていない場合はtrueに設定
+	@Column(name = "credentials_non_expired", nullable = false, updatable = true)
+	private boolean credentialsNonExpired = true;
+	
+	// アカウントがロックされていない場合はtrueに設定
+	@Column(name = "account_non_locked", nullable = false, updatable = true)
+	private boolean accountNonLocked = true;
+
+	@Transient
+	private Collection<? extends GrantedAuthority> authorities;
+
 
 	// コンストラクタ
 	public User() {}
@@ -69,6 +88,18 @@ public class User {
 		this.enabled = enabled;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+	
+	public User(String userName, String password, boolean enabled, boolean accountNonExpired, 
+			boolean credentialsNonExpired, boolean accountNonLocked, 
+			Collection<? extends GrantedAuthority> authorities) {
+		this.userName = userName;
+		this.password = password;
+		this.enabled = enabled;
+		this.accountNonExpired = accountNonExpired;
+		this.credentialsNonExpired = credentialsNonExpired;
+		this.accountNonLocked = accountNonLocked;
+		this.authorities = authorities;
 	}
 
 
@@ -119,6 +150,38 @@ public class User {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public boolean isAccountNonExpired() {
+		return accountNonExpired;
+	}
+
+	public void setAccountNonExpired(boolean accountNonExpired) {
+		this.accountNonExpired = accountNonExpired;
+	}
+
+	public boolean isCredentialsNonExpired() {
+		return credentialsNonExpired;
+	}
+
+	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	public boolean isAccountNonLocked() {
+		return accountNonLocked;
+	}
+
+	public void setAccountNonLocked(boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
 	}
 
 	public LocalDateTime getCreatedAt() {
