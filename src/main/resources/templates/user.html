@@ -8,38 +8,45 @@
 
 </head>
 <body>
-	<div class="container">
-		<h1>ユーザー一覧</h1>
-		<div id="content">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>編集</th>
-						<th>ユーザー名</th>
-						<th>メールアドレス</th>
-						<th>ロール</th>
-<!--						<th>ブロック</th> -->
-						<th>作成日時</th>
-						<th>最終更新日時</th>
-					</tr>
-				</thead>
-				<tbody th:each="user: ${user}">
-					<th><span th:text="${user?.id}"></span></th>	
-					<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
-					<th><span th:text="${user?.userName}"></span></th>
-					<th><span th:text="${user?.email}"></span></th>
-					<th><span th:text="${user?.role}"></span></th>
-<!--					<th><span th:text="${user.enabled}"></span></th> -->
-					<th><span th:text="${user?.createdAt}"></span></th>
-					<th><span th:text="${user?.updatedAt}"></span></th>			
-				</tbody>
-			</table>
-			<a class="link-edit" th:href="@{/api/users/create}" id="userCreateBtn">新規作成</a>
+
+	<main>
+		<div class="container">
+			<h1>ユーザー一覧</h1>
+			<div id="header-content">
+				<form th:action="@{/login}" method="post">
+				    <button class="link-edit" type="submit">ログアウト</button>
+				</form>			
+			</div>
+			<div id="content">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>編集</th>
+							<th>ユーザー名</th>
+							<th>メールアドレス</th>
+							<th>ロール</th>
+	<!--						<th>ブロック</th> -->
+							<th>作成日時</th>
+							<th>最終更新日時</th>
+						</tr>
+					</thead>
+					<tbody th:each="user: ${user}">
+						<th><span th:text="${user?.id}"></span></th>	
+						<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
+						<th><span th:text="${user?.userName}"></span></th>
+						<th><span th:text="${user?.email}"></span></th>
+						<th><span th:text="${user?.role}"></span></th>
+	<!--					<th><span th:text="${user.enabled}"></span></th> -->
+						<th><span th:text="${user?.createdAt}"></span></th>
+						<th><span th:text="${user?.updatedAt}"></span></th>			
+					</tbody>
+				</table>
+				<a class="link-edit" th:href="@{/api/users/create}" id="userCreateBtn">新規作成</a>
+			</div>
+			
 		</div>
-		
-	</div>
-	
+	</main>
 	
 </body>
 

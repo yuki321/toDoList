@@ -8,51 +8,58 @@
 	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
 </head>
 <body>
-	<div class="container">
-		<h1>ユーザー詳細</h1>
-		<div id="detail">
-			<form method="post" th:action="@{/api/users/user/{id}(id=${user.id})}" th:object="${user}">
-				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
-				<table class="table">
-					<tbody>
-						<tr>
-							<th>ID</th>
-							<th><span th:text="*{id}"></span></th>							
-						</tr>
-						<tr>
-							<th>ユーザー名</th>
-							<th>
-								<input type="text" th:field="*{userName}"/>
-								<span class="error" th:errors="*{userName}"></span>
-							</th>
-						</tr>
-						<tr>
-							<th>メールアドレス</th>
-							<th>
-								<input type="email" th:field="*{email}"/>
-								<span class="error" th:errors="*{email}"></span>
-							</th>
-						</tr>
-						<tr>
-							<th>ロール</th>
-							<th><span th:text="*{role}"></span></th>
-						</tr>
-						<tr>
-							<th>作成日時</th>
-							<th><span th:text="*{createdAt}"></span></th>
-						</tr>
-						<tr>
-							<th>最終更新日時</th>
-							<th><span th:text="*{updatedAt}"></span></th>
-						</tr>		
-					</tbody>
-				</table>
-				<a class="link-list" th:href="@{/api/users/user}">戻る</a>
-				<input class="link-update" type="submit" value="更新"/>
-				<input class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
-			</form>		
+	<main>
+		<div class="container">
+			<h1>ユーザー詳細</h1>
+			<div id="header-content">
+				<form th:action="@{/login}" method="post">
+				    <button class="link-edit" type="submit">ログアウト</button>
+				</form>			
+			</div>
+			<div id="detail">
+				<form method="post" th:action="@{/api/users/user/{id}(id=${user.id})}" th:object="${user}">
+					<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
+					<table class="table">
+						<tbody>
+							<tr>
+								<th>ID</th>
+								<th><span th:text="*{id}"></span></th>							
+							</tr>
+							<tr>
+								<th>ユーザー名</th>
+								<th>
+									<input type="text" th:field="*{userName}"/>
+									<span class="error" th:errors="*{userName}"></span>
+								</th>
+							</tr>
+							<tr>
+								<th>メールアドレス</th>
+								<th>
+									<input type="email" th:field="*{email}"/>
+									<span class="error" th:errors="*{email}"></span>
+								</th>
+							</tr>
+							<tr>
+								<th>ロール</th>
+								<th><span th:text="*{role}"></span></th>
+							</tr>
+							<tr>
+								<th>作成日時</th>
+								<th><span th:text="*{createdAt}"></span></th>
+							</tr>
+							<tr>
+								<th>最終更新日時</th>
+								<th><span th:text="*{updatedAt}"></span></th>
+							</tr>		
+						</tbody>
+					</table>
+					<a class="link-list" th:href="@{/api/users/user}">戻る</a>
+					<input class="link-update" type="submit" value="更新"/>
+					<input class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
+				</form>		
+			</div>
 		</div>
-	</div>
+	</main>
 	<dialog>
 		<p>本当にユーザー情報を削除しますか？</p>
 		<div id="dialog">

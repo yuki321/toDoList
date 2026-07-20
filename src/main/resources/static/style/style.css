@@ -2,7 +2,13 @@
 body {
   font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
 }
-
+h1 {
+	margin-bottom: -50px;
+}
+#header-content {
+	padding: 10px;
+	float: right;
+}
 
 
 table {
@@ -33,6 +39,7 @@ th button {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	transition: all 0.3s ease; /* アニメーションの設定 */
 	width: max-content;
+	border: none;
 }
 .link-edit:hover {
 	background-color: #2980b9;
@@ -120,6 +127,7 @@ th button {
 
 #detail{
 	width: 50%;	
+	margin-top: 50px;
 }
 #detail tr th:nth-child(odd) {
 	background-color: #b2cbe4;
