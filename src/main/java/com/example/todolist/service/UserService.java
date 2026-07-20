@@ -97,7 +97,14 @@ public class UserService {
 		
 		updatingUser.setUserName(user.getUserName());
 		updatingUser.setEmail(user.getEmail());
-		updatingUser.setRole(user.getRole());
+
+		if(user.getId() == 1) {
+			updatingUser.setRole("Admin");
+		}else{
+			updatingUser.setRole(user.getRole());
+		}
+		
+//		updatingUser.setRole(user.getRole());
 		updatingUser.setUpdatedAt(LocalDateTime.now());		
 		
 		return userRepository.save(updatingUser);
