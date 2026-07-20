@@ -41,13 +41,14 @@
 							</tr>
 							<tr>
 								<th>ロール</th>
-								<th>
+								<th th:if="${user.id} != 1">
 									<select th:field="*{role}">
 										<option value="General">General</option>
 										<option value="Admin">Admin</option>
 									</select>
 									<span class="error" th:errors="*{role}"></span>
-								</th> 
+								</th>
+								<th th:if="${user.id} == 1"><span>Admin</span></th>
 							</tr>
 							<tr>
 								<th>作成日時</th>
