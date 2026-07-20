@@ -9,7 +9,9 @@ h1 {
 	padding: 10px;
 	float: right;
 }
-
+input {
+	line-height: 2;
+}
 
 table {
 	width: 100%;
@@ -76,11 +78,12 @@ th button {
 /** 更新ボタン **/
 .link-update {
 	display: inline-block;
-	padding: 10px 25px;
+	padding: 4px 20px;
 	background-color: #3498db; /* 背景色 */
 	color: #ffffff; /* 文字色 */
 	text-decoration: none; /* 下線を消す */
 	font-weight: bold;
+	font-size: 16px;
 	border-radius: 5px; /* 角丸 */
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	transition: all 0.3s ease; /* アニメーションの設定 */
@@ -99,11 +102,12 @@ th button {
 /** 削除ボタン **/
 .link-delete {
 	display: inline-block;
-	padding: 10px 25px;
+	padding: 4px 20px;
 	background-color: darkred; /* 背景色 */
 	color: #ffffff; /* 文字色 */
 	text-decoration: none; /* 下線を消す */
 	font-weight: bold;
+	font-size: 16px;
 	border-radius: 5px; /* 角丸 */
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	transition: all 0.3s ease; /* アニメーションの設定 */
@@ -125,11 +129,11 @@ th button {
 	background-color: #b2cbe4;	
 }
 
-#detail{
+#detail, #create {
 	width: 50%;	
 	margin-top: 50px;
 }
-#detail tr th:nth-child(odd) {
+#detail tr th:nth-child(odd), #create tr th:nth-child(odd) {
 	background-color: #b2cbe4;
 }
 
