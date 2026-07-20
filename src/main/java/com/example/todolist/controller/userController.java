@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.example.todolist.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public class userController {
 	 * @return String
 	 */
 	@PostMapping("create")
-	public String createUser(@Validated(User.Create.class) @ModelAttribute("user") User user,
+	public String createUser(@Validated(User.Create.class) @ModelAttribute User user,
 			BindingResult bindingResult, Model model){
 
 		if (bindingResult.hasErrors()) {
