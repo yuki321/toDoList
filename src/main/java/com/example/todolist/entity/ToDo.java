@@ -1,6 +1,5 @@
 package com.example.todolist.entity;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.springframework.data.relational.core.mapping.Table;
@@ -21,37 +20,23 @@ public class ToDo {
 	@Column(name = "user_id", nullable = false, unique = true, length = 20)
 	private Long userId;
 	
-	@Column(name = "category_id", nullable = false, unique = true, length = 20)
-	private Long categoryId;
-	
-	@Column(name = "title", nullable = false, unique = false, length = 50)
-	private String title;
-	
-	@Column(name = "content", nullable = true, unique = false, length = 500)
+//	@Column(name = "category_id", nullable = false, unique = true, length = 20)
+//	private Long categoryId;
+		
+	@Column(name = "content", nullable = false, unique = false, length = 500)
 	private String content;
 	
-	@Column(name = "enabled", nullable = false)
-	private Boolean enabeld = true;
+	@Column(name = "status", nullable = false)
+	private Boolean status = true;
 	
-	@Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     
     // コンストラクタ
-	public ToDo(Long id, Long userId, Long categoryId, String title, String content, Boolean enabeld,
-			LocalDateTime createdAt, LocalDateTime updatedAt) {
+	public ToDo(Long id, Long userId, String content, Boolean status) {
 		super();
 		this.id = id;
 		this.userId = userId;
-		this.categoryId = categoryId;
-		this.title = title;
 		this.content = content;
-		this.enabeld = enabeld;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.status = status;
 	}
 
 
@@ -76,24 +61,14 @@ public class ToDo {
 	}
 
 
-	public Long getCategoryId() {
-		return categoryId;
-	}
-
-
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
-
-
-	public String getTitle() {
-		return title;
-	}
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
+//	public Long getCategoryId() {
+//		return categoryId;
+//	}
+//
+//
+//	public void setCategoryId(Long categoryId) {
+//		this.categoryId = categoryId;
+//	}
 
 
 	public String getContent() {
@@ -106,34 +81,16 @@ public class ToDo {
 	}
 
 
-	public Boolean getEnabeld() {
-		return enabeld;
+	public Boolean getStatus() {
+		return status;
 	}
 
 
-	public void setEnabeld(Boolean enabeld) {
-		this.enabeld = enabeld;
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 
 
 	@Override
