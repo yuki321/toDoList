@@ -160,6 +160,10 @@ dialog {
 	justify-content: center;
 }
 
+dialog .link-list {
+	padding: 5px 20px;
+}
+
 /** バリデーションエラー **/
 .error {
 	display: block;
