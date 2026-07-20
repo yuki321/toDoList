@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>ユーザー作成画面</title>
@@ -12,28 +12,39 @@
 		<h1>ユーザー作成</h1>
 		<div id="create">
 			<form method="post" th:action="@{/api/users/create}" th:object="${user}">
+				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
 				<table class="table">
 					<tbody>
 						<tr>
 							<th>ユーザー名</th>
-							<th><input type="text" name="userName"/></span></th>
+							<th>
+								<input type="text" th:field="*{userName}"/>
+								<span class="error" th:errors="*{userName}"></span>
+							</th>
 						</tr>
 						<tr>
 							<th>メールアドレス</th>
-							<th><input type="email" name="email" /></span></th>
+							<th>
+								<input type="email" th:field="*{email}"/>
+								<span class="error" th:errors="*{email}"></span>
+							</th>
 						</tr>
 						<tr>
 							<th>パスワード</th>
-							<th><input type="password" name="password" /></span></th>
+							<th>
+								<input type="password" th:field="*{password}"/>
+								<span class="error" th:errors="*{password}"></span>
+							</th>
 						</tr>
 						<tr>
 							<th>ロール</th>
 							<th>
-								<select name="role">
+								<select th:field="*{role}">
 									<option value="">--選択してください--</option>
 									<option value="Admin">Admin</option>
 									<option value="General">General</option>
 								</select>
+								<span class="error" th:errors="*{role}"></span>
 							</th>							
 						</tr>
 		
@@ -47,3 +58,4 @@
 	
 </body>
 
+</html>

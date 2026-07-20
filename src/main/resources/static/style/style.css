@@ -148,6 +148,15 @@ dialog {
 	justify-content: center;
 }
 
+/** バリデーションエラー **/
+.error {
+	display: block;
+	color: #d32f2f;
+	font-size: 0.85em;
+	margin-top: 4px;
+	font-weight: normal;
+}
+
 
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>ユーザー詳細画面</title>
@@ -11,32 +11,39 @@
 	<div class="container">
 		<h1>ユーザー詳細</h1>
 		<div id="detail">
-			<form method="post" th:action="@{/api/users/user/{id}(id=${user.id})}">
+			<form method="post" th:action="@{/api/users/user/{id}(id=${user.id})}" th:object="${user}">
+				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
 				<table class="table">
 					<tbody>
 						<tr>
 							<th>ID</th>
-							<th><span th:text="${user?.id}"></span></th>							
+							<th><span th:text="*{id}"></span></th>							
 						</tr>
 						<tr>
 							<th>ユーザー名</th>
-							<th><input type="text" name="userName" th:value="${user?.userName}"/></span></th>
+							<th>
+								<input type="text" th:field="*{userName}"/>
+								<span class="error" th:errors="*{userName}"></span>
+							</th>
 						</tr>
 						<tr>
 							<th>メールアドレス</th>
-							<th><input type="email" name="email" th:value="${user?.email}"/></span></th>
+							<th>
+								<input type="email" th:field="*{email}"/>
+								<span class="error" th:errors="*{email}"></span>
+							</th>
 						</tr>
 						<tr>
 							<th>ロール</th>
-							<th><span th:text="${user?.role}"></span></th>
+							<th><span th:text="*{role}"></span></th>
 						</tr>
 						<tr>
 							<th>作成日時</th>
-							<th><span th:text="${user?.createdAt}"></span></th>
+							<th><span th:text="*{createdAt}"></span></th>
 						</tr>
 						<tr>
 							<th>最終更新日時</th>
-							<th><span th:text="${user?.updatedAt}"></span></th>
+							<th><span th:text="*{updatedAt}"></span></th>
 						</tr>		
 					</tbody>
 				</table>
@@ -58,3 +65,4 @@
 	
 </body>
 
+</html>

@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +56,8 @@ public class userController {
 	
 	// ユーザー作成画面へ遷移
 	@GetMapping("create")
-	public String userCreate() {
+	public String userCreate(Model model) {
+		model.addAttribute("user", new User());
 		return "userCreate";
 	}
 	
@@ -66,15 +68,21 @@ public class userController {
 	 * @return String
 	 */
 	@PostMapping("create")
-	public String createUser(@ModelAttribute User user, Model model){
-		
+	public String createUser(@Validated(User.Create.class) @ModelAttribute("user") User user,
+			BindingResult bindingResult, Model model){
+
+		if (bindingResult.hasErrors()) {
+			return "userCreate";
+		}
+
 		try {
 			User createdUser = userService.createUser(user);
 			model.addAttribute(createdUser);
 			
 			return "redirect:/api/users/user";
 		}catch(IllegalArgumentException e) {
-			return "redirect:/api/users/user";
+			bindingResult.reject("error.create", e.getMessage());
+			return "userCreate";
 		}
 		
 	}
@@ -87,14 +95,24 @@ public class userController {
 	 * @return String
 	 */
 	@PostMapping("user/{id}")
-	public String updateUser(@PathVariable Long id, @ModelAttribute User user, Model model){
+	public String updateUser(@PathVariable Long id,
+			@Validated(User.Update.class) @ModelAttribute("user") User user,
+			BindingResult bindingResult, Model model){
+
+		if (bindingResult.hasErrors()) {
+			restoreUserDisplayFields(id, user);
+			return "userDetail";
+		}
+
 		try {
 			User updatedUser = userService.updateUser(id, user);
 			model.addAttribute("user", updatedUser);
 			
 			return "redirect:/api/users/user";
 		}catch(IllegalArgumentException e) {
-			return "redirect:/api/users/user";
+			bindingResult.reject("error.update", e.getMessage());
+			restoreUserDisplayFields(id, user);
+			return "userDetail";
 		}
 		
 	}
@@ -108,6 +126,18 @@ public class userController {
         	return "redirect:/api/users/user";
         }
     }
+
+	/**
+	 * バリデーションエラー時に表示用の項目を補完する
+	 */
+	private void restoreUserDisplayFields(Long id, User user) {
+		userService.getUserById(id).ifPresent(existing -> {
+			user.setId(existing.getId());
+			user.setRole(existing.getRole());
+			user.setCreatedAt(existing.getCreatedAt());
+			user.setUpdatedAt(existing.getUpdatedAt());
+		});
+	}
 	
 	
 	
