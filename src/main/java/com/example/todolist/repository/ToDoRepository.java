@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,11 @@ public class ToDoRepository {
 	@Autowired
 	UserService userService;
 	
+	/**
+	 * ToDoのデータ全件取得
+	 * @param userDetails userDetails
+	 * @return List<ToDo>
+	 */
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
 		
 		List<ToDo> todolist = new ArrayList<>();
@@ -47,7 +53,12 @@ public class ToDoRepository {
 		return todolist;
 	};
 	
-	// ログイン中のユーザー情報の取得
+
+	/**
+	 * ログイン中のユーザー情報の取得
+	 * @param userDetails userDetails
+	 * @return Map<String, Object> userInfo
+	 */
 	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
 	
 		String userName = userDetails.getUsername();
@@ -57,6 +68,26 @@ public class ToDoRepository {
 		return userInfo;
 	}
 	
+	
+	/**
+	 * ToDo作成
+	 * @param Todo todo
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	public int insertRecord(ToDo todo) throws DataAccessException {
+		
+		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?)",
+				todo.getId(),
+				todo.getUserId(),
+				todo.getContent(),
+				todo.getStatus());
+		
+		// 正常終了: 0 / 異常終了: 0以外の数字
+		return num;
+	}
 
 	
 }
+
+

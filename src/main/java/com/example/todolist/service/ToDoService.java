@@ -44,88 +44,24 @@ public class ToDoService {
 		return toDoRepository.getUserInfo(userDetails);
 	}
 	
-
 	
 	/**
-	 * 	ユーザー作成
-	 * @param User user
-	 * @return User
+	 * ToDo作成
+	 * @param ToDo todo
+	 * @return boolean result
 	 */
-//	public User createUser(User user) {
-//		
-//		if(userRepository.existsByUserName(user.getUserName())) {
-//			throw new IllegalArgumentException("すでにそのユーザー名は存在しています");			
-//		}
-//		if(userRepository.existsByEmail(user.getEmail())) {
-//			throw new IllegalArgumentException("すでにそのメールアドレスは存在しています");			
-//		}
-//		
-//
-//		user.setId(user.getId());
-//		user.setUserName(user.getUserName());
-//		user.setEmail(user.getEmail());
-//		user.setPassword(passwordEncoder.encode(user.getPassword()));
-//		user.setRole(user.getRole());
-//		user.setEnabled(true);
-//		user.setAccountNonExpired(true);
-//		user.setCredentialsNonExpired(true);
-//		user.setAccountNonLocked(true);
-//		user.setCreatedAt(LocalDateTime.now());
-//		user.setUpdatedAt(LocalDateTime.now());
-//		
-//		return userRepository.save(user);
-//	}
+	public boolean insertRecord(ToDo todo) {
+		
+		int num = toDoRepository.insertRecord(todo);
+		
+		boolean result = false;
+		if(num > 0) {
+			// insert成功の場合
+			result = true;
+		}
+		return result;
+	}
 	
-	/**
-	 * 更新
-	 * @param Long id
-	 * @param User user
-	 * @param String userName
-	 * @param String email
-	 * @return User
-	 */
-//	public User updateUser(Long id, User user) {
-//		
-//		User updatingUser = userRepository.findById(id)
-//		        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
-//		
-//		if(!updatingUser.getUserName().equals(user.getUserName())
-//		        && userRepository.existsByUserName(user.getUserName())) {
-//			throw new IllegalArgumentException("すでにそのユーザー名は存在しています");			
-//		}
-//		if(!updatingUser.getEmail().equals(user.getEmail())
-//		        && userRepository.existsByEmail(user.getEmail())) {
-//			throw new IllegalArgumentException("すでにそのメールアドレスは存在しています");			
-//		}
-//		
-//		
-//		updatingUser.setUserName(user.getUserName());
-//		updatingUser.setEmail(user.getEmail());
-//
-//		if(user.getId() == 1) {
-//			updatingUser.setRole("Admin");
-//		}else{
-//			updatingUser.setRole(user.getRole());
-//		}
-//		
-//		updatingUser.setUpdatedAt(LocalDateTime.now());		
-//		
-//		return userRepository.save(updatingUser);
-//	}
-	
-	/**
-	 * 削除
-	 * @param Long id
-	 */
-//	@Transactional
-//	public void deleteUser(Long id) {
-//		
-//		if(!userRepository.existsById(id)) {
-//			throw new IllegalArgumentException("ユーザーが存在しません");
-//		}
-//		
-//		userRepository.deleteById(id);
-//	}
 	
 	
 }

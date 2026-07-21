@@ -30,14 +30,16 @@ input {
 
 
 
-/** 編集ボタン **/
+/** 作成・ログアウトボタン・ユーザー一覧 **/
 .link-edit {
 	display: inline-block;
+	margin-top: 70px;
 	padding: 8px 20px;
 	background-color: #3498db; /* 背景色 */
 	color: #ffffff; /* 文字色 */
 	text-decoration: none; /* 下線を消す */
 	font-weight: bold;
+	font-size: 16px;
 	border-radius: 5px; /* 角丸 */
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	transition: all 0.3s ease; /* アニメーションの設定 */
@@ -53,6 +55,11 @@ input {
 	transform: translateY(0);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+/** タスク作成 **/
+#todoCreate {
+	padding: 4px 20px;
+}
+
 /** 戻るボタン  **/
 .link-list {
 	display: inline-block;
@@ -76,7 +83,7 @@ input {
 	transform: translateY(0);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-/** 更新ボタン **/
+/** 編集ボタン **/
 .link-update {
 	display: inline-block;
 	padding: 4px 20px;
@@ -99,7 +106,7 @@ input {
 .link-update:active {
 	transform: translateY(0);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+} 
 /** 削除ボタン **/
 .link-delete {
 	display: inline-block;
@@ -125,20 +132,6 @@ input {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/**
-#content thead th {
-	background-color: #b2cbe4;	
-}
-
-#detail, #create {
-	width: 50%;	
-	margin-top: 50px;
-}
-#detail tr th:nth-child(odd), #create tr th:nth-child(odd) {
-	background-color: #b2cbe4;
-}
-**/
-
 #userCreateBtn {
 	margin-top: 70px;
 	background-color: green;	
@@ -153,7 +146,7 @@ dialog {
 #closeDialog {
 	margin-right: 10px;
 }
-#delete-btn {
+#create-btn {
 	margin-top: 8px;
 }
 #dialog {

@@ -63,7 +63,7 @@
 					<a class="link-list" th:href="@{/api/users/user}">戻る</a>
 					<input class="link-update" type="submit" value="更新"/>
 					<input th:if="${user?.role} == 'General'"
-					class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
+					class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteUserBtn()"/>
 				</form>		
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 	<dialog>
 		<p>本当にユーザー情報を削除しますか？</p>
 		<div id="dialog">
-			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeDialog()"/>
+			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeUserDeleteDialog()"/>
 			<form method="post" th:action="@{/api/users/user/{id}/delete(id=${user.id})}" id="delete-btn">
 				<input class="link-delete" type="submit" id="delete" value="削除" />
 			</form>			

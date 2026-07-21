@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>タスク一覧画面</title>
 	<link th:href="@{/style/todo.css}" rel="stylesheet">
+	<script th:src="@{/js/index.js}" charset="utf-8"></script>
 	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
 
 </head>
@@ -16,7 +17,7 @@
 				    <button class="link-edit" type="submit">ログアウト</button>
 				</form>			
 			</div>
-			<a class="link-edit" th:href="@{/api/users/create}" id="userCreateBtn">タスク作成</a>
+			<input class="link-edit" id="todoCreate" type="button" value="タスク作成" onclick="onClickCreateToDoBtn()"/>
 			<div id="content">
 				<div>
 					<p th:unless="${todo} != null">タスクは存在しません</p>
@@ -36,6 +37,23 @@
 			</div>
 		</div>
 	</main>
+	<dialog id="toDoCreateDialog">
+		<p>タスクを作成します</p>
+		<div id="dialog">
+			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
+			<form method="post" th:action="@{/}" id="create-btn">
+		<!--
+				<input type="text" th:field="*{userName}"/>
+				<span class="error" th:errors="*{userName}"></span>
+		-->		
+				
+				
+				
+				
+				<input class="link-delete" type="submit" id="delete" value="作成" />
+			</form>			
+		</div>
+	</dialog>
 	
 </body>
 
