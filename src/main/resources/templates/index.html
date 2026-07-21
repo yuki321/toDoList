@@ -23,9 +23,7 @@
 				</div>
 				<div th:each="task: ${todo}" id="task">
 					<p th:if="${todo} != null" th:text="${task.content}"></p>
-<!--
-					<form method="post" th:action="@{/todo/{id}(id=${user.id})}" >
--->
+
 					<form method="post" th:action="@{/todo}" >
 						<input class="link-update" type="submit" value="編集"/>
 						<input class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
@@ -33,9 +31,9 @@
 				</div>
 							
 			</div>
-
-
-		
+			<div th:if="${role == 'Admin'}">
+				<a class="link-edit" th:href="@{/api/users/user}" id="userCreateBtn">ユーザー一覧</a>
+			</div>
 		</div>
 	</main>
 	

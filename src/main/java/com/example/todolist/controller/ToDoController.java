@@ -1,6 +1,7 @@
 package com.example.todolist.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,21 @@ public class ToDoController {
 	/**
 	 * 全件取得
 	 * @param UserDetails userDetails
+	 * @param User user
 	 * @param Model model
 	 * @return String
 	 */
 	@GetMapping("/")
-	public String getAllToDo(@AuthenticationPrincipal UserDetails userDetails, Model model){
+	public String getAllToDo(@AuthenticationPrincipal UserDetails userDetails, 
+			@ModelAttribute User user,
+			Model model){
 		
+		// ログイン情報を基にタスク一覧を表示
 		List<ToDo> todos = toDoService.findAllToDo(userDetails);
 		model.addAttribute("todo", todos);
+		
+		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
+		model.addAttribute("role", userIfo.get("role"));
 		
 		return "index";
 	}

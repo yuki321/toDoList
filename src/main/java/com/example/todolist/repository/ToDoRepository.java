@@ -47,5 +47,17 @@ public class ToDoRepository {
 		
 		return todolist;
 	};
+	
+	// ログイン中のユーザー情報の取得
+	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
+	
+		String userName = userDetails.getUsername();
+		String sql = "SELECT * FROM users WHERE user_name=?";
+		Map<String, Object> userInfo = jdbc.queryForMap(sql, userName);
+		
+		return userInfo;
+	}
+	
 
+	
 }

@@ -2,6 +2,7 @@ package com.example.todolist.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,24 @@ public class ToDoService {
 	@Autowired
 	private ToDoRepository toDoRepository;
 	
-	
 	/**
 	 * 全件取得
+	 * @param UserDetails userDetails
 	 * @return List<ToDo>
 	 */
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
 		return toDoRepository.findAllToDo(userDetails);
+	}
+	
+	/**
+	 * ログイン中のユーザー情報の取得
+	 * @param UserDetails userDetails
+	 * @return Map<String, Object>
+	 */
+	@Transactional(readOnly = true)
+	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
+		return toDoRepository.getUserInfo(userDetails);
 	}
 	
 
