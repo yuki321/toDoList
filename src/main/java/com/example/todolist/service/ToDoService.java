@@ -29,8 +29,8 @@ public class ToDoService {
 	 * @return List<ToDo>
 	 */
 	@Transactional(readOnly = true)
-	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetailr){
-		return toDoRepository.findAllToDo(userDetailr);
+	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
+		return toDoRepository.findAllToDo(userDetails);
 	}
 	
 
