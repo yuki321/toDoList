@@ -38,6 +38,7 @@ public class UserController {
 		return "user";
 	}
 	
+	
 	/**
 	 * IDで指定したユーザーを取得
 	 * @param Long id
