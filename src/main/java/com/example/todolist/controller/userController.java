@@ -23,8 +23,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
-	
+		
 	/**
 	 * 全件取得
 	 * @param Model model
