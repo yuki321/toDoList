@@ -29,11 +29,10 @@ public class ToDoRepository {
 		
 		List<ToDo> todolist = new ArrayList<>();
 		String userName = userDetails.getUsername();
+		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id WHERE u.user_name=?";
 		
 		// ToDoテーブルのデータを全件取得
-		List<Map<String, Object>> getList = jdbc.queryForList(
-				"SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id WHERE u.user_name=?"
-				, userName);
+		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
 		
 		for(Map<String, Object> map: getList) {
 			ToDo todo = new ToDo();
