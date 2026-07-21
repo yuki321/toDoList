@@ -56,7 +56,6 @@ th button {
 /** ユーザー作成 **/
 #userCreateBtn {
 	margin-top: 70px;
-	background-color: green;	
 }
 /** 一覧表とタスク一覧リンクとのマージン調整 **/
 #content {
