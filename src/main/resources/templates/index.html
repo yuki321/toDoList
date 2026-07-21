@@ -1,11 +1,43 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>タスク一覧画面</title>
+	<link th:href="@{/style/todo.css}" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+
 </head>
 <body>
-  <h1>Hello, World!</h1>
+	<main>
+		<div class="container">
+			<h1>タスク一覧</h1>
+			<div id="header-content">
+				<form th:action="@{/login}" method="post">
+				    <button class="link-edit" type="submit">ログアウト</button>
+				</form>			
+			</div>
+			<a class="link-edit" th:href="@{/api/users/create}" id="userCreateBtn">タスク作成</a>
+			<div id="content">
+				<div>
+					<p th:unless="${todo} != null">タスクは存在しません</p>
+				</div>
+				<div th:each="task: ${todo}" id="task">
+					<p th:if="${todo} != null" th:text="${task.content}"></p>
+<!--
+					<form method="post" th:action="@{/todo/{id}(id=${user.id})}" >
+-->
+					<form method="post" th:action="@{/todo}" >
+						<input class="link-update" type="submit" value="編集"/>
+						<input class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
+					</form>											
+				</div>
+							
+			</div>
+
+
+		
+		</div>
+	</main>
+	
 </body>
-</html>
 

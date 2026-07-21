@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import org.springframework.data.relational.core.mapping.Table;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,12 +19,14 @@ public class ToDo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "user_id", nullable = false, unique = true, length = 20)
+	@Column(name = "user_id", nullable = false, unique = false, length = 20)
 	private Long userId;
 	
 //	@Column(name = "category_id", nullable = false, unique = true, length = 20)
 //	private Long categoryId;
 		
+	@NotEmpty(message = "ToDoを入力してください")
+	@Size(max = 100, message = "ToDoは100文字以内で入力してください")
 	@Column(name = "content", nullable = false, unique = false, length = 500)
 	private String content;
 	
@@ -31,6 +35,8 @@ public class ToDo {
 	
     
     // コンストラクタ
+	public ToDo() {};
+	
 	public ToDo(Long id, Long userId, String content, Boolean status) {
 		super();
 		this.id = id;
@@ -89,8 +95,6 @@ public class ToDo {
 	public void setStatus(Boolean status) {
 		this.status = status;
 	}
-
-
 
 
 	@Override

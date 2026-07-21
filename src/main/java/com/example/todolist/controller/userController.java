@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.User;
 import com.example.todolist.service.UserService;
 
 @Controller
 @RequestMapping("/api/users")
-public class userController {
+public class UserController {
 
 	@Autowired
 	private UserService userService;
