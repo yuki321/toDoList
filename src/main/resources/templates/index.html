@@ -20,10 +20,10 @@
 			<input class="link-edit" id="todoCreate" type="button" value="タスク作成" onclick="onClickCreateToDoBtn()"/>
 			<div id="content">
 				<div>
-					<p th:unless="${todo} != null">タスクは存在しません</p>
+					<p th:if="${#lists.isEmpty(todos)}">タスクは存在しません</p>
 				</div>
-				<div th:each="task: ${todo}" id="task">
-					<p th:if="${todo} != null" th:text="${task.content}"></p>
+				<div th:each="task: ${todos}" id="task">
+					<p th:text="${task.content}"></p>
 
 					<form method="post" th:action="@{/todo}" >
 						<input class="link-update" type="submit" value="編集"/>
@@ -38,19 +38,13 @@
 		</div>
 	</main>
 	<dialog id="toDoCreateDialog">
-		<p>タスクを作成します</p>
 		<div id="dialog">
-			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
-			<form method="post" th:action="@{/}" id="create-btn">
-		<!--
-				<input type="text" th:field="*{userName}"/>
-				<span class="error" th:errors="*{userName}"></span>
-		-->		
-				
-				
-				
-				
-				<input class="link-delete" type="submit" id="delete" value="作成" />
+			<form method="post" th:action="@{/}" th:object="${todoForm}">
+				<p>タスクを作成します</p>
+				<input id="input-content" type="text" th:field="*{content}"/><br>
+				<span class="error" th:errors="*{content}"></span>
+				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
+				<input class="link-delete" type="submit" value="作成" />
 			</form>			
 		</div>
 	</dialog>
