@@ -30,7 +30,9 @@ function onClickCreateToDoBtn(){
 	dialog.showModal();
 }
 function closeToDoCreateDialog(){
+	document.querySelector("#input-content").value = "";
 	const dialog = document.querySelector("#toDoCreateDialog");
+	
 	dialog.close();
 }
 
