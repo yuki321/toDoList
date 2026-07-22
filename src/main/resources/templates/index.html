@@ -48,7 +48,7 @@
 		<div id="dialog">
 			<form method="post" th:action="@{/}" th:object="${todoForm}">
 				<p>タスクを作成します</p>
-				<input id="input-content" type="text" th:field="*{content}"/><br>
+				<input id="input-create-content" type="text" th:field="*{content}"/><br>
 				<span class="error" th:errors="*{content}"></span>
 				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
 				<input class="link-edit" type="submit" value="作成" />
@@ -64,11 +64,12 @@
 	            <input type="hidden" name="userId" id="editUserId" />
 				
 				<p>タスクを編集します</p>
-				<input id="input-content" type="text" th:field="*{content}"/><br>
+				<input id="input-edit-content" type="text" th:field="*{content}"/><br>
 				<span class="error" th:errors="*{content}"></span>
 				
 				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>
-				<input class="link-update" type="submit" value="更新" />
+				<input class="link-update" type="submit" value="更新"/>
+										
 			</form>			
 		</div>
 	</dialog>

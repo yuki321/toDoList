@@ -161,7 +161,8 @@ dialog {
 #create-btn {
 	margin-top: 8px;
 }
-#toDoCreateDialog p, #dialog, #input-content {
+#toDoCreateDialog p, #dialog, 
+#input-edit-content, #input-create-content {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -178,7 +179,7 @@ dialog p {
 	justify-content: center;
 }
 
-#input-content {
+#input-create-content, #input-edit-content {
 	width: 250px;
 }
 

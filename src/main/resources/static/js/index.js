@@ -30,7 +30,7 @@ function onClickCreateToDoBtn(){
 	dialog.showModal();
 }
 function closeToDoCreateDialog(){
-	document.querySelector("#input-content").value = "";
+	document.querySelector("#input-create-content").value = "";
 	const dialog = document.querySelector("#toDoCreateDialog");
 	
 	dialog.close();
@@ -49,7 +49,7 @@ function onClickEditToDoBtn(element){
 	// content
 	const todoContent = element.dataset.content;
 	console.log("★★★ todoContent: " + todoContent);
-	document.querySelector("#input-content").value = todoContent;
+	document.querySelector("#input-edit-content").value = todoContent;
 	
 	const dialog = document.querySelector("#toDoEditDialog");
 	dialog.showModal();
