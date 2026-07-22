@@ -97,13 +97,7 @@ public class ToDoController {
 	 * @return
 	 */
 	@PostMapping("/delete")
-//	public String deleteToDo(@AuthenticationPrincipal UserDetails userDetails) {
 	public String deleteToDo(@RequestParam String id) {
-		
-//		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
-//		Long id = (Long) userInfo.get("id");
-		
-		System.out.println("★★★★★ ID: " + id + "★★★★★");
 		
 		try {
 			toDoService.deleteRecord(Long.parseLong(id));
