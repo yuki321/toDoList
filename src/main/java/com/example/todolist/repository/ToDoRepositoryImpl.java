@@ -18,6 +18,8 @@ public interface ToDoRepositoryImpl {
     
     public int insertRecord(User user) throws DataAccessException;
     
+    public int deleteRecord(Long id) throws DataAccessException;
+    
 
 }
 

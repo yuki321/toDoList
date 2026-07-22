@@ -1,11 +1,25 @@
 
+// タスク削除ダイアログ
+function onClickDeleteToDoBtn(element){
+	
+	const todoId = element.dataset.id;
+	
+	document.querySelector("#deleteTodoId").value = todoId;
+	const dialog = document.querySelector("#deleteDialog");
+	dialog.showModal();
+}
+function closeToDoDeleteDialog(){
+	const dialog = document.querySelector("#deleteDialog");
+	dialog.close();
+}
+
 // ユーザー削除ダイアログ
-function onClickDeleteUserBtn(){
-	const dialog = document.querySelector("dialog");
+function onClickDeleteBtn(){
+	const dialog = document.querySelector("#deleteDialog");
 	dialog.showModal();
 }
 function closeUserDeleteDialog(){
-	const dialog = document.querySelector("dialog");
+	const dialog = document.querySelector("#deleteDialog");
 	dialog.close();
 }
 

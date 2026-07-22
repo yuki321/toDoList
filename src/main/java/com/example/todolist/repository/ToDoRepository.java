@@ -88,6 +88,23 @@ public class ToDoRepository {
 	}
 
 	
+	
+	
+	/**
+	 * タスク削除
+	 * @param Long id
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	public int deleteRecord(Long id) throws DataAccessException {
+		
+		String sql = "DELETE FROM todo WHERE id=?";
+		int num = jdbc.update(sql, id);
+		
+		return num;
+	}
+	
+	
 }
 
 

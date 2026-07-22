@@ -30,7 +30,9 @@
 
 					<form method="post" th:action="@{/todo}" >
 						<input class="link-update" type="submit" value="編集"/>
-						<input class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>
+						<input class="link-delete" id="delete" type="button" value="削除" 
+						th:data-id="${task.id}" 
+						onclick="onClickDeleteToDoBtn(this)"/>
 					</form>											
 				</div>
 							
@@ -45,6 +47,16 @@
 				<span class="error" th:errors="*{content}"></span>
 				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
 				<input class="link-delete" type="submit" value="作成" />
+			</form>			
+		</div>
+	</dialog>
+	<dialog id="deleteDialog">
+		<p>タスクを削除します</p>
+		<div id="dialog">
+			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoDeleteDialog()"/>
+			<form method="post" th:action="@{/delete}" id="delete-btn">
+				<input type="hidden" name="id" id="deleteTodoId"/>
+				<input class="link-delete" type="submit" id="delete" value="削除" />
 			</form>			
 		</div>
 	</dialog>

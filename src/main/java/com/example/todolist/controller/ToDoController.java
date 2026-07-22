@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.ToDo;
 import com.example.todolist.entity.User;
@@ -38,9 +39,10 @@ public class ToDoController {
 	public String getAllToDo(@AuthenticationPrincipal UserDetails userDetails, 
 			@ModelAttribute User user,
 			Model model){
-		
+		;
 		// ログイン情報を基にタスク一覧を表示
 		List<ToDo> todos = toDoService.findAllToDo(userDetails);
+		
 		model.addAttribute("todos", todos);
 		model.addAttribute("todoForm", new ToDo());
 
@@ -89,8 +91,28 @@ public class ToDoController {
 	}
 	
 
+	/**
+	 * タスク削除
+	 * @param UserDetails userDetails
+	 * @return
+	 */
+	@PostMapping("/delete")
+//	public String deleteToDo(@AuthenticationPrincipal UserDetails userDetails) {
+	public String deleteToDo(@RequestParam String id) {
+		
+//		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+//		Long id = (Long) userInfo.get("id");
+		
+		System.out.println("★★★★★ ID: " + id + "★★★★★");
+		
+		try {
+			toDoService.deleteRecord(Long.parseLong(id));
+			return "redirect:/";
+		}catch(IllegalArgumentException e) {
+			return "redirect:/";
+		}
+		
+	}
 
-	
-	
 	
 }

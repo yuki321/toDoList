@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,7 +52,6 @@ public class ToDoService {
 	 * @return boolean result
 	 */
 	public boolean insertRecord(ToDo todo) {
-		
 		int num = toDoRepository.insertRecord(todo);
 		
 		boolean result = false;
@@ -62,6 +62,24 @@ public class ToDoService {
 		return result;
 	}
 	
+	
+	
+	/**
+	 * タスク削除
+	 * @param Long id
+	 * @return boolean result
+	 * @throws DataAccessException
+	 */
+	public boolean deleteRecord(Long id) throws DataAccessException {
+		int num = toDoRepository.deleteRecord(id);
+		
+		boolean result = false;
+		if(num > 0) {
+			result = true;
+		}
+		
+		return result;
+	}
 	
 	
 }
