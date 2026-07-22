@@ -27,18 +27,18 @@
 				</div>
 				<div th:each="task: ${todos}" id="task">
 					<p th:text="${task.content}"></p>
-
-					<form method="post" th:action="@{/todo}" >
-						<input class="link-update" type="submit" value="編集"/>
-						<input class="link-delete" id="delete" type="button" value="削除" 
+					<input class="link-update" type="submit" value="編集"
+						th:data-id="${task.id}"
+						onclick="onClickEditToDoBtn(this)"/>
+					<input class="link-delete" id="delete" type="button" value="削除" 
 						th:data-id="${task.id}" 
 						onclick="onClickDeleteToDoBtn(this)"/>
-					</form>											
 				</div>
 							
 			</div>
 		</div>
 	</main>
+	<!-- タスク作成ダイアログ -->
 	<dialog id="toDoCreateDialog">
 		<div id="dialog">
 			<form method="post" th:action="@{/}" th:object="${todoForm}">
@@ -50,6 +50,24 @@
 			</form>			
 		</div>
 	</dialog>
+	<!-- タスク編集ダイアログ -->
+	<dialog id="toDoEditDialog">
+		<div id="dialog">
+			<form method="post" th:action="@{/edit}" th:object="${todoForm}">
+
+				<input type="hidden" name="id" id="editId" />
+	            <input type="hidden" name="userId" id="editUserId" />
+				
+				<p>タスクを編集します</p>
+				<input id="input-content" type="text" th:field="*{content}"/><br>
+				<span class="error" th:errors="*{content}"></span>
+				
+				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>
+				<input class="link-update" type="submit" value="更新" />
+			</form>			
+		</div>
+	</dialog>
+	<!-- タスク削除ダイアログ --> 
 	<dialog id="deleteDialog">
 		<p>タスクを削除します</p>
 		<div id="dialog">

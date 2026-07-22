@@ -1,22 +1,17 @@
 package com.example.todolist.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.todolist.entity.ToDo;
-import com.example.todolist.entity.User;
 import com.example.todolist.repository.ToDoRepository;
-import com.example.todolist.repository.UserRepository;
 
 @Service
 @Transactional
@@ -62,7 +57,24 @@ public class ToDoService {
 		return result;
 	}
 	
-	
+
+	/**
+	 * タスク編集
+	 * @param ToDo todo
+	 * @return boolean result
+	 * @throws DataAccessException
+	 */
+	public boolean updateRecord(ToDo todo) throws DataAccessException {
+		
+		int num = toDoRepository.updateRecord(todo);
+		
+		boolean result = false;
+		if(num > 0) {
+			result = true;
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * タスク削除

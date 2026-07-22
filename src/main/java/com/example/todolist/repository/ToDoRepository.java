@@ -3,7 +3,6 @@ package com.example.todolist.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -11,10 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.todolist.entity.ToDo;
-import com.example.todolist.entity.User;
 import com.example.todolist.service.UserService;
 
 @Repository
@@ -77,6 +74,9 @@ public class ToDoRepository {
 	 */
 	public int insertRecord(ToDo todo) throws DataAccessException {
 		
+		System.out.println("ToDoRepository  userId: ");
+		System.out.println(todo.getUserId());
+		
 		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),
@@ -88,6 +88,24 @@ public class ToDoRepository {
 	}
 
 	
+	/**
+	 * タスク編集
+	 * @param ToDo todo
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	public int updateRecord(ToDo todo) throws DataAccessException {
+		
+		String sql = "UPDATE todo SET user_id = ?, content = ?, status = ? "
+				+ "WHERE id=?";
+		int num = jdbc.update(sql,
+				todo.getUserId(),
+				todo.getContent(),
+				todo.getStatus(),
+				todo.getId());
+		
+		return num;
+	}
 	
 	
 	/**

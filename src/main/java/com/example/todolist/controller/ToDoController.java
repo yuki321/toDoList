@@ -92,6 +92,46 @@ public class ToDoController {
 	
 
 	/**
+	 * タスク編集
+	 * @param ToDo todo
+	 * @param BindingResult bindingResult
+	 * @param UserDetails userDetails
+	 * @param Model model
+	 * @return
+	 */
+	@PostMapping("/edit")
+	public String editToDo(
+			@ModelAttribute("todoForm") ToDo todo, 
+			BindingResult bindingResult, 
+			@AuthenticationPrincipal UserDetails userDetails,
+			Model model
+			) {
+		
+		
+		// userIdを取得
+		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		todo.setUserId((Long) userInfo.get("id"));		
+		model.addAttribute("todo", todo);
+		
+		
+		try {
+			boolean result = toDoService.updateRecord(todo);
+			if (result) {
+				System.out.println("作成成功！");
+			} else {
+				System.out.println("作成失敗");
+			}
+			
+			return "redirect:/";
+		}catch(IllegalArgumentException e) {
+			return "redirect:/";
+		}
+		
+		
+	}
+	
+	
+	/**
 	 * タスク削除
 	 * @param UserDetails userDetails
 	 * @return
