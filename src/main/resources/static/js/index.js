@@ -36,10 +36,18 @@ function closeToDoCreateDialog(){
 
 // タスク編集ダイアログ
 function onClickEditToDoBtn(element){
+
+	// id
 	const todoId = element.dataset.id;
 	document.querySelector("#editId").value = todoId;
-	const todoUserId = element.dataset.userId;
-	document.querySelector("#editUserId").value = todoUserId;
+	// userId
+//	const todoUserId = element.dataset.userId;
+//	document.querySelector("#editUserId").value = todoUserId;
+
+	// content
+	const todoContent = element.dataset.content;
+	console.log("★★★ todoContent: " + todoContent);
+	document.querySelector("#input-content").value = todoContent;
 	
 	const dialog = document.querySelector("#toDoEditDialog");
 	dialog.showModal();

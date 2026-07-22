@@ -117,9 +117,9 @@ public class ToDoController {
 		try {
 			boolean result = toDoService.updateRecord(todo);
 			if (result) {
-				System.out.println("作成成功！");
+				System.out.println("編集成功！");
 			} else {
-				System.out.println("作成失敗");
+				System.out.println("編集失敗");
 			}
 			
 			return "redirect:/";
