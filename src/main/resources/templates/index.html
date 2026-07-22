@@ -17,7 +17,7 @@
 				    <button class="link-edit" type="submit">ログアウト</button>
 				</form>			
 			</div>
-			<input class="link-edit" id="todoCreate" type="button" value="タスク作成" onclick="onClickCreateToDoBtn()"/>
+			<input class="link-edit margin-top" id="todoCreate" type="button" value="タスク作成" onclick="onClickCreateToDoBtn()"/>
 			<div th:if="${role == 'Admin'}">
 				<a class="link-list" id="userCreateBtn" th:href="@{/api/users/user}">ユーザー一覧</a>
 			</div>
@@ -51,7 +51,7 @@
 				<input id="input-content" type="text" th:field="*{content}"/><br>
 				<span class="error" th:errors="*{content}"></span>
 				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
-				<input class="link-delete" type="submit" value="作成" />
+				<input class="link-edit" type="submit" value="作成" />
 			</form>			
 		</div>
 	</dialog>

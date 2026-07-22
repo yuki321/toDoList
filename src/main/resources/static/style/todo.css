@@ -38,12 +38,14 @@ input {
 }
 
 
-
+.margin-top {
+	margin-top: 70px;
+}
 
 /** 作成・ログアウトボタン・ユーザー一覧 **/
 .link-edit {
 	display: inline-block;
-	margin-top: 70px;
+/*	margin-top: 70px; */
 	padding: 8px 20px;
 	background-color: #3498db; /* 背景色 */
 	color: #ffffff; /* 文字色 */
