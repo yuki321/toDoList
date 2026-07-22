@@ -74,9 +74,6 @@ public class ToDoRepository {
 	 */
 	public int insertRecord(ToDo todo) throws DataAccessException {
 		
-		System.out.println("ToDoRepository  userId: ");
-		System.out.println(todo.getUserId());
-		
 		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),

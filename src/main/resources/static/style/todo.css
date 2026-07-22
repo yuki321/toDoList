@@ -26,8 +26,17 @@ input {
 	font-weight: bold;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	border-radius: 5px; /* 角丸 */
-	
+	display: flex;
 }
+#todo-content {
+	width: 70%;	
+	overflow-wrap: anywhere;
+}
+#edit-delete-btn {
+	margin-top: 10px;	
+	margin-left:10px; 
+}
+
 
 
 
