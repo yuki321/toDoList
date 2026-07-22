@@ -32,8 +32,17 @@ public class SecurityConfig {
 				.defaultSuccessUrl("/", true)
 				.permitAll()
 		)
-		.rememberMe(Customizer.withDefaults());
-	
+		// ログアウト設定を追加
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/login?logout") // ログアウト成功時は ?logout を付与してリダイレクト
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .permitAll()
+        );
+		
+		
 		return http.build();
 	}
 	
