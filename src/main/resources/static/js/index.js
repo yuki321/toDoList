@@ -49,7 +49,12 @@ function onClickEditToDoBtn(element){
 	// content
 	const todoContent = element.dataset.content;
 	console.log("★★★ todoContent: " + todoContent);
-	document.querySelector("#input-edit-content").value = todoContent;
+	
+	if(todoContent == undefined){
+		document.querySelector("#input-edit-content").value = "";
+	}else{
+		document.querySelector("#input-edit-content").value = todoContent;
+	}
 	
 	const dialog = document.querySelector("#toDoEditDialog");
 	dialog.showModal();
