@@ -33,6 +33,7 @@
 					<div id="edit-delete-btn">
 						<input class="link-update" type="submit" value="編集"
 							th:data-id="${task.id}"
+							th:data-content="${task.content}"
 							onclick="onClickEditToDoBtn(this)"/>
 						<input class="link-delete" id="delete" type="button" value="削除" 
 							th:data-id="${task.id}" 
