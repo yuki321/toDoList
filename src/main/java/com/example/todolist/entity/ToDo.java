@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.springframework.data.relational.core.mapping.Table;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,9 +26,13 @@ public class ToDo {
 //	@Column(name = "category_id", nullable = false, unique = true, length = 20)
 //	private Long categoryId;
 		
-	@NotEmpty(message = "ToDoを入力してください")
-	@Size(max = 100, message = "ToDoは100文字以内で入力してください")
+	@NotEmpty(message = "タスクを入力してください")
+	@Size(max = 100, message = "タスクは100文字以内で入力してください")
 	@Column(name = "content", nullable = false, unique = false, length = 500)
+	@Pattern(
+	    regexp = "^[a-z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]+$", 
+	    message = "日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ入力可能です"
+	)
 	private String content;
 	
 	@Column(name = "status", nullable = false)

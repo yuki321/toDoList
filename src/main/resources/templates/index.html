@@ -48,11 +48,14 @@
 	<dialog id="toDoCreateDialog">
 		<div id="dialog">
 			<form method="post" th:action="@{/}" th:object="${todoForm}">
+				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
+
 				<p>タスクを作成します</p>
 				<input id="input-create-content" type="text" th:field="*{content}"/><br>
 				<span class="error" th:errors="*{content}"></span>
 				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
-				<input class="link-edit" type="submit" value="作成" />
+				<input class="link-edit" id="create-content-submit"
+				 type="submit" value="作成" />
 			</form>			
 		</div>
 	</dialog>

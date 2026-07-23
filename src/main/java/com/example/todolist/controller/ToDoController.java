@@ -59,7 +59,16 @@ public class ToDoController {
 			Model model) {
 
 		if (bindingResult.hasErrors()) {
+			
+			System.out.println(bindingResult);
 			addIndexModelAttributes(userDetails, model);
+//			return "redirect:/";
+			
+			/**
+			 * FIXME タスク作成をダイアログではなく、別ページで実装する？
+			 * 　　　　　作成ボタン押下時にエラー発生しても、ダイアログが消えるため、
+			 * 　　　　　次ダイアログを表示したタイミングでエラーが表示される
+			 */
 			return "index";
 		}
 
