@@ -1,14 +1,19 @@
 package com.example.todolist.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.UserRepository;
 
@@ -21,6 +26,9 @@ public class UserService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired 
+	private JdbcTemplate jdbc;
 	
 	/**
 	 * 全件取得
@@ -121,6 +129,80 @@ public class UserService {
 		
 		userRepository.deleteById(id);
 	}
+	
+	/**
+	 * パスワード変更
+	 * @param User user
+	 * @param String newPassword
+	 * @return
+	 */
+	@Transactional
+	public User savePassword(User user, String newPassword) {
+		
+		String sql = "SELECT * FROM users WHERE id=?";
+		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
+		String userName = (String)getMap.get("user_name");
+		String email =  (String)getMap.get("email");
+		
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setUserName(userName);
+		user.setEmail(email);
+		user.setPassword(encodedPassword);
+		
+		return userRepository.save(user);
+	}
+	
+	
+	/**
+	 * パスワードのチェック
+	 * @param Password form
+	 * @param UserDetails userDetails
+	 * @return List<String>
+	 */
+	public List<String> checkPassword(PasswordChange form, User user) {
+		
+		List<String> errors = new ArrayList<>();
+		
+		String dbPassword = getDbPassword(user);
+		
+		// 現在のパスワード（入力）
+		String currentPW = form.getCurrentPassword();
+		// 新規パスワード（入力）
+		String newPW = form.getNewPassword();
+		// 確認パスワード（入力）
+		String confirmPW = form.getConfirmPassword();
+		
+		
+		// 現在のパスワードと入力したパスワードが一致しているかチェック
+		if(!passwordEncoder.matches(currentPW, dbPassword)) {
+			errors.add("現在のパスワードと一致しません");
+		}
+		// 現在のパスワードと新しいパスワードが一致しているかチェック（一致しているとエラー）
+		if(currentPW.equals(newPW) || currentPW.equals(confirmPW)) {
+			errors.add("現在のパスワードと新しいパスワードが一致しています");
+		}
+		// 新しいパスワードが一致してしているかチェック
+		if(!newPW.equals(confirmPW)) {
+			errors.add("新しいパスワードが一致していません");
+		}
+		
+		return errors;
+	}
+	
+	/**
+	 * ログインユーザーのパスワードをDBから取得する
+	 * @param User user
+	 * @return String password
+	 */
+	private String getDbPassword(@PathVariable User user) {
+		
+		String sql = "SELECT password FROM users WHERE id=?";
+		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
+		String password = (String)getMap.get("password");
+		
+		return password;
+	}
+	
 	
 	
 }

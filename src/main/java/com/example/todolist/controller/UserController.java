@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
 import com.example.todolist.service.UserService;
 
@@ -23,6 +27,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 		
 	/**
 	 * 全件取得
@@ -59,6 +66,16 @@ public class UserController {
 	public String userCreate(Model model) {
 		model.addAttribute("user", new User());
 		return "userCreate";
+	}
+	
+	// パスワード変更画面へ遷移
+	@GetMapping("user/{id}/change-password")
+	public String changePassword(@PathVariable Long id, Model model, @ModelAttribute User user) {
+		model.addAttribute("user", user);
+		
+		// changePasswordメソッドで利用
+		model.addAttribute("passwordChange", new PasswordChange());
+		return "changePassword";
 	}
 	
 	/**
@@ -129,6 +146,47 @@ public class UserController {
         	return "redirect:/api/users/user";
         }
     }
+	
+	
+	@PostMapping("user/{id}/change-password")
+	public String changePassword(
+			User user,
+			@PathVariable Long id, 
+			@AuthenticationPrincipal UserDetails userDetails,
+			@Validated(PasswordChange.PasswordUpdate.class) 
+			@ModelAttribute PasswordChange passwordChange,
+			BindingResult bindingResult,
+			Model model
+			) {
+		
+		if(bindingResult.hasErrors()) {
+			return "changePassword";
+		}
+		
+		try {
+			
+			// 入力したパスワードが現在のパスワードと一致しているか確認
+			List<String> errors = userService.checkPassword(passwordChange, user);
+			
+			if(!errors.isEmpty()) {
+				for(String error: errors) {
+					bindingResult.reject("error.passwordChange", error);
+				}
+				return "changePassword";
+			}
+			
+			
+			
+			String newPassword = passwordChange.getNewPassword();
+			userService.savePassword(user, newPassword);
+			
+			return "redirect:/api/users/user";
+		}catch(IllegalArgumentException e) {
+			return "redirect:/api/users/user";
+		}
+		
+	}
+	
 
 	/**
 	 * バリデーションエラー時に表示用の項目を補完する
