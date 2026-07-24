@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,10 +55,22 @@ public class UserController {
 	 */
 	@GetMapping("user/{id}")
 	public String getUserById(@PathVariable Long id, Model model){
-		Optional<User> user = userService.getUserById(id);
-		user.ifPresent(u -> model.addAttribute("user", u));
 		
-		return "userDetail";
+		try {
+			Optional<User> user = userService.getUserById(id);
+//			user.ifPresent(u -> model.addAttribute("user", u));
+			
+			if(user.isPresent()) {
+				model.addAttribute("user", user.orElse(null));
+	            return "userDetail";
+			}else {
+				return "redirect:/api/users/user";
+			}
+			
+		}catch(IllegalArgumentException e) {
+			return "redirect: user";
+		}
+		
 	}
 	
 	
