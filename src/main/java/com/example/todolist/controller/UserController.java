@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,6 +57,11 @@ public class UserController {
 	@GetMapping("user/{id}")
 	public String getUserById(@PathVariable Long id, Model model){
 		
+		// idがLong型でない場合
+		if(!(id instanceof Long)) {
+			return "redirect:/api/users/user";
+		}
+		
 		try {
 			Optional<User> user = userService.getUserById(id);
 //			user.ifPresent(u -> model.addAttribute("user", u));
@@ -68,7 +74,7 @@ public class UserController {
 			}
 			
 		}catch(IllegalArgumentException e) {
-			return "redirect: user";
+			return "redirect:/api/users/user";
 		}
 		
 	}
