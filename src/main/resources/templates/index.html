@@ -29,6 +29,7 @@
 				<div th:each="task: ${todos}" id="task">
 					<div id="todo-content">
 						<p th:text="${task.content}"></p>
+						<p th:text="${task.memo}" id="memo"></p>
 					</div>
 					<div id="edit-delete-btn">
 						<input class="link-update" type="submit" value="編集"
@@ -51,9 +52,13 @@
 				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
 
 				<p>タスクを作成します</p>
+				<label>タスク名</label>
 				<input id="input-create-content" type="text" th:field="*{content}" required/><br>
 				<span class="error" th:errors="*{content}"></span>
 				
+				<label>メモ</label>
+				<textarea th:field="*{memo}" rows="5" cols="40"></textarea>
+		
 				<div class="buttons">
 					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
 					<input class="link-update" id="create-content-submit"
@@ -71,8 +76,12 @@
 	            <input type="hidden" name="userId" id="editUserId" />
 				
 				<p>タスクを編集します</p>
+				<label>タスク名</label>
 				<input id="input-edit-content" type="text" th:field="*{content}" required/><br>
 				<span class="error" th:errors="*{content}"></span>
+				
+				<label>メモ</label>
+				<textarea th:field="*{memo}" rows="5" cols="40"></textarea>
 				
 				<div class="buttons">
 					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>

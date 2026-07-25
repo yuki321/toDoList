@@ -35,6 +35,10 @@ public class ToDo {
 	)
 	private String content;
 	
+	@Size(max = 100, message = "メモは100文字以内で入力してください")
+	@Column(name = "memo", nullable = true, unique = false, length = 100)
+	private String memo;
+	
 	@Column(name = "status", nullable = false)
 	private Boolean status = true;
 	
@@ -42,11 +46,12 @@ public class ToDo {
     // コンストラクタ
 	public ToDo() {};
 	
-	public ToDo(Long id, Long userId, String content, Boolean status) {
+	public ToDo(Long id, Long userId, String content, Boolean status, String memo) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.content = content;
+		this.memo = memo;
 		this.status = status;
 	}
 
@@ -89,6 +94,16 @@ public class ToDo {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	
+	public String getMemo() {
+		return memo;
+	}
+
+
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 
 

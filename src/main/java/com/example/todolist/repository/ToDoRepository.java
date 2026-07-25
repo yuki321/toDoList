@@ -42,6 +42,7 @@ public class ToDoRepository {
 			todo.setId((Long)map.get("id"));
 			todo.setUserId((Long)map.get("user_id"));
 			todo.setContent((String)map.get("content"));
+			todo.setMemo((String)map.get("memo"));
 			todo.setStatus((Boolean)map.get("status"));
 				
 			todolist.add(todo);
@@ -74,10 +75,11 @@ public class ToDoRepository {
 	 */
 	public int insertRecord(ToDo todo) throws DataAccessException {
 		
-		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?)",
+		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),
 				todo.getContent(),
+				todo.getMemo(),
 				todo.getStatus());
 		
 		// 正常終了: 0 / 異常終了: 0以外の数字
@@ -93,11 +95,12 @@ public class ToDoRepository {
 	 */
 	public int updateRecord(ToDo todo) throws DataAccessException {
 		
-		String sql = "UPDATE todo SET user_id = ?, content = ?, status = ? "
-				+ "WHERE id=?";
+		String sql = "UPDATE todo SET user_id = ?, content = ?, "
+				+ "memo = ?, status = ? WHERE id=?";
 		int num = jdbc.update(sql,
 				todo.getUserId(),
 				todo.getContent(),
+				todo.getMemo(),
 				todo.getStatus(),
 				todo.getId());
 		
