@@ -7,7 +7,9 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	  integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+	
 	<link th:href="@{/style/login.css}" rel="stylesheet" type="text/css">
+	<script th:src="@{/js/index.js}" charset="utf-8"></script>
 </head>
 
 <body>
@@ -27,10 +29,21 @@
         <input type="text" id="username" name="username" placeholder="ユーザー名" class="form-control" required />
         <input type="password" name="password" placeholder="パスワード" class="form-control" required />
         <button class="btn form-control btn-primary" name="Submit" value="Login" type="Submit">ログイン</button>
-        <p></p>
+        <div id="reset-link" onclick="onClickPWResetDialog()">パスワードの再設定</div>
+		
+		
       </form>
     </div>
   </div>
+  <dialog id="mailSend">
+  	<p>メール送信先を入力してください</p>
+  	<div id="dialog">
+  		<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closePWResetDialog()"/>
+  		<form method="post" th:action="@{/mail-send}" >
+  			<input class="link-update" id="mail-send" type="submit" value="メール送信" required/>
+  		</form>			
+  	</div>
+  </dialog>
 </body>
 </html>
 

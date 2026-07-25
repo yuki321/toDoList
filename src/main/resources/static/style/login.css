@@ -38,22 +38,89 @@ input[type="password"] {
   border-top-right-radius: 0;
 }
 
-.colorgraph {
-  height: 7px;
-  border-top: 0;
-  background: #c4e17f;
-  border-radius: 5px;
-  background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-  background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-  background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-  background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-}
 
 #username {
 	margin-bottom: 10px;
 }
 
+/** password reset link **/
+#reset-link {
+	margin-top: 20px;
+	color: dimgray;
+}
+#reset-link:hover {
+	color: blueviolet;
+}
 
+/** PW再設定ダイアログ **/
+#mailSend {
+	width: 40%;
+	border: 1px solid lightgray;
+	border-radius: 5px; /* 角丸 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
+}
+#dialog, dialog p {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+dialog .link-list {
+	padding: 5px 20px;
+}
+
+#mail-send {
+	margin-top: 10px;
+}
+#closeDialog {
+	margin-right: 20px;
+}
+
+.link-list {
+	display: inline-block;
+	margin-top: 10px;
+	padding: 4px 20px;
+	background-color: #555555; /* 背景色 */
+	color: #ffffff; /* 文字色 */
+	text-decoration: none; /* 下線を消す */
+	font-weight: bold;
+	border-radius: 5px; /* 角丸 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
+	transition: all 0.3s ease; /* アニメーションの設定 */
+	width: max-content;
+}
+.link-list:hover {
+	background-color: #2980b9;
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+	transform: translateY(-2px); /* 少し上に浮き上がる */
+}
+.link-list:active {
+	transform: translateY(0);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/** 更新ボタン **/
+.link-update {
+	display: inline-block;
+	padding: 6px 20px;
+	background-color: #3498db; /* 背景色 */
+	color: #ffffff; /* 文字色 */
+	text-decoration: none; /* 下線を消す */
+	font-weight: bold;
+	font-size: 16px;
+	border-radius: 5px; /* 角丸 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
+	transition: all 0.3s ease; /* アニメーションの設定 */
+	width: max-content;
+	border: none;
+}
+.link-update:hover {
+	background-color: #2980b9;
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+	transform: translateY(-2px); /* 少し上に浮き上がる */
+}
+.link-update:active {
+	transform: translateY(0);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
 
 

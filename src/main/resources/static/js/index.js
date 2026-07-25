@@ -42,9 +42,6 @@ function onClickEditToDoBtn(element){
 	// id
 	const todoId = element.dataset.id;
 	document.querySelector("#editId").value = todoId;
-	// userId
-//	const todoUserId = element.dataset.userId;
-//	document.querySelector("#editUserId").value = todoUserId;
 
 	// content
 	const todoContent = element.dataset.content;
@@ -64,8 +61,15 @@ function closeToDoEditDialog(){
 	dialog.close();
 }
 
-
-
+// パスワードリセットダイアログ
+function onClickPWResetDialog(){
+	const dialog = document.querySelector("#mailSend");
+	dialog.showModal();
+}
+function closePWResetDialog(){
+	const dialog = document.querySelector("#mailSend");
+	dialog.close();
+}
 
 
 
