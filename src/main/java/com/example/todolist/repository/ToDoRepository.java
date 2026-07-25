@@ -94,11 +94,6 @@ public class ToDoRepository {
 	 */
 	public int updateRecord(ToDo todo) throws DataAccessException {
 		
-System.out.println("Id: " + todo.getId());
-System.out.println("UserId: " + todo.getUserId());
-System.out.println("Content: " + todo.getContent());
-System.out.println("Memo: " + todo.getMemo());
-		
 		String sql = "UPDATE todo SET user_id = ?, content = ?, "
 				+ "memo = ?, status = ? WHERE id=?";
 		int num = jdbc.update(sql,
