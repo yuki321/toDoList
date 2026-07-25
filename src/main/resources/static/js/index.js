@@ -45,7 +45,6 @@ function onClickEditToDoBtn(element){
 
 	// content
 	const todoContent = element.dataset.content;
-	console.log("★★★ todoContent: " + todoContent);
 	
 	// memo
 	const todoMemo = element.dataset.memo;

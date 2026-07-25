@@ -82,7 +82,6 @@ public class ToDoRepository {
 				todo.getMemo(),
 				todo.getStatus());
 		
-		// 正常終了: 0 / 異常終了: 0以外の数字
 		return num;
 	}
 
@@ -94,6 +93,11 @@ public class ToDoRepository {
 	 * @throws DataAccessException
 	 */
 	public int updateRecord(ToDo todo) throws DataAccessException {
+		
+System.out.println("Id: " + todo.getId());
+System.out.println("UserId: " + todo.getUserId());
+System.out.println("Content: " + todo.getContent());
+System.out.println("Memo: " + todo.getMemo());
 		
 		String sql = "UPDATE todo SET user_id = ?, content = ?, "
 				+ "memo = ?, status = ? WHERE id=?";

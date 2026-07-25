@@ -44,6 +44,7 @@ public class ToDoController {
 		List<ToDo> todos = toDoService.findAllToDo(userDetails);
 		
 		model.addAttribute("todos", todos);
+		model.addAttribute("todoCreate", new ToDo());
 		model.addAttribute("todoForm", new ToDo());
 
 		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
@@ -53,7 +54,7 @@ public class ToDoController {
 	}
 
 	@PostMapping("/")
-	public String createToDo(@Validated @ModelAttribute("todoForm") ToDo todo,
+	public String createToDo(@Validated @ModelAttribute("todoCreate") ToDo todo,
 			BindingResult bindingResult,
 			@AuthenticationPrincipal UserDetails userDetails,
 			Model model) {
@@ -62,7 +63,6 @@ public class ToDoController {
 			
 			System.out.println(bindingResult);
 			addIndexModelAttributes(userDetails, model);
-//			return "redirect:/";
 			
 			/**
 			 * FIXME タスク作成をダイアログではなく、別ページで実装する？
@@ -148,13 +148,10 @@ public class ToDoController {
 	@PostMapping("/delete")
 	public String deleteToDo(@RequestParam String id) {
 		
-	System.out.println("★★★ 通過！！");
 		try {
-	System.out.println("★★★ 通過！！(try)");
 			toDoService.deleteRecord(Long.parseLong(id));
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
-System.out.println("★★★ 通過......");
 			return "redirect:/";
 		}
 		

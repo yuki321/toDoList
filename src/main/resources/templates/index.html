@@ -49,7 +49,7 @@
 	<!-- タスク作成ダイアログ -->
 	<dialog id="toDoCreateDialog">
 		<div id="dialog">
-			<form method="post" th:action="@{/}" th:object="${todoForm}">
+			<form method="post" th:action="@{/}" th:object="${todoCreate}">
 				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
 
 				<p>タスクを作成します</p>
