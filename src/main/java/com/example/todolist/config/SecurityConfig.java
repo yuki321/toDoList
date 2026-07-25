@@ -24,13 +24,19 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain fiterChain(HttpSecurity http) throws Exception {
 		
-		http.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/api/users/create", "/login").permitAll()
-				.anyRequest().authenticated()
-		)
+		http
 		.formLogin(formLogin -> formLogin
-				.defaultSuccessUrl("/", true)
+//				.defaultSuccessUrl("/", true)
+				.loginPage("/login")
 				.permitAll()
+		)
+		.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/api/users/create", "/login").permitAll()
+				.requestMatchers("/css/**").permitAll() // CSSファイルは認証不要で使えるようにする
+	            .requestMatchers("/").permitAll() //  トップページは認証不要
+	            .requestMatchers("/create/**").hasRole("ADMIN")
+	            .requestMatchers("/delete/**").hasRole("ADMIN")
+				.anyRequest().authenticated()
 		)
 		// ログアウト設定を追加
         .logout(logout -> logout
