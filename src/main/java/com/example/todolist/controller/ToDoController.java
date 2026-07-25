@@ -148,10 +148,13 @@ public class ToDoController {
 	@PostMapping("/delete")
 	public String deleteToDo(@RequestParam String id) {
 		
+	System.out.println("★★★ 通過！！");
 		try {
+	System.out.println("★★★ 通過！！(try)");
 			toDoService.deleteRecord(Long.parseLong(id));
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
+System.out.println("★★★ 通過......");
 			return "redirect:/";
 		}
 		

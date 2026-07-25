@@ -35,6 +35,7 @@
 						<input class="link-update" type="submit" value="編集"
 							th:data-id="${task.id}"
 							th:data-content="${task.content}"
+							th:data-memo="${task.memo}"
 							onclick="onClickEditToDoBtn(this)"/>
 						<input class="link-delete" id="delete" type="button" value="削除" 
 							th:data-id="${task.id}" 
@@ -81,7 +82,7 @@
 				<span class="error" th:errors="*{content}"></span>
 				
 				<label>メモ</label>
-				<textarea th:field="*{memo}" rows="5" cols="40"></textarea>
+				<textarea th:field="*{memo}" rows="5" cols="40" id="input-edit-memo"></textarea>
 				
 				<div class="buttons">
 					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>

@@ -47,10 +47,17 @@ function onClickEditToDoBtn(element){
 	const todoContent = element.dataset.content;
 	console.log("★★★ todoContent: " + todoContent);
 	
+	// memo
+	const todoMemo = element.dataset.memo;
+	
 	if(todoContent == undefined){
 		document.querySelector("#input-edit-content").value = "";
 	}else{
 		document.querySelector("#input-edit-content").value = todoContent;
+	}
+	
+	if(todoMemo){
+		document.querySelector("#input-edit-memo").value = todoMemo;
 	}
 	
 	const dialog = document.querySelector("#toDoEditDialog");

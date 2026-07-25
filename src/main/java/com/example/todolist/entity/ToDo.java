@@ -46,7 +46,7 @@ public class ToDo {
     // コンストラクタ
 	public ToDo() {};
 	
-	public ToDo(Long id, Long userId, String content, Boolean status, String memo) {
+	public ToDo(Long id, Long userId, String content, String memo, Boolean status) {
 		super();
 		this.id = id;
 		this.userId = userId;
