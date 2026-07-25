@@ -51,11 +51,14 @@
 				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
 
 				<p>タスクを作成します</p>
-				<input id="input-create-content" type="text" th:field="*{content}"/><br>
+				<input id="input-create-content" type="text" th:field="*{content}" required/><br>
 				<span class="error" th:errors="*{content}"></span>
-				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
-				<input class="link-edit" id="create-content-submit"
-				 type="submit" value="作成" />
+				
+				<div class="buttons">
+					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
+					<input class="link-update" id="create-content-submit"
+					 type="submit" value="作成" />
+				 </div>
 			</form>			
 		</div>
 	</dialog>
@@ -68,11 +71,13 @@
 	            <input type="hidden" name="userId" id="editUserId" />
 				
 				<p>タスクを編集します</p>
-				<input id="input-edit-content" type="text" th:field="*{content}"/><br>
+				<input id="input-edit-content" type="text" th:field="*{content}" required/><br>
 				<span class="error" th:errors="*{content}"></span>
 				
-				<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>
-				<input class="link-update" type="submit" value="更新"/>
+				<div class="buttons">
+					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>
+					<input class="link-update" id="update-btn" type="submit" value="更新"/>
+				</div>
 										
 			</form>			
 		</div>

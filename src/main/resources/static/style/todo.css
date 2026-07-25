@@ -158,11 +158,13 @@ dialog {
 #closeDialog {
 	margin-right: 10px;
 }
-#create-btn {
+#create-btn, #update-btn, #create-content-submit {
 	margin-top: 8px;
 }
 #toDoCreateDialog p, #dialog, 
-#input-edit-content, #input-create-content {
+#input-edit-content, #input-create-content,
+.buttons 
+{
 	display: flex;
 	align-items: center;
 	justify-content: center;
