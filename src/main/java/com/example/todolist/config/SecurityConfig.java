@@ -34,8 +34,6 @@ public class SecurityConfig {
 				.requestMatchers("/api/users/create", "/login").permitAll()
 				.requestMatchers("/css/**").permitAll() // CSSファイルは認証不要で使えるようにする
 	            .requestMatchers("/").permitAll() //  トップページは認証不要
-	            .requestMatchers("/create/**").hasRole("ADMIN")
-	            .requestMatchers("/delete/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 		)
 		// ログアウト設定を追加
@@ -46,6 +44,7 @@ public class SecurityConfig {
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
             .permitAll()
+            
         );
 		
 		
