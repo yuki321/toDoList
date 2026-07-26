@@ -64,6 +64,11 @@ function onClickEditToDoBtn(element){
 }
 function closeToDoEditDialog(){
 	const dialog = document.querySelector("#toDoEditDialog");
+	/**
+	 * 値を空にしないと、メモなしタスクの編集ボタンを押下すると、直前で開いたタスクのメモが表示されてしまう
+	 */
+	document.querySelector("#input-edit-memo").value = "";
+	
 	dialog.close();
 }
 
