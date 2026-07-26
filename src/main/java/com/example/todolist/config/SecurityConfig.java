@@ -32,15 +32,14 @@ public class SecurityConfig {
 				.permitAll()
 		)
 		.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/api/users/create", "/login").permitAll()
+				.requestMatchers("/login").permitAll()  // ログインページは認証不要で使えるようにする
 				.requestMatchers("/css/**").permitAll() // CSSファイルは認証不要で使えるようにする
-	            .requestMatchers("/").permitAll() //  トップページは認証不要
 				.anyRequest().authenticated()
 		)
 		// ログアウト設定を追加
         .logout(logout -> logout
             .logoutUrl("/logout")
-            .logoutSuccessUrl("/login?logout") // ログアウト成功時は ?logout を付与してリダイレクト
+            .logoutSuccessUrl("/login") 
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
