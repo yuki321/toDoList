@@ -40,6 +40,8 @@ public class PasswordChange {
 	@Size(min = 4, max = 20, groups = PasswordUpdate.class, 
 	message = "パスワードは4～20文字で入力してください")
     private String confirmPassword;
+    
+    private String passwordChange;
 
     
     // Setter / Getterのメソッド
@@ -66,16 +68,27 @@ public class PasswordChange {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+	
+	public String getPasswordChange() {
+		return passwordChange;
+	}
+
+	public void setPasswordChange(String passwordChange) {
+		this.passwordChange = passwordChange;
+	}
+
 
 	
 	// コンストラクタ
 	public PasswordChange() {};
 	
-	public PasswordChange(String currentPassword, String newPassword, String confirmPassword) {
+	public PasswordChange(String currentPassword, String newPassword, 
+			String confirmPassword, String passwordChange) {
 		super();
 		this.currentPassword = currentPassword;
 		this.newPassword = newPassword;
 		this.confirmPassword = confirmPassword;
+		this.passwordChange = passwordChange;
 	}
 
 
