@@ -57,7 +57,8 @@ public class SecurityConfig {
 	public WebSecurityCustomizer configure() throws Exception {
         return web -> web.ignoring().requestMatchers(
     		"/image/**",
-            "/style/**" 
+            "/style/**" ,
+            "/js/**"
 		);
     }
 	
