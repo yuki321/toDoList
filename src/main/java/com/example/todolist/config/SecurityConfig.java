@@ -32,7 +32,7 @@ public class SecurityConfig {
 				.permitAll()
 		)
 		.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/login").permitAll()  // ログインページは認証不要で使えるようにする
+				.requestMatchers("/api/users/create", "/login").permitAll()  // ユーザー登録画面・ログイン画面は認証不要で使えるようにする
 				.requestMatchers("/css/**").permitAll() // CSSファイルは認証不要で使えるようにする
 				.anyRequest().authenticated()
 		)

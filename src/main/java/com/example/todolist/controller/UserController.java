@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,8 +81,9 @@ public class UserController {
 	
 	// ユーザー作成画面へ遷移
 	@GetMapping("create")
-	public String userCreate(Model model) {
+	public String userCreate(@RequestParam("login")String login , Model model) {
 		model.addAttribute("user", new User());
+		model.addAttribute("login", login);
 		return "userCreate";
 	}
 	

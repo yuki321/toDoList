@@ -2,7 +2,7 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ユーザー作成画面</title>
+    <title>ユーザー登録画面</title>
 	<link th:href="@{/style/style.css}" rel="stylesheet">
 	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
 
@@ -10,10 +10,10 @@
 <body>
 	<main>
 		<div class="container">
-			<h1>ユーザー作成</h1>
+			<h1>ユーザー登録</h1>
 			<div id="header-content">
 				<form th:action="@{/logout}" method="post">
-				    <button class="link-edit" type="submit">ログアウト</button>
+				    <button th:if="${login} == 'true'" class="link-edit" type="submit">ログアウト</button>
 				</form>			
 			</div>
 			<div id="create">
@@ -57,7 +57,7 @@
 						</tbody>
 					</table>
 					<a class="link-list" th:href="@{/api/users/user}">戻る</a>
-					<input class="link-update" type="submit" value="作成"/>
+					<input class="link-update" type="submit" value="登録"/>
 				</form>		
 			</div>
 		</div>

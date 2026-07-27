@@ -30,8 +30,8 @@
         <input type="password" name="password" placeholder="パスワード" class="form-control" required />
         <button class="btn form-control btn-primary" name="Submit" value="Login" type="Submit">ログイン</button>
         <div id="reset-link" onclick="onClickPWResetDialog()">パスワードの再設定</div>
-		
-		
+		<br>
+		<a class="link-edit" id="userCreateBtn" th:href="@{/api/users/create(login='false')}">新規登録</a><br>
       </form>
     </div>
   </div>

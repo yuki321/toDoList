@@ -17,7 +17,7 @@
 				    <button class="link-edit" type="submit">ログアウト</button>
 				</form>			
 			</div>
-			<a class="link-edit" id="userCreateBtn" th:href="@{/api/users/create}">ユーザー作成</a><br>
+			<a class="link-edit" id="userCreateBtn" th:href="@{/api/users/create(login='true')}">ユーザー作成</a><br>
 			<a class="link-list" id="toDoList" th:href="@{/}" >タスク一覧</a>
 			<div id="content">
 				<table class="table">
@@ -28,7 +28,6 @@
 							<th>ユーザー名</th>
 							<th>メールアドレス</th>
 							<th>ロール</th>
-	<!--						<th>ブロック</th> -->
 							<th>作成日時</th>
 							<th>最終更新日時</th>
 						</tr>
@@ -39,7 +38,6 @@
 						<th><span th:text="${user?.userName}"></span></th>
 						<th><span th:text="${user?.email}"></span></th>
 						<th><span th:text="${user?.role}"></span></th>
-	<!--					<th><span th:text="${user.enabled}"></span></th> -->
 						<th><span th:text="${user?.createdAt}"></span></th>
 						<th><span th:text="${user?.updatedAt}"></span></th>			
 					</tbody>
