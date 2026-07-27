@@ -1,6 +1,7 @@
 package com.example.todolist.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
+import com.example.todolist.service.ToDoService;
 import com.example.todolist.service.UserService;
 
 @Controller
@@ -31,6 +33,9 @@ public class UserController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private ToDoService toDoService;
 		
 	/**
 	 * 全件取得
@@ -38,7 +43,14 @@ public class UserController {
 	 * @return String
 	 */
 	@GetMapping("user")
-	public String getAllUsers(Model model){
+	public String getAllUsers(@AuthenticationPrincipal UserDetails userDetails,Model model){
+		
+		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
+		String role = (String) userIfo.get("role");
+		
+		if(!"Admin".equals(role)) {
+			return "redirect:/";
+		}
 		
 		List<User> users = userService.getAllUsers();
 		model.addAttribute("user", users);			
@@ -81,7 +93,7 @@ public class UserController {
 	
 	// ユーザー作成画面へ遷移
 	@GetMapping("create")
-	public String userCreate(@RequestParam("login")String login , Model model) {
+	public String userCreate(@RequestParam(defaultValue = "false")String login , Model model) {
 		model.addAttribute("user", new User());
 		model.addAttribute("login", login);
 		return "userCreate";
