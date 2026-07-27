@@ -32,6 +32,7 @@ th button {
 /** 編集ボタン **/
 .link-edit {
 	display: inline-block;
+	margin-top: 10px;
 	padding: 8px 20px;
 	background-color: #3498db; /* 背景色 */
 	color: #ffffff; /* 文字色 */
@@ -88,6 +89,7 @@ th button {
 /** 更新ボタン **/
 .link-update {
 	display: inline-block;
+	margin-top: 10px;
 	padding: 4px 20px;
 	background-color: #3498db; /* 背景色 */
 	color: #ffffff; /* 文字色 */

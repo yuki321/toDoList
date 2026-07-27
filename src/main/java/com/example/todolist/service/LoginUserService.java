@@ -21,6 +21,11 @@ public class LoginUserService implements UserDetailsService  {
 		
 		User user = userRepository.findByUserName(username)
 				.orElseThrow(() -> new UsernameNotFoundException("ユーザーは存在しません"));
+		String AUTHORITY = "ROLE_USER";
+		
+		if(user.getRole().equals("Admin")) {
+			AUTHORITY = "ROLE_ADMIN";
+		}
 		
 		return new org.springframework.security.core.userdetails.User(
                 // userName
@@ -36,7 +41,7 @@ public class LoginUserService implements UserDetailsService  {
                 // accountNonLocked
                 true,
                 // authorities
-                AuthorityUtils.createAuthorityList("ROLE_USER")
+                AuthorityUtils.createAuthorityList(AUTHORITY)
         );
 		
 		
