@@ -171,6 +171,21 @@ dialog .link-list {
 	padding: 5px 20px;
 }
 
+#search-content {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.search-form {
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+#no-user {
+	margin-top: 50px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
 /** バリデーションエラー **/
 .error {
 	display: block;

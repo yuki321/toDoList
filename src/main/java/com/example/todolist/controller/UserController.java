@@ -53,7 +53,49 @@ public class UserController {
 		}
 		
 		List<User> users = userService.getAllUsers();
-		model.addAttribute("user", users);			
+		
+		model.addAttribute("users", users);
+		model.addAttribute("user", new User());
+		
+		return "user";
+	}
+	
+	
+	/**
+	 * ユーザー検索
+	 * @param String userName
+	 * @param String email
+	 * @param Strign role
+	 * @param Model model
+	 * @return
+	 */
+	@GetMapping("search")
+	public String searchUsers(@ModelAttribute("user") User user, Model model) {
+		String userName = user.getUserName();
+		String email = user.getEmail();
+		String role = user.getRole();
+		
+		if(userName == null || userName.isEmpty()) {
+			userName = "%";
+		}else {
+			userName = "%" + userName + "%";
+		}
+		
+		if(email == null || email.isEmpty()) {
+			email = "%";
+		}else {
+			email = "%" + email + "%";
+		}
+		
+		if(role == null || role.isEmpty()) {
+			role = "%";
+		}else {
+			role = "%" + role + "%";
+		}
+		
+		List<User> users = userService.searchUsers(userName, email, role);
+		model.addAttribute("users", users);
+		model.addAttribute("user", new User());
 		
 		return "user";
 	}

@@ -39,7 +39,7 @@ public class ToDoController {
 	public String getAllToDo(@AuthenticationPrincipal UserDetails userDetails, 
 			@ModelAttribute User user,
 			Model model){
-		;
+
 		// ログイン情報を基にタスク一覧を表示
 		List<ToDo> todos = toDoService.findAllToDo(userDetails);
 		

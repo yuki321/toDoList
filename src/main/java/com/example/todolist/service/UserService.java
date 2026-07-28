@@ -39,6 +39,33 @@ public class UserService {
 		return userRepository.findAll();
 	}
 	
+	
+	@Transactional(readOnly = true)
+	public List<User> searchUsers(String userName, String email, String role){
+    	
+    	List<User> userlist = new ArrayList<>();
+    	String sql = "SELECT * FROM users "
+    			+ "WHERE user_name LIKE ? AND email LIKE ? AND role LIKE ?";
+    	List<Map<String, Object>> resultList = jdbc.queryForList(sql, userName, email, role);
+    	
+    	
+    	for(Map<String, Object> map: resultList) {
+			User user = new User();
+			user.setId((Long)map.get("id"));
+			user.setUserName((String)map.get("user_name"));
+			user.setEmail((String)map.get("email"));
+			user.setRole((String)map.get("role"));
+			user.setCreatedAt((LocalDateTime)map.get("created_at"));
+			user.setUpdatedAt((LocalDateTime)map.get("updated_at"));
+			
+			userlist.add(user);
+		}
+    	
+    	return userlist;
+	}
+	
+	
+	
 	/**
 	 * IDで指定して取得
 	 * @param Long id

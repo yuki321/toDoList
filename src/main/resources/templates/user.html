@@ -8,7 +8,6 @@
 
 </head>
 <body>
-
 	<main>
 		<div class="container">
 			<h1>ユーザー一覧</h1>
@@ -19,29 +18,60 @@
 			</div>
 			<a class="link-edit" id="userCreateBtn" th:href="@{/api/users/create(login='true')}">ユーザー作成</a><br>
 			<a class="link-list" id="toDoList" th:href="@{/}" >タスク一覧</a>
+			
+			<!-- 検索機能 -->
+			<div id="search-content">
+		        <form th:action="@{/api/users/search}" method="get" th:object="${user}">
+		            <div class="search-form">
+						<span>ユーザー名：</span><br>
+						<input type="text" th:field="*{userName}" size="35"/><br>
+					</div>
+					<div class="search-form">
+			            <span>メールアドレス：</span><br>
+						<input type="text" th:field="*{email}" size="35"/><br>
+					</div>
+					<div class="search-form">
+			            <span>ロール：</span><br>
+						<select th:field="*{role}">
+			                <option value="">選択してください</option>
+			                <option value="General">General</option>
+			                <option value="Admin">Admin</option>
+			            </select><br>
+					</div>
+					<div class="search-form">
+			            <input class="link-update" type="submit" value="検索"/>
+					</div>
+		        </form>
+				<form th:action="@{/api/users/user}" method="get" th:object="${user}">
+					<input class="link-list" type="submit" value="リセット"/>
+				</form>            
+		    </div>
 			<div id="content">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>編集</th>
-							<th>ユーザー名</th>
-							<th>メールアドレス</th>
-							<th>ロール</th>
-							<th>作成日時</th>
-							<th>最終更新日時</th>
-						</tr>
-					</thead>
-					<tbody th:each="user: ${user}">
-						<th><span th:text="${user?.id}"></span></th>	
-						<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
-						<th><span th:text="${user?.userName}"></span></th>
-						<th><span th:text="${user?.email}"></span></th>
-						<th><span th:text="${user?.role}"></span></th>
-						<th><span th:text="${user?.createdAt}"></span></th>
-						<th><span th:text="${user?.updatedAt}"></span></th>			
-					</tbody>
-				</table>
+				<div th:unless="${#lists.isEmpty(users)}">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>編集</th>
+								<th>ユーザー名</th>
+								<th>メールアドレス</th>
+								<th>ロール</th>
+								<th>作成日時</th>
+								<th>最終更新日時</th>
+							</tr>
+						</thead>
+						<tbody th:each="user: ${users}">
+							<th><span th:text="${user?.id}"></span></th>	
+							<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
+							<th><span th:text="${user?.userName}"></span></th>
+							<th><span th:text="${user?.email}"></span></th>
+							<th><span th:text="${user?.role}"></span></th>
+							<th><span th:text="${user?.createdAt}"></span></th>
+							<th><span th:text="${user?.updatedAt}"></span></th>			
+						</tbody>
+					</table>
+				</div>
+				<p id="no-user" th:if="${#lists.isEmpty(users)}">該当条件のユーザーは存在しません</p>
 			</div>
 			
 		</div>
