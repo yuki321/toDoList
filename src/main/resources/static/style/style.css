@@ -179,6 +179,20 @@ dialog .link-list {
 	font-weight: bold;
 	margin-top: 10px;
 }
+select {
+	height: 30px;
+}
+.search-form select {
+	margin-left: 60px;
+}
+#searchUserName {
+	margin-left: 30px;
+}
+#searchBtn {
+	float: left;
+	margin-right: 10px;
+}
+
 
 #no-user {
 	margin-top: 50px;

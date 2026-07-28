@@ -23,15 +23,15 @@
 			<div id="search-content">
 		        <form th:action="@{/api/users/search}" method="get" th:object="${user}">
 		            <div class="search-form">
-						<span>ユーザー名：</span><br>
-						<input type="text" th:field="*{userName}" size="35"/><br>
+						<span>ユーザー名：</span>
+						<input id="searchUserName" type="text" th:field="*{userName}" size="35"/>
 					</div>
 					<div class="search-form">
-			            <span>メールアドレス：</span><br>
-						<input type="text" th:field="*{email}" size="35"/><br>
+			            <span>メールアドレス：</span>
+						<input type="text" th:field="*{email}" size="35"/>
 					</div>
 					<div class="search-form">
-			            <span>ロール：</span><br>
+			            <span>ロール：</span>
 						<select th:field="*{role}">
 			                <option value="">選択してください</option>
 			                <option value="General">General</option>
@@ -39,7 +39,7 @@
 			            </select><br>
 					</div>
 					<div class="search-form">
-			            <input class="link-update" type="submit" value="検索"/>
+			            <input id="searchBtn" class="link-edit" type="submit" value="検索"/>
 					</div>
 		        </form>
 				<form th:action="@{/api/users/user}" method="get" th:object="${user}">
