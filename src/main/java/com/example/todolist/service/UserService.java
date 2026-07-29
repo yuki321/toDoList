@@ -77,6 +77,16 @@ public class UserService {
 	}
 	
 	/**
+	 * ユーザー名で指定して取得
+	 * @param String email
+	 * @return List<User> user
+	 */
+	public List<User> findByEmail(String email){
+		return userRepository.findByEmail(email);
+	}
+	
+	
+	/**
 	 * 	ユーザー作成
 	 * @param User user
 	 * @return User

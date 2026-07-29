@@ -20,6 +20,9 @@ import jakarta.validation.groups.Default;
 
 @Entity
 public class PasswordChange {
+	
+	// トークンの有効期限（時間単位）
+	int EXPIRATION_HOUR_UNIT = 1; 
 
 	/** パスワード変更時のバリデーショングループ */
 	public interface PasswordUpdate extends Default {}
