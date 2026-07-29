@@ -33,6 +33,18 @@ public class PasswordResetTokenRepository {
 		return count;
 	}
 	
+	/**
+	 * すべてのパスワードリセットトークンを取得する
+	 * @return List<Map<String, Object>> list
+	 * @throws DataAccessException
+	 */
+	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
+		String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
+		List<Map<String, Object>> list = jdbc.queryForList(sql);
+		
+		return list;
+	}
+	
 	
 	/**
 	 * パスワードリセットトークンのレコードを挿入する

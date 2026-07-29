@@ -36,8 +36,11 @@ public class SecurityConfig {
             .accessDeniedPage("/")
         )
 		.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/api/users/create", "/login", 
-						"/reset-password/**").permitAll()  // ユーザー登録画面・ログイン画面は認証不要で使えるようにする
+				.requestMatchers("/api/users/create", 
+						"/login", 
+						"/reset-password/**",
+						"/validate_token" // パスワードリセット用のトークンを検証
+						).permitAll()  // ユーザー登録画面・ログイン画面は認証不要で使えるようにする
 				.requestMatchers("/css/**").permitAll() // CSSファイルは認証不要で使えるようにする
 				.requestMatchers("/api/users/**").hasAnyRole("ADMIN") // ユーザー登録は管理者のみアクセス可能
 				.anyRequest().authenticated()

@@ -112,6 +112,12 @@ public class MailController {
 		return "login";
 	}
 	
+	@GetMapping("/reset-password-form")
+	public String resetPassword(Model model) {
+//		model.addAttribute("passwordChange", new PasswordChange());
+		return "reset-password-form";
+	}
+	
 	/**
 	 * パスワードリセットメールを送信する
 	 * @param token
@@ -120,7 +126,7 @@ public class MailController {
 	private void sendPasswordResetEmail(String email, String token) {
 		
 		String subject = "[todolist]パスワードリセットのご案内";
-		String resetLink = "http://localhost:8080/reset-password?token=" + token;
+		String resetLink = "http://localhost:8080/validate_token?token=" + token;
 		String text = "パスワードリセットのリクエストを受け付けました。下記リンクからリセットをしてください。\n"
 				+ resetLink
 				+ "\nメールに心当たりがない場合、このメールを削除してください。\n"
