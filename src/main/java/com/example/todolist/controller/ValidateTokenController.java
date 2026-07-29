@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.todolist.entity.PasswordReset;
 import com.example.todolist.repository.PasswordResetTokenRepository;
 import org.springframework.ui.Model;
 
@@ -38,6 +39,8 @@ public class ValidateTokenController {
 			
 			return "redirect:/login";  
 		}
+		
+		model.addAttribute("resetPassword", new PasswordReset());
 			
 		// 検証が問題ない場合、パスワード再設定フォームへ遷移
 		return "resetPassword";

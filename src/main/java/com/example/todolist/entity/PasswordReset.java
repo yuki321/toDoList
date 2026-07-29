@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
 
 @Entity
-public class PasswordChange {
+public class PasswordReset {
 	
 	// トークンの有効期限（時間単位）
 	int EXPIRATION_HOUR_UNIT = 1; 
@@ -21,9 +21,6 @@ public class PasswordChange {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	 
-	@NotBlank(message = "現在のパスワードを入力してください")
-    private String currentPassword;
-
     @NotBlank(message = "新しいパスワードを入力してください")
 	@Size(min = 4, max = 20, groups = PasswordUpdate.class, 
 	message = "パスワードは4～20文字で入力してください")
@@ -34,18 +31,8 @@ public class PasswordChange {
 	message = "パスワードは4～20文字で入力してください")
     private String confirmPassword;
     
-    private String passwordChange;
-
     
     // Setter / Getterのメソッド
-	public String getCurrentPassword() {
-		return currentPassword;
-	}
-
-	public void setCurrentPassword(String currentPassword) {
-		this.currentPassword = currentPassword;
-	}
-
 	public String getNewPassword() {
 		return newPassword;
 	}
@@ -62,34 +49,15 @@ public class PasswordChange {
 		this.confirmPassword = confirmPassword;
 	}
 	
-	public String getPasswordChange() {
-		return passwordChange;
-	}
-
-	public void setPasswordChange(String passwordChange) {
-		this.passwordChange = passwordChange;
-	}
-
-
 	
 	// コンストラクタ
-	public PasswordChange() {};
+	public PasswordReset() {};
 	
-	public PasswordChange(String currentPassword, String newPassword, 
-			String confirmPassword, String passwordChange) {
+	public PasswordReset(String currentPassword, String newPassword, String confirmPassword) {
 		super();
-		this.currentPassword = currentPassword;
 		this.newPassword = newPassword;
 		this.confirmPassword = confirmPassword;
-		this.passwordChange = passwordChange;
 	}
-
-
-	
-
-
-
-
 
 
 

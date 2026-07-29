@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.PasswordChange;
+import com.example.todolist.entity.PasswordReset;
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.PasswordResetTokenRepository;
 import com.example.todolist.repository.UserRepository;
+import com.example.todolist.service.PasswordResetService;
 import com.example.todolist.service.UserService;
 
 import org.springframework.ui.Model;
@@ -38,6 +40,9 @@ public class MailController {
 	
 	@Autowired
 	private PasswordResetTokenRepository passwordResetTokenRepository;
+	
+	@Autowired
+	private PasswordResetService passwordResetService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -112,10 +117,27 @@ public class MailController {
 		return "login";
 	}
 	
-	@GetMapping("/reset-password-form")
-	public String resetPassword(Model model) {
+	@PostMapping("/reset-password-form")
+	public String resetPassword(@ModelAttribute("resetPassword") PasswordReset passwordReset,
+			@RequestParam String rawToken,
+			Model model) {
+		
+		/**
+		 * 処理の流れ
+		 * 1.password-reset-tokensテーブルからuser_idを取得
+		 * 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
+		 * 3.Userテーブルのパスワードを更新
+		 * 4.password-reset-tokensテーブルの該当レコードを削除する
+		 */
+		boolean result = passwordResetService.passwordResetTransanction(rawToken, passwordReset.getNewPassword());
+		if(!result) {
+			return ""; // FIXME どこの画面に遷移する？ 
+		}
+
+		
+		
 //		model.addAttribute("passwordChange", new PasswordChange());
-		return "reset-password-form";
+		return "login";  // FIXME 再設定完了画面に遷移？？
 	}
 	
 	/**

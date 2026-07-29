@@ -7,14 +7,83 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.todolist.entity.PasswordReset;
+import com.example.todolist.entity.PasswordResetToken;
+import com.example.todolist.entity.ToDo;
 
 
 @Repository
-public class PasswordResetTokenRepository {
+public class PasswordResetRepository {
 	
 	@Autowired
 	JdbcTemplate jdbc;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	/**
+	 * 1.password-reset-tokensテーブルからuser_idを取得
+	 *  ServiceクラスでpasswordResetTokenRepository.findAllTokenHash()を利用して
+	 *  user_idを取得
+	 */
+
+	
+	
+	/**
+	 * 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
+	 * @param Long userId
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	@Transactional
+	public int updateResetTokenUsedAt(Long userId) throws DataAccessException {
+		
+		String sql = "UPDATE password_reset_tokens "
+				+ "SET user_at = ? WHERE user_id=?";
+		int num = jdbc.update(sql, LocalDateTime.now(), userId);
+		
+		return num;
+	}
+	
+	
+	/**
+	 * 3.Userテーブルのパスワードを更新
+	 * @param Long userId
+	 * @param String newPassword
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	@Transactional
+	public int resetPassword(Long userId, String newPassword) throws DataAccessException {
+		String sql = "UPDATE users "
+				+ "SET password = ? WHERE user_id=?";
+		
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		int num = jdbc.update(sql, encodedPassword, userId);
+		
+		return num;
+	}
+	
+	
+	/**
+	 * 4.password-reset-tokensテーブルの該当レコードを削除する
+	 * @param Long userId
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	@Transactional
+	public int deleteRecord(Long userId) throws DataAccessException {
+		String sql = "UPDATE password_reset_tokens WHERE user_id=?";
+		int num = jdbc.update(sql, userId);
+		
+		return num;
+	}
+	
+	
 	
 	/**
 	 * ユーザーIDに紐づくパスワードリセットトークンの件数を取得する
