@@ -21,6 +21,18 @@ public class PasswordResetTokenRepository {
 	@Autowired
 	JdbcTemplate jdbc;
 	
+	/**
+	 * ユーザーIDに紐づくパスワードリセットトークンの件数を取得する
+	 * @param Long userId
+	 * @return int count
+	 * @throws 
+	 */
+	public int selectCountByUserId(Long userId) throws DataAccessException {
+		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE user_id = ?";
+		int count = jdbc.queryForObject(sql, Integer.class, userId);
+		return count;
+	}
+	
 	
 	/**
 	 * パスワードリセットトークンのレコードを挿入する
@@ -49,101 +61,22 @@ public class PasswordResetTokenRepository {
 		return num;
 	}
 	
-	
-	
-	
-	public void delete(Long id) throws DataAccessException {
+	/**
+	 * ユーザーIDに紐づくパスワードリセットトークンのレコードを削除する
+	 * @param Long userId
+	 * @return int num 
+	 * @throws 
+	 */	
+	public int deleteResetToken(Long userId) throws DataAccessException {
 		
-// TODO 
+		String sql = "DELETE FROM password_reset_tokens WHERE user_id = ?";
+		int num = jdbc.update(sql, userId);
 		
-//		return num;
+		return num;
 	}
 	
 	
-	
-	
-	
-//	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
-//		
-//		List<ToDo> todolist = new ArrayList<>();
-//		String userName = userDetails.getUsername();
-//		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id WHERE u.user_name=?";
-//		
-//		// ToDoテーブルのデータを全件取得
-//		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
-//		
-//		for(Map<String, Object> map: getList) {
-//			ToDo todo = new ToDo();
-//			todo.setId((Long)map.get("id"));
-//			todo.setUserId((Long)map.get("user_id"));
-//			todo.setContent((String)map.get("content"));
-//			todo.setMemo((String)map.get("memo"));
-//			todo.setStatus((Boolean)map.get("status"));
-//				
-//			todolist.add(todo);
-//		}
-//		
-//		return todolist;
-//	};
-//	
-//
-//	/**
-//	 * ログイン中のユーザー情報の取得
-//	 * @param userDetails userDetails
-//	 * @return Map<String, Object> userInfo
-//	 */
-//	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
-//	
-//		String userName = userDetails.getUsername();
-//		String sql = "SELECT * FROM users WHERE user_name=?";
-//		Map<String, Object> userInfo = jdbc.queryForMap(sql, userName);
-//		
-//		return userInfo;
-//	}
-//	
-//	
-//	/**
-//	 * ToDo作成
-//	 * @param Todo todo
-//	 * @return int num
-//	 * @throws DataAccessException
-//	 */
-//	public int insertRecord(ToDo todo) throws DataAccessException {
-//		
-//		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?)",
-//				todo.getId(),
-//				todo.getUserId(),
-//				todo.getContent(),
-//				todo.getMemo(),
-//				todo.getStatus());
-//		
-//		return num;
-//	}
-//
-//	
-//	/**
-//	 * タスク編集
-//	 * @param ToDo todo
-//	 * @return int num
-//	 * @throws DataAccessException
-//	 */
-//	public int updateRecord(ToDo todo) throws DataAccessException {
-//		
-//		String sql = "UPDATE todo SET user_id = ?, content = ?, "
-//				+ "memo = ?, status = ? WHERE id=?";
-//		int num = jdbc.update(sql,
-//				todo.getUserId(),
-//				todo.getContent(),
-//				todo.getMemo(),
-//				todo.getStatus(),
-//				todo.getId());
-//		
-//		return num;
-//	}
-//	
-	
 
-	
 }
 
 

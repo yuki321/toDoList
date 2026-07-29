@@ -75,9 +75,17 @@ public class MailController {
 
 		
 		// 過去に作成した、未使用トークンが存在する場合は削除する
-		// TODO: トークンをDBから削除する処理を追加
+		int count = passwordResetTokenRepository.selectCountByUserId(userId);
 		
-		
+		if(count > 0) {
+			// 過去に作成した、未使用トークンが存在する場合は削除する
+			int num = passwordResetTokenRepository.deleteResetToken(userId);
+			if(num < 0) {
+				// トークンの削除に失敗した場合の処理
+				model.addAttribute("errorMessage", "トークンの削除に失敗しました。");
+				return "login";
+			}
+		}
 		
 		
 		// ランダムなトークンを生成し、メールに設定する
