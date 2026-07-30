@@ -180,11 +180,15 @@ public class UserService {
 		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
 		String userName = (String)getMap.get("user_name");
 		String email =  (String)getMap.get("email");
+		String role =  (String)getMap.get("role");
+		LocalDateTime updatedAt =  (LocalDateTime)getMap.get("updated_at");
 		
 		String encodedPassword = passwordEncoder.encode(newPassword);
 		user.setUserName(userName);
 		user.setEmail(email);
 		user.setPassword(encodedPassword);
+		user.setRole(role);
+		user.setUpdatedAt(updatedAt);
 		
 		return userRepository.save(user);
 	}

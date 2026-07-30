@@ -55,7 +55,7 @@ public class User {
 
 	@NotEmpty(groups = Create.class, message = "ロールを選択してください")
 	@Column(name = "role", nullable = false, length = 10)
-	private String role = "General";
+	private String role;
 
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
