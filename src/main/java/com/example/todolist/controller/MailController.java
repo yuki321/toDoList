@@ -117,10 +117,9 @@ public class MailController {
 		return "login";
 	}
 	
-	@PostMapping("/reset-password-form")
+	@PostMapping
 	public String resetPassword(@ModelAttribute("resetPassword") PasswordReset passwordReset,
-			@RequestParam String rawToken,
-			Model model) {
+			@RequestParam("token") String rawToken, Model model) {
 		
 		/**
 		 * 処理の流れ
@@ -129,15 +128,15 @@ public class MailController {
 		 * 3.Userテーブルのパスワードを更新
 		 * 4.password-reset-tokensテーブルの該当レコードを削除する
 		 */
-		boolean result = passwordResetService.passwordResetTransanction(rawToken, passwordReset.getNewPassword());
-		if(!result) {
-			return ""; // FIXME どこの画面に遷移する？ 
-		}
+		boolean result = passwordResetService.passwordResetTransanction(rawToken, passwordReset.getNewPassword(), model);
 
+		if(!result) {
+
+			model.addAttribute("error-reset-pw", "パスワードの再設定に失敗しました。");
+			return "error";  
+		}
 		
-		
-//		model.addAttribute("passwordChange", new PasswordChange());
-		return "login";  // FIXME 再設定完了画面に遷移？？
+		return "redirect: /reset-password/complete";  
 	}
 	
 	/**
@@ -162,6 +161,21 @@ public class MailController {
 		message.setText(text);
 		mailSender.send(message);
 		
+	}
+	
+	@GetMapping("complete")
+	public String resetComplete() {
+		return "complete";
+	}
+	
+	
+	/**
+	 * エラー画面への画面遷移
+	 * @return
+	 */
+	@GetMapping("/error")
+	public String moveToError() {
+		return "error";
 	}
 	
 

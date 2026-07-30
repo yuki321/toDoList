@@ -34,9 +34,9 @@ public class PasswordResetTokenRepository {
 	 * @throws DataAccessException
 	 */
 	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
-		String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
+		String sql = "SELECT * FROM password_reset_tokens";
 		List<Map<String, Object>> list = jdbc.queryForList(sql);
-		
+	
 		return list;
 	}
 	

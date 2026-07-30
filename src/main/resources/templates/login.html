@@ -42,7 +42,7 @@
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				
 				<input type="email" id="email-form" name="passwordChange"
-					th:field="*{passwordChange}" required/><br>
+					th:field="*{passwordChange}" size="35" required/><br>
 		  		<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closePWResetDialog()"/>
 	  			<input class="link-update" id="mail-send" type="submit" value="メール送信"/>
 	  		</form>			

@@ -44,7 +44,15 @@ public class PasswordResetRepository {
 		
 		String sql = "UPDATE password_reset_tokens "
 				+ "SET user_at = ? WHERE user_id=?";
-		int num = jdbc.update(sql, LocalDateTime.now(), userId);
+		int num = 0;
+		try {
+			num = jdbc.update(sql, LocalDateTime.now(), userId);
+			
+		}catch(DataAccessException e) {
+			System.out.println("Error Message: " + e);
+		}
+		
+//System.out.println("通過 : updateResetTokenUsedAt　SQL"); FIXME
 		
 		return num;
 	}
@@ -60,8 +68,8 @@ public class PasswordResetRepository {
 	@Transactional
 	public int resetPassword(Long userId, String newPassword) throws DataAccessException {
 		String sql = "UPDATE users "
-				+ "SET password = ? WHERE user_id=?";
-		
+				+ "SET password = ? WHERE id=?";
+
 		String encodedPassword = passwordEncoder.encode(newPassword);
 		int num = jdbc.update(sql, encodedPassword, userId);
 		
@@ -77,9 +85,9 @@ public class PasswordResetRepository {
 	 */
 	@Transactional
 	public int deleteRecord(Long userId) throws DataAccessException {
-		String sql = "UPDATE password_reset_tokens WHERE user_id=?";
+		String sql = "DELETE FROM password_reset_tokens WHERE user_id=?";
 		int num = jdbc.update(sql, userId);
-		
+
 		return num;
 	}
 	

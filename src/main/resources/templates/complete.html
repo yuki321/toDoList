@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+	<link th:href="@{/style/login.css}" rel="stylesheet">
+	<script th:src="@{/js/index.js}" charset="utf-8"></script>
+	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+
+</head>
+<body>
+	<main>
+		<div class="container">
+			<p>パスワードの再設定が完了しました。ログイン画面から変更をご確認ください。</p>
+			<a class="link-list" th:href="@{/login}">戻る</a>
+		</div>
+	</main>
+</body>
+</html>
