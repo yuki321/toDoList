@@ -136,7 +136,7 @@ public class MailController {
 			return "error";  
 		}
 		
-		return "redirect: /reset-password/complete";  
+		return "redirect:/reset-password/complete";  
 	}
 	
 	/**
@@ -163,7 +163,7 @@ public class MailController {
 		
 	}
 	
-	@GetMapping("complete")
+	@GetMapping("/complete")
 	public String resetComplete() {
 		return "complete";
 	}

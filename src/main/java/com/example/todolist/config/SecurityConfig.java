@@ -40,7 +40,7 @@ public class SecurityConfig {
 						"/login", 
 						"/reset-password/**",
 						"/validate_token", // パスワードリセット用のトークンを検証
-						"/reset-password/**", // パスワード再設定画面
+						"/reset-password/complete", // パスワード再設定画面
 						"/error"
 						).permitAll()  // ユーザー登録画面・ログイン画面は認証不要で使えるようにする
 				.requestMatchers("/css/**").permitAll() // CSSファイルは認証不要で使えるようにする

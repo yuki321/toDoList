@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.example.todolist.repository.PasswordResetRepository;
@@ -27,7 +26,6 @@ public class PasswordResetService {
 	
 	
 	public boolean passwordResetTransanction(String rawToken, String newPassword, Model model) {
-System.out.println("Start!! : passwordResetTransanction()");
 
 		// 1.password-reset-tokensテーブルからuser_idを取得
 		// 全有効トーケンを取得して、ハッシュ化されていない平文トークンと比較
@@ -51,22 +49,16 @@ System.out.println("Start!! : passwordResetTransanction()");
 		if(!matchResult) {
 			return false;
 		}
-//System.out.println("通過１ : findAllTokenHash()");	FIXME	
 		
 		// 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
 		Long userId_L = Long.valueOf(userId);
-		
-//System.out.println("userId_L : " + userId_L); FIXME
 
 		try {
 			int num = passwordResetRepository.updateResetTokenUsedAt(userId_L);
 
-//System.out.println("updateResetTokenUsedAt num : " + num); FIXME
-
 			if(num < 0) {
 				return false;
 			}
-//System.out.println("通過２ : updateResetTokenUsedAt");		FIXME
 
 		}catch(DataAccessException e) {
 			/**
@@ -85,7 +77,7 @@ System.out.println("Start!! : passwordResetTransanction()");
 			if(num < 0) {
 				return false;
 			}
-System.out.println("通過３ : resetPassword");				
+
 		}catch(DataAccessException e) {
 			/**
 			 * 例外処理
@@ -103,7 +95,7 @@ System.out.println("通過３ : resetPassword");
 			if(num < 0) {
 				return false;
 			}
-System.out.println("通過４ : deleteRecord");			
+
 		}catch(DataAccessException e) {
 			/**
 			 * 例外処理
@@ -114,7 +106,6 @@ System.out.println("通過４ : deleteRecord");
 			return false;
 		}
 
-System.out.println("通過！：Queryすべて完了！");
 		return true;
 	}
 	
