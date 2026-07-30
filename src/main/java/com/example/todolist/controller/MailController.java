@@ -1,10 +1,13 @@
 package com.example.todolist.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +27,7 @@ import com.example.todolist.service.PasswordResetService;
 import com.example.todolist.service.UserService;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 @Controller
 @RequestMapping("/reset-password")
@@ -46,6 +50,9 @@ public class MailController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JdbcTemplate jdbc;
 	
 
 	// application.propertiesに設定した送信元メールアドレスを取得
@@ -119,7 +126,24 @@ public class MailController {
 	
 	@PostMapping
 	public String resetPassword(@ModelAttribute("resetPassword") PasswordReset passwordReset,
-			@RequestParam("token") String rawToken, Model model) {
+			@RequestParam("token") String rawToken, 
+			BindingResult bindingResult, 
+			Model model
+			) {
+		
+		if(bindingResult.hasErrors()) {
+			return "resetPassword";
+		}
+		
+		List<String> errors = checkPassword(passwordReset, rawToken);
+		
+		if(!errors.isEmpty()) {
+			for(String error: errors) {
+				bindingResult.reject("error.resetPassword", error);
+			}
+			return "resetPassword";
+		}
+		
 		
 		/**
 		 * 処理の流れ
@@ -138,6 +162,75 @@ public class MailController {
 		
 		return "redirect:/reset-password/complete";  
 	}
+	
+	private List<String> checkPassword(PasswordReset passwordReset, String rawToken){
+		
+		List<String> errors = new ArrayList<>();
+		
+		List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
+
+		Long userId_L = getUserId(resultList, rawToken);
+		
+		// 新パスワード
+		String newPassword = passwordReset.getNewPassword();
+		// 新パスワード（確認用）
+		String confirmedPassword = passwordReset.getConfirmPassword();
+		// DBから取得した現在のパスワード
+		String DBPassword = getDbPassword(userId_L);
+		
+		// 新パスワードと新パスワード（確認用）が一致しない
+		if(!newPassword.equals(confirmedPassword)) {
+			errors.add("入力したパスワードが一致しません");
+		}
+		// DBの現在のパスワードと入力したパスワードが一致する
+		if(passwordEncoder.matches(newPassword, DBPassword)) {
+			errors.add("登録されているパスワードと入力したパスワードが同じです");
+		}
+		
+		return errors;
+	}
+	
+	/**
+	 * パスワードをusersテーブルから取得
+	 * @param Long userId
+	 * @return String password
+	 */
+	private String getDbPassword(Long userId) {
+		
+		String sql = "SELECT password FROM users WHERE id=?";
+		Map<String, Object> getMap = jdbc.queryForMap(sql, userId);
+		String password = (String)getMap.get("password");
+		
+		return password;
+	}
+	
+	/**
+	 * ユーザーIDの取得
+	 * @param List<Map<String, Object>> resultList
+	 * @param String rawToken
+	 * @return Long userId
+	 */
+	private Long getUserId(List<Map<String, Object>> resultList, String rawToken) {
+		
+		boolean matchResult = false;
+		String userId = null;
+		for(Map<String, Object> map: resultList) {
+	
+			String token_hash = (String)map.get("token_hash");
+			matchResult = passwordEncoder.matches(rawToken, token_hash);
+	
+			if(matchResult) {
+				// マッチした組み合わせを次の判定で利用
+				userId = map.get("user_id").toString();
+				break;
+			}
+			
+		}
+		
+		return Long.valueOf(userId);
+	}
+	
+	
 	
 	/**
 	 * パスワードリセットメールを送信する
