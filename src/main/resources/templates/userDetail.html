@@ -54,11 +54,11 @@
 							</tr>
 							<tr>
 								<th>作成日時</th>
-								<th><span th:text="*{createdAt}"></span></th>
+								<th><span th:text="${#temporals.format(user?.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>
 							</tr>
 							<tr>
 								<th>最終更新日時</th>
-								<th><span th:text="*{updatedAt}"></span></th>
+								<th><span th:text="${#temporals.format(user?.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>
 							</tr>		
 						</tbody>
 					</table>
