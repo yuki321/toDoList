@@ -1,6 +1,7 @@
 
 body {
   font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  margin-bottom: 150px;
 }
 h1 {
 	margin-bottom: -50px;
@@ -9,14 +10,18 @@ h1 {
 	padding: 10px;
 	float: right;
 }
+#toDoList {
+	margin-bottom: 30px;
+}
+
 input {
 	line-height: 2;
 }
 
 table {
 	width: 100%;
-/**	border: 1px solid; **/
 	border-collapse: collapse;
+	margin-top: 50px;
 }
 th, td {
   padding: 0.5em;
