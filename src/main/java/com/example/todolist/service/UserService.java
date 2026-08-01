@@ -265,7 +265,7 @@ public class UserService {
 					User user = new User();
 					user.setUserName(values[0].trim());
 					user.setEmail(values[1].trim());
-					user.setPassword(values[2]);
+					user.setPassword(values[2].trim());
 					if(values[3].trim().equals("1")) {
 						user.setRole("Admin");
 					} else if(values[3].trim().equals("2")) {
