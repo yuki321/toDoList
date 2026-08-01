@@ -265,7 +265,7 @@ public class UserService {
 					User user = new User();
 					user.setUserName(values[0].trim());
 					user.setEmail(values[1].trim());
-					user.setPassword(passwordEncoder.encode(values[2].trim()));
+					user.setPassword(values[2]);
 					if(values[3].trim().equals("1")) {
 						user.setRole("Admin");
 					} else if(values[3].trim().equals("2")) {
@@ -273,7 +273,6 @@ public class UserService {
 					} else {
 						throw new IllegalArgumentException("不正なロールが指定されています: " + values[3].trim());
 					}
-//					user.setRole(values[3].trim());
 					user.setEnabled(true);
 					user.setAccountNonExpired(true);
 					user.setCredentialsNonExpired(true);
