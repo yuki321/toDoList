@@ -1,5 +1,8 @@
 package com.example.todolist.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
@@ -245,5 +249,50 @@ public class UserService {
 	}
 	
 	
+	@Transactional
+	public void uploadCsvFile(MultipartFile file) throws Exception {
+		// CSVファイルを読み込む
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+			String line;
+			//ヘッダーレコードを飛ばすために１行だけ読み取る
+            line = br.readLine();
+			
+			while ((line = br.readLine()) != null) {
+				
+				
+				String[] values = line.split(",");
+				if (values.length >= 4) {
+					User user = new User();
+					user.setUserName(values[0].trim());
+					user.setEmail(values[1].trim());
+					user.setPassword(passwordEncoder.encode(values[2].trim()));
+					if(values[3].trim().equals("1")) {
+						user.setRole("Admin");
+					} else if(values[3].trim().equals("2")) {
+						user.setRole("General");
+					} else {
+						throw new IllegalArgumentException("不正なロールが指定されています: " + values[3].trim());
+					}
+//					user.setRole(values[3].trim());
+					user.setEnabled(true);
+					user.setAccountNonExpired(true);
+					user.setCredentialsNonExpired(true);
+					user.setAccountNonLocked(true);
+					user.setCreatedAt(LocalDateTime.now());
+					user.setUpdatedAt(LocalDateTime.now());
+					
+					// ユーザーを保存
+					createUser(user);
+				}
+			}
+		} catch (IOException e) {
+			throw new Exception("CSVファイルの読み込みに失敗しました", e);
+		}
+
+		
+	}
+	
 	
 }
+
+

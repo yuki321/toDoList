@@ -60,7 +60,6 @@
 							</tr>
 						</thead>
 						<tbody th:each="user: ${users}">
-						<!--	<th><span th:text="${user?.id}"></span></th>	-->
 							<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
 							<th><span th:text="${user?.userName}"></span></th>
 							<th><span th:text="${user?.email}"></span></th>
@@ -70,6 +69,10 @@
 							
 						</tbody>
 					</table>
+					<form th:action="@{/api/users/upload}" method="post" enctype="multipart/form-data">
+						<input class="link-upload" type="file" name="file"><br>
+						<button id="upload-btn" type="submit">アップロード</button>
+					</form>
 				</div>
 				<p id="no-user" th:if="${#lists.isEmpty(users)}">該当条件のユーザーは存在しません</p>
 			</div>

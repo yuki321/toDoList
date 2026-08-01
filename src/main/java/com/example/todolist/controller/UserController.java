@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -272,6 +273,20 @@ public class UserController {
 			user.setUpdatedAt(existing.getUpdatedAt());
 		});
 	}
+	
+	
+	
+	@PostMapping("/upload")
+	public String uploadCsvFile(@RequestParam("file") MultipartFile file, Model model) {
+	    try {
+	        userService.uploadCsvFile(file);
+	        return "redirect:/api/users/user";
+	    } catch (Exception e) {
+	        model.addAttribute("errorMessage", "CSVファイルのインポート中にエラーが発生しました: " + e.getMessage());
+	        return "user";
+	    }
+	}
+	
 	
 	
 	
