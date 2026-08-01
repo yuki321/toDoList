@@ -51,7 +51,6 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>ID</th>
 								<th>編集</th>
 								<th>ユーザー名</th>
 								<th>メールアドレス</th>
@@ -61,7 +60,7 @@
 							</tr>
 						</thead>
 						<tbody th:each="user: ${users}">
-							<th><span th:text="${user?.id}"></span></th>	
+						<!--	<th><span th:text="${user?.id}"></span></th>	-->
 							<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
 							<th><span th:text="${user?.userName}"></span></th>
 							<th><span th:text="${user?.email}"></span></th>
