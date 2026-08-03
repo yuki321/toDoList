@@ -1,5 +1,6 @@
 package com.example.todolist.entity;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.springframework.data.relational.core.mapping.Table;
@@ -42,17 +43,26 @@ public class ToDo {
 	@Column(name = "status", nullable = false)
 	private Boolean status = true;
 	
+	@Column(name = "deadline", nullable = true)
+	private LocalDateTime deadline;
+	
+	@Column(name = "priority", nullable = true)
+	private String priority;
+	
     
     // コンストラクタ
 	public ToDo() {};
 	
-	public ToDo(Long id, Long userId, String content, String memo, Boolean status) {
+	public ToDo(Long id, Long userId, String content, String memo, 
+			Boolean status, LocalDateTime deadline, String priority) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.content = content;
 		this.memo = memo;
 		this.status = status;
+		this.deadline = deadline;
+		this.priority = priority;
 	}
 
 
@@ -116,6 +126,24 @@ public class ToDo {
 		this.status = status;
 	}
 
+
+	public LocalDateTime getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(LocalDateTime deadline) {
+		this.deadline = deadline;
+	}
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+	
+	
 
 	@Override
 	public int hashCode() {

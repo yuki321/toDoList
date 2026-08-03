@@ -193,6 +193,40 @@ dialog p {
 #input-create-content, #input-edit-content {
 	width: 250px;
 }
+#input-create-content, .deadline-container,
+.priority-container, #input-edit-content {
+	margin-top: 20px;
+}
+.priority-container {
+	margin-bottom: 20px;
+}
+.priority {
+	display: inline-block;
+	padding: 4px 14px;
+	color: #ffffff; /* 文字色 */
+	text-decoration: none; /* 下線を消す */
+	font-weight: bold;
+	font-size: 12px;
+	border-radius: 4px; /* 角丸 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
+	transition: all 0.3s ease; /* アニメーションの設定 */
+	width: max-content;
+	border: none;
+		
+}
+#priority-high {
+	background-color: darkred;
+}
+#priority-medium {
+	background-color: #ffd400;
+}
+#priority-low {
+	background-color: green;
+}
+#priority-none {
+	background-color: dimgray;
+}
+
 
 dialog .link-list {
 	padding: 5px 20px;

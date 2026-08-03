@@ -39,36 +39,58 @@ function closeToDoCreateDialog(){
 // タスク編集ダイアログ
 function onClickEditToDoBtn(element){
 
-	// id
 	const todoId = element.dataset.id;
-	document.querySelector("#editId").value = todoId;
-
-	// content
 	const todoContent = element.dataset.content;
-	
-	// memo
 	const todoMemo = element.dataset.memo;
-	
+	const todoDeadline = element.dataset.deadline;
+	const todoPriority = element.dataset.priority;
+
+	document.querySelector("#editId").value = todoId;
 	if(todoContent == undefined){
 		document.querySelector("#input-edit-content").value = "";
 	}else{
 		document.querySelector("#input-edit-content").value = todoContent;
 	}
-	
+
 	if(todoMemo){
 		document.querySelector("#input-edit-memo").value = todoMemo;
 	}
+/** 
+	if(todoDeadline){
+		document.querySelector("#input-edit-deadline").value = todoDeadline;
+	}
+
+	if(todoPriority){
+		document.querySelector("select[name='priority']").value = todoPriority;
+	}
+	*/
+		
+	if (todoDeadline) {
+        // 例: "2026-08-03T15:30" から "2026-08-03" を抽出
+        document.getElementById('input-edit-deadline').value = todoDeadline.split('T')[0];
+    } else {
+        document.getElementById('input-edit-deadline').value = '';
+    }
+
+    // 優先度（ドロップダウン）の設定
+    // option の value（"1", "2", "3", ""）と一致していれば自動的に選択状態になります
+    document.getElementById('input-edit-priority').value = todoPriority || '';
 	
+
 	const dialog = document.querySelector("#toDoEditDialog");
 	dialog.showModal();
 }
+
 function closeToDoEditDialog(){
 	const dialog = document.querySelector("#toDoEditDialog");
 	/**
 	 * 値を空にしないと、メモなしタスクの編集ボタンを押下すると、直前で開いたタスクのメモが表示されてしまう
 	 */
 	document.querySelector("#input-edit-memo").value = "";
-	
+	document.querySelector("#input-edit-content").value = "";
+	document.querySelector("#input-edit-deadline").value = "";
+	document.querySelector("select[name='priority']").value = "";
+
 	dialog.close();
 }
 

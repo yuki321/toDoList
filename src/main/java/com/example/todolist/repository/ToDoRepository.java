@@ -1,5 +1,6 @@
 package com.example.todolist.repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,20 @@ public class ToDoRepository {
 			todo.setContent((String)map.get("content"));
 			todo.setMemo((String)map.get("memo"));
 			todo.setStatus((Boolean)map.get("status"));
+			todo.setDeadline((LocalDateTime)map.get("deadline"));
+			
+//			String priority = (String)map.get("priority");
+//			if(priority.equals("1")){
+//				todo.setPriority("優先度高");
+//			}else if(priority.equals("2")){
+//				todo.setPriority("優先度中");
+//			}else if(priority.equals("3")){
+//				todo.setPriority("優先度低");
+//			}else{
+//				todo.setPriority("優先度なし");
+//			}
+			
+			todo.setPriority((String)map.get("priority"));
 				
 			todolist.add(todo);
 		}
@@ -75,12 +90,14 @@ public class ToDoRepository {
 	 */
 	public int insertRecord(ToDo todo) throws DataAccessException {
 		
-		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?)",
+		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),
 				todo.getContent(),
 				todo.getMemo(),
-				todo.getStatus());
+				todo.getStatus(),
+				todo.getDeadline(),
+				todo.getPriority());
 		
 		return num;
 	}
@@ -95,12 +112,15 @@ public class ToDoRepository {
 	public int updateRecord(ToDo todo) throws DataAccessException {
 		
 		String sql = "UPDATE todo SET user_id = ?, content = ?, "
-				+ "memo = ?, status = ? WHERE id=?";
+				+ "memo = ?, status = ?, deadline = ? ,"
+				+ "priority = ? WHERE id=?";
 		int num = jdbc.update(sql,
 				todo.getUserId(),
 				todo.getContent(),
 				todo.getMemo(),
 				todo.getStatus(),
+				todo.getDeadline(),
+				todo.getPriority(),
 				todo.getId());
 		
 		return num;

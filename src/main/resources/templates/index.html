@@ -30,12 +30,30 @@
 					<div id="todo-content">
 						<p th:text="${task.content}"></p>
 						<p th:text="${task.memo}" id="memo"></p>
+						<p th:text="${task.deadline}" id="deadline"></p>
+					<!--	
+						<p th:text="${task.priority}" th:if="${task.priority} == '優先度高' " 
+							id="priority-high" class="priority">優先度高</p>
+						<p th:text="${task.priority}" th:if="${task.priority} == '優先度中' " 
+							id="priority-medium" class="priority">優先度中</p>
+						<p th:text="${task.priority}" th:if="${task.priority} == '優先度低' " 
+							id="priority-low" class="priority">優先度低</p>
+						<p th:text="${task.priority}" th:if="${task.priority} == '優先度なし' " 
+							id="priority-none" class="priority">優先度なし</p>
+					-->		
+						<p th:if="${task.priority == '1'}" id="priority-high" class="priority">優先度高</p>
+						<p th:if="${task.priority == '2'}" id="priority-medium" class="priority">優先度中</p>
+						<p th:if="${task.priority == '3'}" id="priority-low" class="priority">優先度低</p>
+						<p th:if="${task.priority == null or task.priority == '' or task.priority == '0'}" id="priority-none" class="priority">優先度なし</p>						
 					</div>
+					
 					<div id="edit-delete-btn">
 						<input class="link-update" type="submit" value="編集"
 							th:data-id="${task.id}"
 							th:data-content="${task.content}"
 							th:data-memo="${task.memo}"
+							th:data-deadline="${task.deadline}"
+							th:data-priority="${task.priority}"
 							onclick="onClickEditToDoBtn(this)"/>
 						<input class="link-delete" id="delete" type="button" value="削除" 
 							th:data-id="${task.id}" 
@@ -59,6 +77,22 @@
 				
 				<label>メモ</label>
 				<textarea th:field="*{memo}" rows="5" cols="40"></textarea>
+
+				<div class="deadline-container">
+					<label>期日</label>
+					<input id="deadline" type="date" th:field="*{deadline}"/><br>
+					<span class="error" th:errors="*{deadline}"></span>					
+				</div>
+				<div class="priority-container">
+					<label>優先度</label>
+					<select th:field="*{priority}">
+						<option value="">--選択してください--</option>
+						<option value="1">優先度高</option>
+						<option value="2">優先度中</option>
+						<option value="3">優先度低</option>
+					</select>
+					<span class="error" th:errors="*{priority}"></span>
+				</div>
 		
 				<div class="buttons">
 					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoCreateDialog()"/>
@@ -83,6 +117,22 @@
 				
 				<label>メモ</label>
 				<textarea th:field="*{memo}" rows="5" cols="40" id="input-edit-memo"></textarea>
+				
+				<id class="deadline-container">
+					<label>期日</label>
+					<input id="input-edit-deadline" type="date" th:field="*{deadline}"/><br>
+					<span class="error" th:errors="*{deadline}"></span>
+				</id>
+				<div class="priority-container">
+					<label>優先度</label>
+					<select id="input-edit-priority" th:field="*{priority}">
+						<option value="">--選択してください--</option>
+						<option value="1">優先度高</option>
+						<option value="2">優先度中</option>
+						<option value="3">優先度低</option>
+					</select>
+					<span class="error" th:errors="*{priority}"></span>
+				</div>
 				
 				<div class="buttons">
 					<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoEditDialog()"/>
