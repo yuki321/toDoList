@@ -30,17 +30,9 @@
 					<div id="todo-content">
 						<p th:text="${task.content}"></p>
 						<p th:text="${task.memo}" id="memo"></p>
-						<p th:text="${task.deadline}" id="deadline"></p>
-					<!--	
-						<p th:text="${task.priority}" th:if="${task.priority} == '優先度高' " 
-							id="priority-high" class="priority">優先度高</p>
-						<p th:text="${task.priority}" th:if="${task.priority} == '優先度中' " 
-							id="priority-medium" class="priority">優先度中</p>
-						<p th:text="${task.priority}" th:if="${task.priority} == '優先度低' " 
-							id="priority-low" class="priority">優先度低</p>
-						<p th:text="${task.priority}" th:if="${task.priority} == '優先度なし' " 
-							id="priority-none" class="priority">優先度なし</p>
-					-->		
+						<span th:if="${task.deadline == null or task.deadline == ''}" id="deadline-none">期日なし</span>
+						<p id="deadline-list" th:text="${#temporals.format(task.deadline, 'M/d')}"></p>
+						
 						<p th:if="${task.priority == '1'}" id="priority-high" class="priority">優先度高</p>
 						<p th:if="${task.priority == '2'}" id="priority-medium" class="priority">優先度中</p>
 						<p th:if="${task.priority == '3'}" id="priority-low" class="priority">優先度低</p>
@@ -80,7 +72,7 @@
 
 				<div class="deadline-container">
 					<label>期日</label>
-					<input id="deadline" type="date" th:field="*{deadline}"/><br>
+					<input id="input-create-deadline" type="datetime-local" th:field="*{deadline}"/><br>
 					<span class="error" th:errors="*{deadline}"></span>					
 				</div>
 				<div class="priority-container">
@@ -118,11 +110,11 @@
 				<label>メモ</label>
 				<textarea th:field="*{memo}" rows="5" cols="40" id="input-edit-memo"></textarea>
 				
-				<id class="deadline-container">
-					<label>期日</label>
-					<input id="input-edit-deadline" type="date" th:field="*{deadline}"/><br>
-					<span class="error" th:errors="*{deadline}"></span>
-				</id>
+				<div id="deadline-container">
+				    <label for="input-edit-deadline">期日</label>
+				    <input id="input-edit-deadline" type="datetime-local" th:field="*{deadline}"/><br>
+				    <span class="error" th:errors="*{deadline}"></span>
+				</div>
 				<div class="priority-container">
 					<label>優先度</label>
 					<select id="input-edit-priority" th:field="*{priority}">

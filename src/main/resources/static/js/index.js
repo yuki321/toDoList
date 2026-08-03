@@ -44,7 +44,8 @@ function onClickEditToDoBtn(element){
 	const todoMemo = element.dataset.memo;
 	const todoDeadline = element.dataset.deadline;
 	const todoPriority = element.dataset.priority;
-
+console.log("todoDeadline: " + todoDeadline);
+	
 	document.querySelector("#editId").value = todoId;
 	if(todoContent == undefined){
 		document.querySelector("#input-edit-content").value = "";
@@ -55,19 +56,9 @@ function onClickEditToDoBtn(element){
 	if(todoMemo){
 		document.querySelector("#input-edit-memo").value = todoMemo;
 	}
-/** 
-	if(todoDeadline){
-		document.querySelector("#input-edit-deadline").value = todoDeadline;
-	}
-
-	if(todoPriority){
-		document.querySelector("select[name='priority']").value = todoPriority;
-	}
-	*/
 		
 	if (todoDeadline) {
-        // 例: "2026-08-03T15:30" から "2026-08-03" を抽出
-        document.getElementById('input-edit-deadline').value = todoDeadline.split('T')[0];
+		document.getElementById('input-edit-deadline').value = todoDeadline;
     } else {
         document.getElementById('input-edit-deadline').value = '';
     }

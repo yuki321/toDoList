@@ -3,6 +3,10 @@ body {
   font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
   margin-bottom: 150px;
 }
+main {
+  width: 80%;
+  margin: 0 auto;
+}
 h1 {
 	margin-bottom: -50px;
 }

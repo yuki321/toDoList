@@ -46,18 +46,6 @@ public class ToDoRepository {
 			todo.setMemo((String)map.get("memo"));
 			todo.setStatus((Boolean)map.get("status"));
 			todo.setDeadline((LocalDateTime)map.get("deadline"));
-			
-//			String priority = (String)map.get("priority");
-//			if(priority.equals("1")){
-//				todo.setPriority("優先度高");
-//			}else if(priority.equals("2")){
-//				todo.setPriority("優先度中");
-//			}else if(priority.equals("3")){
-//				todo.setPriority("優先度低");
-//			}else{
-//				todo.setPriority("優先度なし");
-//			}
-			
 			todo.setPriority((String)map.get("priority"));
 				
 			todolist.add(todo);

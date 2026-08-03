@@ -122,7 +122,6 @@ public class ToDoController {
 		todo.setUserId((Long) userInfo.get("id"));		
 		model.addAttribute("todo", todo);
 		
-		
 		try {
 			boolean result = toDoService.updateRecord(todo);
 			if (result) {

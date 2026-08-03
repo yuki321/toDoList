@@ -17,7 +17,9 @@ CREATE TABLE IF NOT EXISTS todo (
     user_id BIGINT NOT NULL,
     content VARCHAR(100) NOT NULL,
     memo VARCHAR(100),
-    status BOOLEAN NOT NULL DEFAULT TRUE
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    deadline DATETIME,
+    priority INTEGER NOT NULL DEFAULT 2
 );
 
 

@@ -3,6 +3,13 @@ body {
   font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
   background-color: #EDEDED;
 }
+main {
+  width: 80%;
+  margin: 0 auto;
+}
+.container {
+  margin-bottom: 100px;
+}
 h1 {
 	margin-bottom: -50px;
 }
@@ -40,6 +47,11 @@ input {
 	color: gray;
 	font-size: 14px;
 }
+#deadline-none, #deadline-list {
+	margin: 20px 0 20px 0;
+	color: dodgerblue;
+	font-size: 16px;
+}
 
 #edit-delete-btn {
 	margin-top: 10px;	
@@ -54,7 +66,6 @@ input {
 /** 作成・ログアウトボタン・ユーザー一覧 **/
 .link-edit {
 	display: inline-block;
-/*	margin-top: 70px; */
 	padding: 8px 20px;
 	background-color: #3498db; /* 背景色 */
 	color: #ffffff; /* 文字色 */
