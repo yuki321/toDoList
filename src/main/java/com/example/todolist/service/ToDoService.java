@@ -31,6 +31,16 @@ public class ToDoService {
 	}
 	
 	/**
+	 * 完了済みToDoの全件取得
+	 * @param UserDetails userDetails
+	 * @return List<ToDo>
+	 */
+	@Transactional(readOnly = true)
+	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
+		return toDoRepository.findAllCompletedToDo(userDetails);
+	}
+	
+	/**
 	 * ログイン中のユーザー情報の取得
 	 * @param UserDetails userDetails
 	 * @return Map<String, Object>

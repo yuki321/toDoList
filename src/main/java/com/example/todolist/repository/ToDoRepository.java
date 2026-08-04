@@ -33,7 +33,8 @@ public class ToDoRepository {
 		
 		List<ToDo> todolist = new ArrayList<>();
 		String userName = userDetails.getUsername();
-		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id WHERE u.user_name=?";
+		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
+				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.deadline ASC";
 		
 		// ToDoテーブルのデータを全件取得
 		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
@@ -53,6 +54,40 @@ public class ToDoRepository {
 		
 		return todolist;
 	};
+	
+	
+	/**
+	 * 完了済みToDoのデータ全件取得
+	 * @param UserDetails userDetails
+	 * @return List<ToDo>
+	 */
+	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
+		
+		List<ToDo> todolist = new ArrayList<>();
+		String userName = userDetails.getUsername();
+		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
+				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.deadline ASC";
+		
+		// ToDoテーブルのデータを全件取得
+		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
+		
+		for(Map<String, Object> map: getList) {
+			ToDo todo = new ToDo();
+			todo.setId((Long)map.get("id"));
+			todo.setUserId((Long)map.get("user_id"));
+			todo.setContent((String)map.get("content"));
+			todo.setMemo((String)map.get("memo"));
+			todo.setStatus((Boolean)map.get("status"));
+			todo.setDeadline((LocalDateTime)map.get("deadline"));
+			todo.setPriority((String)map.get("priority"));
+				
+			todolist.add(todo);
+		}
+		
+		return todolist;
+	};
+	
+	
 	
 
 	/**

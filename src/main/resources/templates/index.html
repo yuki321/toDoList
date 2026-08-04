@@ -26,8 +26,8 @@
 					<p th:if="${#lists.isEmpty(todos)}">タスクは存在しません</p>
 				</div>
 				<!-- データありの場合 -->
-				<div th:each="task: ${todos}" id="task">
-					<div id="todo-content">
+				<div th:each="task: ${todos}" class="task">
+					<div class="todo-content">
 						<p th:text="${task.content}"></p>
 						<p th:text="${task.memo}" id="memo"></p>
 						<span th:if="${task.deadline == null or task.deadline == ''}" id="deadline-none">期日なし</span>
@@ -38,8 +38,7 @@
 						<p th:if="${task.priority == '3'}" id="priority-low" class="priority">優先度低</p>
 						<p th:if="${task.priority == null or task.priority == '' or task.priority == '0'}" id="priority-none" class="priority">優先度なし</p>						
 					</div>
-					
-					<div id="edit-delete-btn">
+					<div class="edit-delete-btn">
 						<input class="link-update" type="submit" value="編集"
 							th:data-id="${task.id}"
 							th:data-content="${task.content}"
@@ -47,12 +46,24 @@
 							th:data-deadline="${task.deadline}"
 							th:data-priority="${task.priority}"
 							onclick="onClickEditToDoBtn(this)"/>
-						<input class="link-delete" id="delete" type="button" value="削除" 
+						<input class="link-delete delete" type="button" value="削除" 
 							th:data-id="${task.id}" 
 							onclick="onClickDeleteToDoBtn(this)"/>
 					</div>
 				</div>
-							
+
+				<h2 id="complete-task">完了済みタスク</h2>				
+				<div th:each="task: ${completedTodos}" class="task">
+					<div class="todo-content completed">
+						<p th:text="${task.content}"></p>						
+					</div>
+					
+					<div class="edit-delete-btn">
+						<input class="link-delete delete" type="button" value="削除" 
+							th:data-id="${task.id}" 
+							onclick="onClickDeleteToDoBtn(this)"/>
+					</div>
+				</div>
 			</div>
 		</div>
 	</main>
