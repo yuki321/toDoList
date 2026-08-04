@@ -56,12 +56,6 @@ input {
 .btn-container {
 	margin-top: 10px;	
 }
-#complete-form {
-	float: left;
-	margin-right: 5px;
-	margin-top: -10px;
-}
-
 
 .margin-top {
 	margin-top: 70px;
@@ -251,6 +245,20 @@ dialog p {
 	color: gray;
 }
 
+#complete-form {
+	float: left;
+	margin-right: 5px;
+	margin-top: -10px;
+}
+.undo-task {
+	float: left;
+	margin-right: 5px;
+	margin-top: 0px;
+}
+.no-task {
+	font-size: 20px;
+	color: darkslategray
+}
 
 dialog .link-list {
 	padding: 5px 20px;

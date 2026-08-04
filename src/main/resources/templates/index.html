@@ -57,12 +57,19 @@
 				</div>
 
 				<h2 id="complete-task">完了済みタスク</h2>				
+				<div>
+					<p th:if="${#lists.isEmpty(completedTodos)}" class="no-task">タスクは存在しません</p>
+				</div>
 				<div th:each="task: ${completedTodos}" class="task">
 					<div class="todo-content completed">
 						<p th:text="${task.content}"></p>						
 					</div>
 					
 					<div class="btn-container">
+						<form method="post" th:action="@{/undoTask}" th:object="${undoTask}" class="undo-task">
+							<input type="hidden" name="id" th:value="${task.id}" />
+							<input class="link-list undo-task" type="submit" value="元に戻す" th:data-id="${task.id}" />
+						</form>
 						<input class="link-delete delete" type="button" value="削除" 
 							th:data-id="${task.id}" 
 							onclick="onClickDeleteToDoBtn(this)"/>

@@ -48,8 +48,27 @@ public class ToDoService {
 	 * @throws DataAccessException
 	 */
 	public boolean completeTask(ToDo todo) throws DataAccessException {
-		
+
 		int num = toDoRepository.completeTask(todo);
+
+		boolean result = false;
+		if(num > 0) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+
+	/**
+	 * タスク完了の取り消し
+	 * @param ToDo todo
+	 * @return boolean result
+	 * @throws DataAccessException
+	 */
+	public boolean undoCompletedTask(ToDo todo) throws DataAccessException {
+
+		int num = toDoRepository.undoCompletedTask(todo);
 		
 		boolean result = false;
 		if(num > 0) {

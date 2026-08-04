@@ -43,11 +43,12 @@ public class ToDoController {
 		// ログイン情報を基にタスク一覧を表示
 		List<ToDo> todos = toDoService.findAllToDo(userDetails);
 		
-		// 完了していないタスク
 		model.addAttribute("todos", todos);
 		model.addAttribute("todoCreate", new ToDo());
 		model.addAttribute("todoForm", new ToDo());
 		model.addAttribute("todoComplete", new ToDo());
+		model.addAttribute("undoTask", new ToDo());
+		
 		
 		// 完了済みタスク
 		List<ToDo> completedTodos = toDoService.findAllCompletedToDo(userDetails);
@@ -95,6 +96,42 @@ public class ToDoController {
 			return "redirect:/";
 		}
 		
+	}
+	
+	
+	/**
+	 * タスク完了の取り消し
+	 * @param ToDo todo
+	 * @param BindingResult bindingResult
+	 * @param UserDetails userDetails
+	 * @param Model model
+	 * @return String
+	 */
+	@PostMapping("/undoTask")
+	public String undoCompletedTask(
+			@ModelAttribute("undoTask") ToDo todo, 
+			BindingResult bindingResult, 
+			@AuthenticationPrincipal UserDetails userDetails,
+			Model model
+			) {
+		
+		// userIdを取得
+		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		todo.setUserId((Long) userInfo.get("id"));		
+		model.addAttribute("todo", todo);
+		
+		try {
+			boolean result = toDoService.undoCompletedTask(todo);
+			if (result) {
+				System.out.println("編集成功！");
+			} else {
+				System.out.println("編集失敗");
+			}
+			
+			return "redirect:/";
+		}catch(IllegalArgumentException e) {
+			return "redirect:/";
+		}
 		
 	}
 	

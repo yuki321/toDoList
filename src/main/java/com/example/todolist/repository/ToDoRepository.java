@@ -102,6 +102,21 @@ public class ToDoRepository {
 		return num;
 	}
 	
+	
+	/**
+	 * タスク完了を取り消す
+	 * @param ToDo todo
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	public int undoCompletedTask(ToDo todo) throws DataAccessException {
+	
+		String sql = "UPDATE todo SET status = 1 WHERE id=? and status = 2";
+		int num = jdbc.update(sql, todo.getId());
+		
+		return num;
+	}
+	
 
 	/**
 	 * ログイン中のユーザー情報の取得
