@@ -44,7 +44,6 @@ function onClickEditToDoBtn(element){
 	const todoMemo = element.dataset.memo;
 	const todoDeadline = element.dataset.deadline;
 	const todoPriority = element.dataset.priority;
-console.log("todoDeadline: " + todoDeadline);
 	
 	document.querySelector("#editId").value = todoId;
 	if(todoContent == undefined){

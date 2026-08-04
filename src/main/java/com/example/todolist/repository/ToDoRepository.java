@@ -87,7 +87,20 @@ public class ToDoRepository {
 		return todolist;
 	};
 	
-	
+
+	/**
+	 * タスク完了
+	 * @param ToDo todo
+	 * @return int num
+	 * @throws DataAccessException
+	 */
+	public int completeTask(ToDo todo) throws DataAccessException {
+		
+		String sql = "UPDATE todo SET status = 2 WHERE id=? and status = 1";
+		int num = jdbc.update(sql, todo.getId());
+		
+		return num;
+	}
 	
 
 	/**

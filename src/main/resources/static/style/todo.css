@@ -29,7 +29,7 @@ input {
 	margin-top: 20px;
 	background-color: #ffffff;
 	padding: 10px 30px;
-	width: 60%;
+	width: 70%;
 	font-weight: bold;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	border-radius: 5px; /* 角丸 */
@@ -53,9 +53,13 @@ input {
 	font-size: 16px;
 }
 
-.edit-delete-btn {
+.btn-container {
 	margin-top: 10px;	
-	margin-left:10px; 
+}
+#complete-form {
+	float: left;
+	margin-right: 5px;
+	margin-top: -10px;
 }
 
 
@@ -102,9 +106,9 @@ input {
 	text-decoration: none; /* 下線を消す */
 	font-weight: bold;
 	border-radius: 5px; /* 角丸 */
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
 	transition: all 0.3s ease; /* アニメーションの設定 */
 	width: max-content;
+	border: none;
 }
 .link-list:hover {
 	background-color: #2980b9;

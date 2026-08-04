@@ -40,6 +40,26 @@ public class ToDoService {
 		return toDoRepository.findAllCompletedToDo(userDetails);
 	}
 	
+	
+	/**
+	 * タスク完了
+	 * @param ToDo todo
+	 * @return boolean result
+	 * @throws DataAccessException
+	 */
+	public boolean completeTask(ToDo todo) throws DataAccessException {
+		
+		int num = toDoRepository.completeTask(todo);
+		
+		boolean result = false;
+		if(num > 0) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	
 	/**
 	 * ログイン中のユーザー情報の取得
 	 * @param UserDetails userDetails

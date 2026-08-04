@@ -47,6 +47,7 @@ public class ToDoController {
 		model.addAttribute("todos", todos);
 		model.addAttribute("todoCreate", new ToDo());
 		model.addAttribute("todoForm", new ToDo());
+		model.addAttribute("todoComplete", new ToDo());
 		
 		// 完了済みタスク
 		List<ToDo> completedTodos = toDoService.findAllCompletedToDo(userDetails);
@@ -58,6 +59,45 @@ public class ToDoController {
 
 		return "index";
 	}
+	
+	
+	/**
+	 * タスク完了
+	 * @param ToDo todo
+	 * @param BindingResult bindingResult
+	 * @param UserDetails userDetails
+	 * @param Model model
+	 * @return String
+	 */
+	@PostMapping("/complete")
+	public String getTaskCompleted(
+			@ModelAttribute("todoComplete") ToDo todo, 
+			BindingResult bindingResult, 
+			@AuthenticationPrincipal UserDetails userDetails,
+			Model model
+			) {
+		
+		// userIdを取得
+		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		todo.setUserId((Long) userInfo.get("id"));		
+		model.addAttribute("todo", todo);
+		
+		try {
+			boolean result = toDoService.completeTask(todo);
+			if (result) {
+				System.out.println("編集成功！");
+			} else {
+				System.out.println("編集失敗");
+			}
+			
+			return "redirect:/";
+		}catch(IllegalArgumentException e) {
+			return "redirect:/";
+		}
+		
+		
+	}
+	
 
 	@PostMapping("/")
 	public String createToDo(@Validated @ModelAttribute("todoCreate") ToDo todo,
