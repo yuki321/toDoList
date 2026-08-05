@@ -44,10 +44,44 @@ public class UserService implements UserServiceIF {
 		return userRepository.findAll();
 	}
 	
+	
+	/**
+	 * ユーザー検索
+	 * @param User _user
+	 * @return List<User>
+	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<User> searchUsers(String userName, String email, String role){
+	public List<User> searchUsers(User _user){
     	
+		// 検索条件を取得
+		String userName = _user.getUserName();
+		String email = _user.getEmail();
+		String role = _user.getRole();
+		
+		if(userName == null || userName.isEmpty()) {
+			userName = "%";
+		}else {
+			userName = "%" + userName + "%";
+		}
+		
+		if(email == null || email.isEmpty()) {
+			email = "%";
+		}else {
+			email = "%" + email + "%";
+		}
+		
+		if(role == null || role.isEmpty()) {
+			role = "%";
+		}else {
+			role = "%" + role + "%";
+		}
+
+		
+		/**
+		 * 1.クエリを実行
+		 * 2.クエリ実行結果をモデルに詰める
+		 */
     	List<User> userlist = new ArrayList<>();
     	String sql = "SELECT * FROM users "
     			+ "WHERE user_name LIKE ? AND email LIKE ? AND role LIKE ?";

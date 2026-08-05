@@ -12,7 +12,7 @@ public interface UserServiceIF {
 
 	List<User> getAllUsers();
 
-	List<User> searchUsers(String userName, String email, String role);
+	List<User> searchUsers(User user);
 
 	Optional<User> getUserById(Long id);
 
