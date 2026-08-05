@@ -67,6 +67,10 @@ th button {
 #userCreateBtn {
 	margin-top: 70px;
 }
+/** ログインしていない時のユーザー作成 **/
+#no-login-user-registration {
+	display:none;
+}
 /** 一覧表とタスク一覧リンクとのマージン調整 **/
 #content {
 	margin-top: 10px;

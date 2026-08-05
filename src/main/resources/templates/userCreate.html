@@ -42,7 +42,9 @@
 									<span class="error" th:errors="*{password}"></span>
 								</th>
 							</tr>
-							<tr>
+							
+							<!-- ログインしている場合は、ロールを選択できるようにする -->
+							<tr th:if="${login} == 'true'">
 								<th>ロール</th>
 								<th>
 									<select th:field="*{role}">
@@ -51,7 +53,17 @@
 										<option value="General">General</option>
 									</select>
 									<span class="error" th:errors="*{role}"></span>
-								</th>							
+								</th>
+								
+							</tr>
+							
+							<!-- ログインしていない場合は、ロールをGeneralに固定する -->
+							<tr th:if="${login} == 'false'">
+								<select th:field="*{role}"
+									id="no-login-user-registration" >
+									<option value="General">General</option>
+								</select>
+								<span class="error" th:errors="*{role}"></span>
 							</tr>
 			
 						</tbody>
