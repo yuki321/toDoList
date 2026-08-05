@@ -32,5 +32,7 @@ public interface UserServiceIF {
 
 	void uploadCsvFile(MultipartFile file) throws Exception;
 
+	void restoreUserDisplayFields(Long id, User user);
+
 	
 }

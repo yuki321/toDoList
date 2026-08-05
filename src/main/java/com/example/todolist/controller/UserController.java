@@ -95,7 +95,6 @@ public class UserController {
 		
 		try {
 			Optional<User> user = userService.getUserById(id);
-//			user.ifPresent(u -> model.addAttribute("user", u));
 			
 			if(user.isPresent()) {
 				model.addAttribute("user", user.orElse(null));
@@ -171,7 +170,7 @@ public class UserController {
 			BindingResult bindingResult, Model model){
 
 		if (bindingResult.hasErrors()) {
-			restoreUserDisplayFields(id, user);
+			userService.restoreUserDisplayFields(id, user);
 			return "userDetail";
 		}
 
@@ -182,7 +181,7 @@ public class UserController {
 			return "redirect:/api/users/user";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.update", e.getMessage());
-			restoreUserDisplayFields(id, user);
+			userService.restoreUserDisplayFields(id, user);
 			return "userDetail";
 		}
 		
@@ -226,8 +225,6 @@ public class UserController {
 				return "changePassword";
 			}
 			
-			
-			
 			String newPassword = passwordChange.getNewPassword();
 			userService.savePassword(user, newPassword);
 			
@@ -237,21 +234,7 @@ public class UserController {
 		}
 		
 	}
-	
-
-	/**
-	 * バリデーションエラー時に表示用の項目を補完する
-	 */
-	private void restoreUserDisplayFields(Long id, User user) {
-		userService.getUserById(id).ifPresent(existing -> {
-			user.setId(existing.getId());
-			user.setRole(existing.getRole());
-			user.setCreatedAt(existing.getCreatedAt());
-			user.setUpdatedAt(existing.getUpdatedAt());
-		});
-	}
-	
-	
+		
 	
 	@PostMapping("/upload")
 	public String uploadCsvFile(@RequestParam("file") MultipartFile file, Model model) {

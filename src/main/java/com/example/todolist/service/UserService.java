@@ -336,6 +336,21 @@ public class UserService implements UserServiceIF {
 	}
 	
 	
+	/**
+	 * バリデーションエラー時に表示用の項目を補完する
+	 * @param Long id
+	 * @param User user
+	 */
+	public void restoreUserDisplayFields(Long id, User user) {
+		getUserById(id).ifPresent(existing -> {
+			user.setId(existing.getId());
+			user.setRole(existing.getRole());
+			user.setCreatedAt(existing.getCreatedAt());
+			user.setUpdatedAt(existing.getUpdatedAt());
+		});
+	}
+	
+	
 }
 
 
