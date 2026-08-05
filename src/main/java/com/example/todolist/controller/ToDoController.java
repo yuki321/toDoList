@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.ToDo;
 import com.example.todolist.entity.User;
-import com.example.todolist.service.ToDoService;
+import com.example.todolist.service.ToDoServiceIF;
 
 @Controller
 @RequestMapping("/")
 public class ToDoController {
 
 	@Autowired
-	private ToDoService toDoService;
+	private ToDoServiceIF toDoService;
 	
 	
 	/**

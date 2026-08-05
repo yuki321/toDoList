@@ -24,7 +24,7 @@ import com.example.todolist.entity.User;
 import com.example.todolist.repository.PasswordResetTokenRepository;
 import com.example.todolist.repository.UserRepository;
 import com.example.todolist.service.PasswordResetService;
-import com.example.todolist.service.UserService;
+import com.example.todolist.service.UserServiceIF;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,7 +40,7 @@ public class MailController {
 	private UserRepository userRepository;
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceIF userService;
 	
 	@Autowired
 	private PasswordResetTokenRepository passwordResetTokenRepository;

@@ -22,21 +22,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
-import com.example.todolist.service.ToDoService;
-import com.example.todolist.service.UserService;
+import com.example.todolist.service.ToDoServiceIF;
+import com.example.todolist.service.UserServiceIF;
 
 @Controller
 @RequestMapping("/api/users")
 public class UserController {
 
 	@Autowired
-	private UserService userService;
+	private UserServiceIF userService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private ToDoService toDoService;
+	private ToDoServiceIF toDoService;
 		
 	/**
 	 * 全件取得

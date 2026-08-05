@@ -11,20 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.todolist.entity.ToDo;
-import com.example.todolist.repository.ToDoRepository;
+import com.example.todolist.repository.ToDoRepositoryIF;
 
 @Service
 @Transactional
-public class ToDoService {
+public class ToDoService implements ToDoServiceIF {
 	
 	@Autowired
-	private ToDoRepository toDoRepository;
+	private ToDoRepositoryIF toDoRepository;
 	
 	/**
 	 * 全件取得
 	 * @param UserDetails userDetails
 	 * @return List<ToDo>
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
 		return toDoRepository.findAllToDo(userDetails);
@@ -35,6 +36,7 @@ public class ToDoService {
 	 * @param UserDetails userDetails
 	 * @return List<ToDo>
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
 		return toDoRepository.findAllCompletedToDo(userDetails);
@@ -47,6 +49,7 @@ public class ToDoService {
 	 * @return boolean result
 	 * @throws DataAccessException
 	 */
+	@Override
 	public boolean completeTask(ToDo todo) throws DataAccessException {
 
 		int num = toDoRepository.completeTask(todo);
@@ -66,6 +69,7 @@ public class ToDoService {
 	 * @return boolean result
 	 * @throws DataAccessException
 	 */
+	@Override
 	public boolean undoCompletedTask(ToDo todo) throws DataAccessException {
 
 		int num = toDoRepository.undoCompletedTask(todo);
@@ -84,6 +88,7 @@ public class ToDoService {
 	 * @param UserDetails userDetails
 	 * @return Map<String, Object>
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
 		return toDoRepository.getUserInfo(userDetails);
@@ -95,6 +100,7 @@ public class ToDoService {
 	 * @param ToDo todo
 	 * @return boolean result
 	 */
+	@Override
 	public boolean insertRecord(ToDo todo) {
 		int num = toDoRepository.insertRecord(todo);
 		
@@ -113,6 +119,7 @@ public class ToDoService {
 	 * @return boolean result
 	 * @throws DataAccessException
 	 */
+	@Override
 	public boolean updateRecord(ToDo todo) throws DataAccessException {
 		
 		int num = toDoRepository.updateRecord(todo);
@@ -131,6 +138,7 @@ public class ToDoService {
 	 * @return boolean result
 	 * @throws DataAccessException
 	 */
+	@Override
 	public boolean deleteRecord(Long id) throws DataAccessException {
 		int num = toDoRepository.deleteRecord(id);
 		

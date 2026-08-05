@@ -13,10 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import com.example.todolist.entity.ToDo;
+import com.example.todolist.entity.User;
 import com.example.todolist.service.UserService;
 
 @Repository
-public class ToDoRepository {
+public class ToDoRepository implements ToDoRepositoryIF {
 	
 	@Autowired
 	JdbcTemplate jdbc;
@@ -29,6 +30,7 @@ public class ToDoRepository {
 	 * @param userDetails userDetails
 	 * @return List<ToDo>
 	 */
+	@Override
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
 		
 		List<ToDo> todolist = new ArrayList<>();
@@ -61,6 +63,7 @@ public class ToDoRepository {
 	 * @param UserDetails userDetails
 	 * @return List<ToDo>
 	 */
+	@Override
 	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
 		
 		List<ToDo> todolist = new ArrayList<>();
@@ -94,6 +97,7 @@ public class ToDoRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	public int completeTask(ToDo todo) throws DataAccessException {
 		
 		String sql = "UPDATE todo SET status = 2 WHERE id=? and status = 1";
@@ -109,6 +113,7 @@ public class ToDoRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	public int undoCompletedTask(ToDo todo) throws DataAccessException {
 	
 		String sql = "UPDATE todo SET status = 1 WHERE id=? and status = 2";
@@ -123,6 +128,7 @@ public class ToDoRepository {
 	 * @param userDetails userDetails
 	 * @return Map<String, Object> userInfo
 	 */
+	@Override
 	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
 	
 		String userName = userDetails.getUsername();
@@ -139,6 +145,7 @@ public class ToDoRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	public int insertRecord(ToDo todo) throws DataAccessException {
 		
 		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
@@ -160,6 +167,7 @@ public class ToDoRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	public int updateRecord(ToDo todo) throws DataAccessException {
 		
 		String sql = "UPDATE todo SET user_id = ?, content = ?, "
@@ -184,6 +192,7 @@ public class ToDoRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	public int deleteRecord(Long id) throws DataAccessException {
 		
 		String sql = "DELETE FROM todo WHERE id=?";
@@ -191,6 +200,8 @@ public class ToDoRepository {
 		
 		return num;
 	}
+
+
 	
 	
 }
