@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class PasswordResetTokenRepository {
+public class PasswordResetTokenRepository implements PasswordResetTokenRepositoryIF {
 	
 	@Autowired
 	JdbcTemplate jdbc;
@@ -22,6 +22,7 @@ public class PasswordResetTokenRepository {
 	 * @return int count
 	 * @throws 
 	 */
+	@Override
 	public int selectCountByUserId(Long userId) throws DataAccessException {
 		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE user_id = ?";
 		int count = jdbc.queryForObject(sql, Integer.class, userId);
@@ -33,6 +34,7 @@ public class PasswordResetTokenRepository {
 	 * @return List<Map<String, Object>> list
 	 * @throws DataAccessException
 	 */
+	@Override
 	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
 		String sql = "SELECT * FROM password_reset_tokens";
 		List<Map<String, Object>> list = jdbc.queryForList(sql);
@@ -48,6 +50,7 @@ public class PasswordResetTokenRepository {
 	 * @return 1:挿入成功, 0:挿入失敗
 	 * @throws DataAccessException データアクセス例外
 	 */
+	@Override
 	public int insertRecord(Long userId, String tokenHash) throws DataAccessException {
 		
 		// トークンの有効期限（時間単位）
@@ -74,6 +77,7 @@ public class PasswordResetTokenRepository {
 	 * @return int num 
 	 * @throws 
 	 */	
+	@Override
 	public int deleteResetToken(Long userId) throws DataAccessException {
 		
 		String sql = "DELETE FROM password_reset_tokens WHERE user_id = ?";

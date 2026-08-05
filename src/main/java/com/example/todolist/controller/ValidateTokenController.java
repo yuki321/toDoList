@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.todolist.entity.PasswordReset;
-import com.example.todolist.repository.PasswordResetTokenRepository;
+import com.example.todolist.repository.PasswordResetTokenRepositoryIF;
+
 import org.springframework.ui.Model;
 
 @Controller
@@ -21,7 +22,7 @@ import org.springframework.ui.Model;
 public class ValidateTokenController {
 	
 	@Autowired
-	private PasswordResetTokenRepository passwordResetTokenRepository;
+	private PasswordResetTokenRepositoryIF passwordResetTokenRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;

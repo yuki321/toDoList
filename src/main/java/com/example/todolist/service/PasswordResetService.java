@@ -9,22 +9,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.example.todolist.repository.PasswordResetRepository;
-import com.example.todolist.repository.PasswordResetTokenRepository;
+import com.example.todolist.repository.PasswordResetRepositoryIF;
+import com.example.todolist.repository.PasswordResetTokenRepositoryIF;
 
 @Service
-public class PasswordResetService {
+public class PasswordResetService implements PasswordResetServiceIF {
 	
 	@Autowired
-	PasswordResetTokenRepository passwordResetTokenRepository;
+	PasswordResetTokenRepositoryIF passwordResetTokenRepository;
 	
 	@Autowired
-	PasswordResetRepository passwordResetRepository;
+	PasswordResetRepositoryIF passwordResetRepository;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	
+	@Override
 	public boolean passwordResetTransanction(String rawToken, String newPassword, Model model) {
 
 		// 1.password-reset-tokensテーブルからuser_idを取得

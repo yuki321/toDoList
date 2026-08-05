@@ -11,13 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.todolist.entity.PasswordReset;
-import com.example.todolist.entity.PasswordResetToken;
-import com.example.todolist.entity.ToDo;
-
 
 @Repository
-public class PasswordResetRepository {
+public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	
 	@Autowired
 	JdbcTemplate jdbc;
@@ -39,6 +35,7 @@ public class PasswordResetRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	@Transactional
 	public int updateResetTokenUsedAt(Long userId) throws DataAccessException {
 		
@@ -63,6 +60,7 @@ public class PasswordResetRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	@Transactional
 	public int resetPassword(Long userId, String newPassword) throws DataAccessException {
 		String sql = "UPDATE users SET password = ? WHERE id=?";
@@ -80,6 +78,7 @@ public class PasswordResetRepository {
 	 * @return int num
 	 * @throws DataAccessException
 	 */
+	@Override
 	@Transactional
 	public int deleteRecord(Long userId) throws DataAccessException {
 		String sql = "DELETE FROM password_reset_tokens WHERE user_id=?";
@@ -96,6 +95,7 @@ public class PasswordResetRepository {
 	 * @return int count
 	 * @throws 
 	 */
+	@Override
 	public int selectCountByUserId(Long userId) throws DataAccessException {
 		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE user_id = ?";
 		int count = jdbc.queryForObject(sql, Integer.class, userId);
@@ -107,6 +107,7 @@ public class PasswordResetRepository {
 	 * @return List<Map<String, Object>> list
 	 * @throws DataAccessException
 	 */
+	@Override
 	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
 		String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
 		List<Map<String, Object>> list = jdbc.queryForList(sql);
@@ -122,6 +123,7 @@ public class PasswordResetRepository {
 	 * @return 1:挿入成功, 0:挿入失敗
 	 * @throws DataAccessException データアクセス例外
 	 */
+	@Override
 	public int insertRecord(Long userId, String tokenHash) throws DataAccessException {
 		
 		// トークンの有効期限（時間単位）
@@ -148,6 +150,7 @@ public class PasswordResetRepository {
 	 * @return int num 
 	 * @throws 
 	 */	
+	@Override
 	public int deleteResetToken(Long userId) throws DataAccessException {
 		
 		String sql = "DELETE FROM password_reset_tokens WHERE user_id = ?";
@@ -155,7 +158,6 @@ public class PasswordResetRepository {
 		
 		return num;
 	}
-	
 	
 
 }

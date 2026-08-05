@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.PasswordReset;
 import com.example.todolist.entity.User;
-import com.example.todolist.repository.PasswordResetTokenRepository;
+import com.example.todolist.repository.PasswordResetTokenRepositoryIF;
 import com.example.todolist.repository.UserRepository;
-import com.example.todolist.service.PasswordResetService;
+import com.example.todolist.service.PasswordResetServiceIF;
 import com.example.todolist.service.UserServiceIF;
 
 import org.springframework.ui.Model;
@@ -43,10 +43,10 @@ public class MailController {
 	private UserServiceIF userService;
 	
 	@Autowired
-	private PasswordResetTokenRepository passwordResetTokenRepository;
+	private PasswordResetTokenRepositoryIF passwordResetTokenRepository;
 	
 	@Autowired
-	private PasswordResetService passwordResetService;
+	private PasswordResetServiceIF passwordResetService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
