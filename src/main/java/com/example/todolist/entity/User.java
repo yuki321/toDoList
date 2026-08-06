@@ -35,7 +35,6 @@ public class User {
 	@NotEmpty(message = "ユーザー名を入力してください")
 	@Size(max = 50, message = "ユーザー名は1～50文字で入力してください")
 	@Column(name = "user_name", nullable = false, unique = false, length = 50)
-//	@Pattern(regexp = "^[a-z0-9]+$", message = "英小文字、数字のみユーザー名に含めることができます")
 	@Pattern(
 	    regexp = "^[a-z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]+$", 
 	    message = "日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ入力可能です"
@@ -223,7 +222,6 @@ public class User {
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
-
 
 
 }
