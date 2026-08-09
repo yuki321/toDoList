@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.todolist.entity.PasswordReset;
-import com.example.todolist.entity.ProcessType;
 import com.example.todolist.repository.PasswordResetTokenRepositoryIF;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -124,7 +123,7 @@ public class MailService implements MailServiceIF {
 	public void sendPasswordResetEmail(String email, String token) {
 		
 		String subject = "[todolist]パスワードリセットのご案内";
-		String resetLink = "http://localhost:8080/validate_token?token=" + token;
+		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=reset";
 		String text = "パスワードリセットのリクエストを受け付けました。下記リンクからリセットをしてください。\n"
 				+ resetLink
 				+ "\nメールに心当たりがない場合、このメールを削除してください。\n"
@@ -149,7 +148,7 @@ public class MailService implements MailServiceIF {
 	public void sendUserCreateEmail(String email, String token) {
 		
 		String subject = "[todolist]ユーザー登録のご案内";
-		String resetLink = "http://localhost:8080/validate_token?token=" + token;
+		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=registration";
 		String text = "ユーザー登録のリクエストを受け付けました。下記リンクからリセットをしてください。\n"
 				+ resetLink
 				+ "\nメールに心当たりがない場合、このメールを削除してください。\n"
@@ -164,22 +163,6 @@ public class MailService implements MailServiceIF {
 		mailSender.send(message);
 		
 	}
-	
-	
-	public boolean isPwReset(String type) {
-		
-		if(ProcessType.PW_RESET.equals(type)) return true;
-		
-		return false;
-	}
-	public boolean isCreateUser(String type) {
-		
-		if(ProcessType.USER_CREATE.equals(type)) return true;
-		
-		return false;
-	}
-	
-	
 	
 	
 }

@@ -35,6 +35,9 @@ public class PasswordChange {
     private String confirmPassword;
     
     private String passwordChange;
+    
+    // 処理の種類（パスワード再設定または新規登録）
+    private String kind;
 
     
     // Setter / Getterのメソッド
@@ -69,19 +72,26 @@ public class PasswordChange {
 	public void setPasswordChange(String passwordChange) {
 		this.passwordChange = passwordChange;
 	}
-
-
 	
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
 	// コンストラクタ
 	public PasswordChange() {};
 	
 	public PasswordChange(String currentPassword, String newPassword, 
-			String confirmPassword, String passwordChange) {
+			String confirmPassword, String passwordChange, String kind) {
 		super();
 		this.currentPassword = currentPassword;
 		this.newPassword = newPassword;
 		this.confirmPassword = confirmPassword;
 		this.passwordChange = passwordChange;
+		this.kind = kind;
 	}
 
 

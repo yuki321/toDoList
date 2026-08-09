@@ -86,11 +86,21 @@ function closeToDoEditDialog(){
 
 // パスワードリセットダイアログ
 function onClickPWResetDialog(){
-	const dialog = document.querySelector("#mailSend");
+	const dialog = document.querySelector("#mailSend-reset");
 	dialog.showModal();
 }
 function closePWResetDialog(){
-	const dialog = document.querySelector("#mailSend");
+	const dialog = document.querySelector("#mailSend-reset");
+	dialog.close();
+}
+
+// 新規登録ダイアログ
+function onClickUserCreateDialog(){
+	const dialog = document.querySelector("#mailSend-registration");
+	dialog.showModal();
+}
+function closeUserCreateDialog(){
+	const dialog = document.querySelector("#mailSend-registration");
 	dialog.close();
 }
 

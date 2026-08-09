@@ -17,9 +17,5 @@ public interface MailServiceIF {
 	
 	public void sendUserCreateEmail(String email, String token);
 	
-	public boolean isPwReset(String type);
-	
-	public boolean isCreateUser(String type);
-
 	
 }

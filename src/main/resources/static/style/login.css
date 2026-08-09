@@ -53,7 +53,7 @@ input[type="password"] {
 }
 
 /** PW再設定ダイアログ **/
-#mailSend {
+#mailSend-reset, #mailSend-registration {
 	width: 40%;
 	border: 1px solid lightgray;
 	border-radius: 5px; /* 角丸 */

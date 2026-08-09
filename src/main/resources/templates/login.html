@@ -30,16 +30,19 @@
 	        	<button class="btn form-control btn-primary" name="Submit" value="Login" type="Submit">ログイン</button>
 	        	<div id="reset-link" onclick="onClickPWResetDialog()">パスワードの再設定</div>
 				<br>
-				<a class="link-edit" id="userCreateBtn" th:href="@{/api/users/create(login='false')}">新規登録</a><br>
+
+				<a class="link-edit" id="userCreateBtn" onclick="onClickUserCreateDialog()">新規登録</a><br>
 				<span class="error" th:text="${error}"></span>
 			</form>
 	    </div>
 	</div>
-	<dialog id="mailSend">
-  		<p>メール送信先を入力してください</p>
+	<!-- パスワード再設定 -->
+	<dialog id="mailSend-reset">
+  		<p>メール送信先を入力してください(パスワード再設定)</p>
 		<div id="dialog">
 	  		<form method="post" th:action="@{/reset-password/send}" th:object="${passwordChange}">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<input type="hidden" name="kind" th:value="PW_RESET" />
 				
 				<input type="email" id="email-form" name="passwordChange"
 					th:field="*{passwordChange}" size="35" required/><br>
@@ -47,7 +50,22 @@
 	  			<input class="link-update" id="mail-send" type="submit" value="メール送信"/>
 	  		</form>			
   		</div>
-  </dialog>
+	</dialog>
+	<!-- 新規登録 -->
+	<dialog id="mailSend-registration">
+		<p>メール送信先を入力してください(新規登録)</p>
+		<div id="dialog">
+	  		<form method="post" th:action="@{/reset-password/send}" th:object="${passwordChange}">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<input type="hidden" name="kind" th:value="USER_CREATE" />
+				
+				<input type="email" id="email-form" name="passwordChange"
+					th:field="*{passwordChange}" size="35" required/><br>
+		  		<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeUserCreateDialog()"/>
+	  			<input class="link-update" id="mail-send" type="submit" value="メール送信"/>
+	  		</form>			
+		</div>
+	</dialog>
 </body>
 </html>
 

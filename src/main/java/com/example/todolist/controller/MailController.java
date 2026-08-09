@@ -110,13 +110,30 @@ public class MailController {
 		}
 		
 		// パスワードリセットメールを送信する
-		mailService.sendPasswordResetEmail(email, token);
+		String kind = mail.getKind();
+		if(kind.equals("PW_RESET")) {
+			mailService.sendPasswordResetEmail(email, token);
+		}
+		
+		// ユーザー登録のメールを送信する
+		if(kind.equals("USER_CREATE")) {
+			mailService.sendUserCreateEmail(email, token);
+		}
 
 		model.addAttribute("passwordChange", new PasswordChange());
 		
 		return "login";
 	}
 	
+	
+	/**
+	 * パスワード再設定
+	 * @param PasswordReset passwordReset
+	 * @param String rawToken
+	 * @param BindingResult bindingResult
+	 * @param Model model
+	 * @return String
+	 */
 	@PostMapping
 	public String resetPassword(@ModelAttribute("resetPassword") PasswordReset passwordReset,
 			@RequestParam("token") String rawToken, 
@@ -157,6 +174,10 @@ public class MailController {
 	}
 
 	
+	/**
+	 * 完了画面へ遷移
+	 * @return String
+	 */
 	@GetMapping("/complete")
 	public String resetComplete() {
 		return "complete";

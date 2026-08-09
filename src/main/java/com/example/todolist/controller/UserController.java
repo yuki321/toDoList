@@ -110,7 +110,12 @@ public class UserController {
 	}
 	
 	
-	// ユーザー作成画面へ遷移
+	/**
+	 * ユーザー作成画面へ遷移
+	 * @param String login(デフォルトはfalse)
+	 * @param model
+	 * @return String
+	 */
 	@GetMapping("create")
 	public String userCreate(@RequestParam(defaultValue = "false")String login , Model model) {
 		model.addAttribute("user", new User());
@@ -118,7 +123,14 @@ public class UserController {
 		return "userCreate";
 	}
 	
-	// パスワード変更画面へ遷移
+
+	/**
+	 * パスワード変更画面へ遷移
+	 * @param Long id
+	 * @param Model model
+	 * @param User user
+	 * @return String
+	 */
 	@GetMapping("user/{id}/change-password")
 	public String changePassword(@PathVariable Long id, Model model, @ModelAttribute User user) {
 		model.addAttribute("user", user);
@@ -127,6 +139,7 @@ public class UserController {
 		model.addAttribute("passwordChange", new PasswordChange());
 		return "changePassword";
 	}
+	
 	
 	/**
 	 * ユーザー作成
@@ -144,8 +157,8 @@ public class UserController {
 
 		try {
 			User createdUser = userService.createUser(user);
-			model.addAttribute(createdUser);
 			
+			model.addAttribute(createdUser);
 			return "redirect:/api/users/user";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.create", e.getMessage());
@@ -154,8 +167,9 @@ public class UserController {
 		
 	}
 	
+	
 	/**
-	 * 更新
+	 * ユーザー更新
 	 * @param Long id
 	 * @param User user
 	 * @param String userName
@@ -187,6 +201,12 @@ public class UserController {
 		
 	}
 	
+	
+	/**
+	 * ユーザー削除
+	 * @param Long id
+	 * @return String
+	 */
 	@PostMapping("user/{id}/delete")
     public String deleteUser(@PathVariable Long id) {
         try {
@@ -198,6 +218,16 @@ public class UserController {
     }
 	
 	
+	/**
+	 * パスワード変更（再設定とは別）
+	 * @param User user
+	 * @param Long id
+	 * @param UserDetails userDetails
+	 * @param PasswordChange passwordChange
+	 * @param BindingResult bindingResult
+	 * @param Model model
+	 * @return String
+	 */
 	@PostMapping("user/{id}/change-password")
 	public String changePassword(
 			User user,
@@ -236,6 +266,12 @@ public class UserController {
 	}
 		
 	
+	/**
+	 * CSVアップロード
+	 * @param MultipartFile file
+	 * @param Model model
+	 * @return String
+	 */
 	@PostMapping("/upload")
 	public String uploadCsvFile(@RequestParam("file") MultipartFile file, Model model) {
 	    try {
@@ -246,8 +282,6 @@ public class UserController {
 	        return "user";
 	    }
 	}
-	
-	
 	
 	
 }
