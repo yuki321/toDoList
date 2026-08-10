@@ -1,4 +1,4 @@
-# 
+## application.properties 
 
 spring.application.name=todolist
 spring.sql.init.mode=always
