@@ -84,7 +84,7 @@ public class UserService implements UserServiceIF {
 		 */
     	List<User> userlist = new ArrayList<>();
     	String sql = "SELECT * FROM users "
-    			+ "WHERE user_name LIKE ? AND email LIKE ? AND role LIKE ?";
+    			+ "WHERE user_name LIKE ? AND email LIKE ? AND role LIKE ? ORDER BY role ASC";
     	List<Map<String, Object>> resultList = jdbc.queryForList(sql, userName, email, role);
     	
     	

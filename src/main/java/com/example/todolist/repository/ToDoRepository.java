@@ -36,7 +36,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		List<ToDo> todolist = new ArrayList<>();
 		String userName = userDetails.getUsername();
 		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
-				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.deadline ASC";
+				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.priority ASC";
 		
 		// ToDoテーブルのデータを全件取得
 		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
@@ -69,7 +69,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		List<ToDo> todolist = new ArrayList<>();
 		String userName = userDetails.getUsername();
 		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
-				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.deadline ASC";
+				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.priority ASC";
 		
 		// ToDoテーブルのデータを全件取得
 		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);

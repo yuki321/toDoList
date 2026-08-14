@@ -23,10 +23,7 @@ public class ToDo {
 	
 	@Column(name = "user_id", nullable = false, unique = false, length = 20)
 	private Long userId;
-	
-//	@Column(name = "category_id", nullable = false, unique = true, length = 20)
-//	private Long categoryId;
-		
+			
 	@NotEmpty(message = "タスクを入力してください")
 	@Size(max = 100, message = "タスクは100文字以内で入力してください")
 	@Column(name = "content", nullable = false, unique = false, length = 500)
@@ -46,7 +43,8 @@ public class ToDo {
 	@Column(name = "deadline", nullable = true)
 	private LocalDateTime deadline;
 	
-	@Column(name = "priority", nullable = true)
+	@NotEmpty(message = "優先度を選択してください")
+	@Column(name = "priority", nullable = false)
 	private String priority;
 	
     
