@@ -22,6 +22,8 @@ import com.example.todolist.repository.UserRepository;
 import com.example.todolist.service.MailServiceIF;
 import com.example.todolist.service.PasswordResetServiceIF;
 
+import jakarta.validation.Valid;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -54,7 +56,7 @@ public class MailController {
 	
 	
 	@PostMapping("/send")
-	public String sendMail(@ModelAttribute PasswordChange mail, Model model) {
+	public String sendMail(@Valid @ModelAttribute PasswordChange mail, Model model) {
 
 		// メール送信先のメールアドレス
 		String email = mail.getPasswordChange();
@@ -135,7 +137,7 @@ public class MailController {
 	 * @return String
 	 */
 	@PostMapping
-	public String resetPassword(@ModelAttribute("resetPassword") PasswordReset passwordReset,
+	public String resetPassword(@Valid @ModelAttribute("resetPassword") PasswordReset passwordReset,
 			@RequestParam("token") String rawToken, 
 			BindingResult bindingResult, 
 			Model model

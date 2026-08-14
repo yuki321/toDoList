@@ -20,6 +20,8 @@ import com.example.todolist.entity.ToDo;
 import com.example.todolist.entity.User;
 import com.example.todolist.service.ToDoServiceIF;
 
+import jakarta.validation.Valid;
+
 @Controller
 @RequestMapping("/")
 public class ToDoController {
@@ -72,7 +74,7 @@ public class ToDoController {
 	 */
 	@PostMapping("/complete")
 	public String getTaskCompleted(
-			@ModelAttribute("todoComplete") ToDo todo, 
+			@Valid @ModelAttribute("todoComplete") ToDo todo, 
 			BindingResult bindingResult, 
 			@AuthenticationPrincipal UserDetails userDetails,
 			Model model
@@ -109,7 +111,7 @@ public class ToDoController {
 	 */
 	@PostMapping("/undoTask")
 	public String undoCompletedTask(
-			@ModelAttribute("undoTask") ToDo todo, 
+			@Valid @ModelAttribute("undoTask") ToDo todo, 
 			BindingResult bindingResult, 
 			@AuthenticationPrincipal UserDetails userDetails,
 			Model model
@@ -193,7 +195,7 @@ public class ToDoController {
 	 */
 	@PostMapping("/edit")
 	public String editToDo(
-			@ModelAttribute("todoForm") ToDo todo, 
+			@Valid @ModelAttribute("todoForm") ToDo todo, 
 			BindingResult bindingResult, 
 			@AuthenticationPrincipal UserDetails userDetails,
 			Model model
