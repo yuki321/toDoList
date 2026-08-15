@@ -17,6 +17,12 @@ h1 {
 #toDoList {
 	margin-bottom: 30px;
 }
+.userCount {
+	margin-top: 50px;
+	margin-bottom: -30px;
+	font-weight: bold;
+	font-size: 20px;
+}
 
 input {
 	line-height: 2;

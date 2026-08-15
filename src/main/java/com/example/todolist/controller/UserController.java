@@ -54,9 +54,11 @@ public class UserController {
 		}
 		
 		List<User> users = userService.getAllUsers();
+		final int userCount = users.size();
 		
 		model.addAttribute("users", users);
 		model.addAttribute("user", new User());
+		model.addAttribute("userCount", userCount);
 		
 		return "user";
 	}
@@ -72,8 +74,11 @@ public class UserController {
 	public String searchUsers(@ModelAttribute("user") User user, Model model) {
 		
 		List<User> users = userService.searchUsers(user);
+		final int userCount = users.size();
+		
 		model.addAttribute("users", users);
 		model.addAttribute("user", new User());
+		model.addAttribute("userCount", userCount);
 		
 		return "user";
 	}

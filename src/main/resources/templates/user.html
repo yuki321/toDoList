@@ -47,6 +47,7 @@
 				</form>            
 		    </div>
 			<div id="content">
+				<div class="userCount">データ <span th:text="${userCount}"></span>件</div>
 				<div th:unless="${#lists.isEmpty(users)}">
 					<table class="table">
 						<thead>
