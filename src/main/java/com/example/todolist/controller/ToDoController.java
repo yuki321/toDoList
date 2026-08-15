@@ -44,8 +44,10 @@ public class ToDoController {
 
 		// ログイン情報を基にタスク一覧を表示
 		List<ToDo> todos = toDoService.findAllToDo(userDetails);
+		final int todoCount = todos.size();
 		
 		model.addAttribute("todos", todos);
+		model.addAttribute("todoCount", todoCount);
 		model.addAttribute("todoCreate", new ToDo());
 		model.addAttribute("todoForm", new ToDo());
 		model.addAttribute("todoComplete", new ToDo());
@@ -54,7 +56,9 @@ public class ToDoController {
 		
 		// 完了済みタスク
 		List<ToDo> completedTodos = toDoService.findAllCompletedToDo(userDetails);
+		final int completedCount = completedTodos.size();
 		model.addAttribute("completedTodos", completedTodos);
+		model.addAttribute("completedCount", completedCount);
 
 		// ロールを取得（ロールがAdminの場合、管理者画面へのリンクを表示する）
 		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);

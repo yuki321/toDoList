@@ -26,6 +26,7 @@
 					<p th:if="${#lists.isEmpty(todos)}">タスクは存在しません</p>
 				</div>
 				<!-- データありの場合 -->
+				<div class="taskCount">タスク残り <span th:text="${todoCount}"></span>件</div>
 				<div th:each="task: ${todos}" class="task">
 					<div class="todo-content">
 						<p th:text="${task.content}"></p>
@@ -56,7 +57,7 @@
 					</div>
 				</div>
 
-				<h2 id="complete-task">完了済みタスク</h2>				
+				<h2 id="complete-task">完了済みタスク <span th:text="${completedCount}"></span>件</h2>				
 				<div>
 					<p th:if="${#lists.isEmpty(completedTodos)}" class="no-task">タスクは存在しません</p>
 				</div>
