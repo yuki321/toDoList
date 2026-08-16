@@ -41,17 +41,6 @@ public class PasswordResetToken {
 	@Column(name = "used_at", nullable = true)
 	private LocalDateTime used_at; 
 	
-	
-	
-	/**
-	 * tokenが有効期限内か判定
-	 * @return boolean true:有効期限切れ, false:有効期限内
-	 */
-	public boolean isExpired() {
-		LocalDateTime now = LocalDateTime.now();
-		return this.expires_at.isBefore(now);
-	}
-	
     
     // コンストラクタ
 	public PasswordResetToken() {};
