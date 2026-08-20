@@ -134,7 +134,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		String userName = userDetails.getUsername();
 		String sql = "SELECT * FROM users WHERE user_name=?";
 		Map<String, Object> userInfo = jdbc.queryForMap(sql, userName);
-		
+
 		return userInfo;
 	}
 	

@@ -44,7 +44,7 @@ public class UserController {
 	 * @return String
 	 */
 	@GetMapping("user")
-	public String getAllUsers(@AuthenticationPrincipal UserDetails userDetails,Model model){
+	public String getAllUsers(@AuthenticationPrincipal UserDetails userDetails, Model model){
 		
 		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
 		String role = (String) userIfo.get("role");
@@ -97,7 +97,7 @@ public class UserController {
 		if(!(id instanceof Long)) {
 			return "redirect:/api/users/user";
 		}
-		
+
 		try {
 			Optional<User> user = userService.getUserById(id);
 			
@@ -177,8 +177,6 @@ public class UserController {
 	 * ユーザー更新
 	 * @param Long id
 	 * @param User user
-	 * @param String userName
-	 * @param String email
 	 * @param BindingResult bindingResult
 	 * @param Model model
 	 * @return String

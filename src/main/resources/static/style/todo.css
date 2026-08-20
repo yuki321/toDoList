@@ -60,6 +60,9 @@ input {
 .margin-top {
 	margin-top: 70px;
 }
+.edit-button {
+	margin-bottom: 10px; 
+}
 
 .taskCount {
 	margin-top: 50px;

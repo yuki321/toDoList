@@ -13,6 +13,7 @@
 		<div class="container">
 			<h1>タスク一覧</h1>
 			<div id="header-content">
+				<a class="link-list edit-button" th:href="@{/others/{id}(id=${userId})}">編集</a>
 				<form th:action="@{/logout}" method="post">
 				    <button class="link-edit" type="submit">ログアウト</button>
 				</form>			

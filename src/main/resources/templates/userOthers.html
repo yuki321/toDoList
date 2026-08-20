@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー処理画面</title>
+	<link th:href="@{/style/style.css}" rel="stylesheet">
+	<script th:src="@{/js/index.js}" charset="utf-8"></script>
+	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
+</head>
+<body>
+	<main>
+		<div class="container">
+			<h1>ユーザー処理</h1>
+			<div id="header-content">
+				<form th:action="@{/logout}" method="post">
+				    <button class="link-edit" type="submit">ログアウト</button>
+				</form>			
+			</div>
+			<div id="detail">
+				<p>退会処理</p>
+				<a class="link-list" th:href="@{/others/{id}/change-password-todo(id=${user?.id})}">パスワード変更</a>
+				<br>
+				<a class="link-list" th:href="@{/}">戻る</a>
+			</div>
+		</div>
+	</main>
+	
+</body>
+
+</html>

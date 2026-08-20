@@ -162,8 +162,6 @@ public class UserService implements UserServiceIF {
 	 * 更新
 	 * @param Long id
 	 * @param User user
-	 * @param String userName
-	 * @param String email
 	 * @return User
 	 */
 	@Override
@@ -181,7 +179,6 @@ public class UserService implements UserServiceIF {
 			throw new IllegalArgumentException("すでにそのメールアドレスは存在しています");			
 		}
 		
-		
 		updatingUser.setUserName(user.getUserName());
 		updatingUser.setEmail(user.getEmail());
 
@@ -195,6 +192,7 @@ public class UserService implements UserServiceIF {
 		
 		return userRepository.save(updatingUser);
 	}
+
 	
 	/**
 	 * 削除

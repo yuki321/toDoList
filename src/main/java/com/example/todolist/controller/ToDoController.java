@@ -2,6 +2,7 @@ package com.example.todolist.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,13 +13,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.ToDo;
 import com.example.todolist.entity.User;
 import com.example.todolist.service.ToDoServiceIF;
+import com.example.todolist.service.UserServiceIF;
 
 import jakarta.validation.Valid;
 
@@ -28,6 +32,9 @@ public class ToDoController {
 
 	@Autowired
 	private ToDoServiceIF toDoService;
+	
+	@Autowired
+	private UserServiceIF userService;
 	
 	
 	/**
@@ -53,7 +60,6 @@ public class ToDoController {
 		model.addAttribute("todoComplete", new ToDo());
 		model.addAttribute("undoTask", new ToDo());
 		
-		
 		// 完了済みタスク
 		List<ToDo> completedTodos = toDoService.findAllCompletedToDo(userDetails);
 		final int completedCount = completedTodos.size();
@@ -61,9 +67,11 @@ public class ToDoController {
 		model.addAttribute("completedCount", completedCount);
 
 		// ロールを取得（ロールがAdminの場合、管理者画面へのリンクを表示する）
-		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
-		model.addAttribute("role", userIfo.get("role"));
+		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		model.addAttribute("role", userInfo.get("role"));
 
+		// ユーザー編集 
+		model.addAttribute("userId", userInfo.get("id"));
 		return "index";
 	}
 	
@@ -141,7 +149,111 @@ public class ToDoController {
 		
 	}
 	
+	
+	/**
+	 * 編集ページへ遷移
+	 * @param Long id
+	 * @param Model model
+	 * @return String
+	 */
+	@GetMapping("others/{id}")
+	public String getOthers(@PathVariable Long id, Model model){
+		// idがLong型でない場合
+		if(!(id instanceof Long)) {
+			return "redirect:/";
+		}
 
+		try {
+			Optional<User> user = userService.getUserById(id);
+
+			if(user.isPresent()) {
+				model.addAttribute("user", user.orElse(null));
+
+				return "userOthers";
+			}else {
+				return "redirect:/";
+			}
+			
+		}catch(IllegalArgumentException e) {
+			return "redirect:/";
+		}
+		
+	}
+	
+	
+	/**
+	 * パスワード変更画面へ遷移
+	 * @param Long id
+	 * @param Model model
+	 * @param User user
+	 * @return String
+	 */
+	@GetMapping("others/{id}/change-password-todo")
+	public String changePasswordFromToDo(@PathVariable Long id, Model model, @ModelAttribute User user) {
+		model.addAttribute("user", user);
+		
+		// changePasswordメソッドで利用
+		model.addAttribute("passwordChange", new PasswordChange());
+		return "changePasswordFromToDo";
+	}
+	
+	
+	/**
+	 * パスワード変更処理
+	 * @param user
+	 * @param id
+	 * @param userDetails
+	 * @param passwordChange
+	 * @param bindingResult
+	 * @param model
+	 * @return
+	 */
+	@PostMapping("others/{id}/change-password-todo")
+	public String changePasswordFromToDo(
+			User user,
+			@PathVariable Long id, 
+			@AuthenticationPrincipal UserDetails userDetails,
+			@Validated(PasswordChange.PasswordUpdate.class) 
+			@ModelAttribute PasswordChange passwordChange,
+			BindingResult bindingResult,
+			Model model
+			) {
+		
+		if(bindingResult.hasErrors()) {
+			return "changePasswordFromToDo";
+		}
+		
+		try {
+			
+			// 入力したパスワードが現在のパスワードと一致しているか確認
+			List<String> errors = userService.checkPassword(passwordChange, user);
+			
+			if(!errors.isEmpty()) {
+				for(String error: errors) {
+					bindingResult.reject("error.passwordChange", error);
+				}
+				return "changePasswordFromToDo";
+			}
+			
+			String newPassword = passwordChange.getNewPassword();
+			userService.savePassword(user, newPassword);
+			
+			return "redirect:/";
+		}catch(IllegalArgumentException e) {
+			return "redirect:/";
+		}
+		
+	}
+	
+
+	/**
+	 * タスク作成
+	 * @param ToDo todo
+	 * @param BindingResult bindingResult
+	 * @param UserDetails userDetails
+	 * @param Model model
+	 * @return String
+	 */
 	@PostMapping("/")
 	public String createToDo(@Validated @ModelAttribute("todoCreate") ToDo todo,
 			BindingResult bindingResult,
