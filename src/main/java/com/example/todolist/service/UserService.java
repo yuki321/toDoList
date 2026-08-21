@@ -167,6 +167,30 @@ public class UserService implements UserServiceIF {
 		return userRepository.save(user);
 	}
 	
+	
+	/**
+	 * CSVファイルのデータを読み込みユーザーを作成
+	 * @param User user
+	 * @return
+	 */
+	public User createUserFromCsv(User user) {
+		
+		user.setId(user.getId());
+		user.setUserName(user.getUserName());
+		user.setEmail(user.getEmail());
+		user.setPassword(user.getPassword());
+		user.setRole(user.getRole());
+		user.setEnabled(true);
+		user.setAccountNonExpired(true);
+		user.setCredentialsNonExpired(true);
+		user.setAccountNonLocked(true);
+		user.setCreatedAt(LocalDateTime.now());
+		user.setUpdatedAt(LocalDateTime.now());
+		
+		return userRepository.save(user);
+	}
+	
+	
 	/**
 	 * 更新
 	 * @param Long id
@@ -319,8 +343,19 @@ public class UserService implements UserServiceIF {
 				if (values.length >= 4) {
 					User user = new User();
 					user.setUserName(values[0].trim());
-					user.setEmail(values[1].trim());
-					user.setPassword(values[2].trim());
+					
+					String emailFromCSV = values[1].replace("\"", "").trim();
+					String passwordFromCSV = values[2].replace("\"", "").trim();
+					
+					/**
+					 *  CSV記載のメールアドレスとDBデータの重複をチェック（重複している場合trueを返す）
+					 *  重複している場合、処理を飛ばす
+					 */
+					boolean checkResult = duplicatedCheck(emailFromCSV, passwordFromCSV);
+					if(checkResult) continue;
+					
+					user.setEmail(emailFromCSV);
+					user.setPassword(passwordFromCSV);
 					if(values[3].trim().equals("1")) {
 						user.setRole("Admin");
 					} else if(values[3].trim().equals("2")) {
@@ -336,13 +371,38 @@ public class UserService implements UserServiceIF {
 					user.setUpdatedAt(LocalDateTime.now());
 					
 					// ユーザーを保存
-					createUser(user);
+					createUserFromCsv(user);
 				}
 			}
 		} catch (IOException e) {
 			throw new Exception("CSVファイルの読み込みに失敗しました", e);
 		}
 
+	}
+	
+
+	/**
+	 * CSV記載のメールアドレス / パスワードとDBデータの重複をチェック
+	 * 重複している場合trueを返す
+	 * 
+	 * @param String emailFromCSV
+	 * @return boolean
+	 */
+	public boolean duplicatedCheck(String emailFromCSV, String passwordFromCSV) {
+		
+		List<User> users = getAllUsers();
+		
+		for(User u: users) {
+			if(emailFromCSV.equals(u.getEmail())) {
+				return true;
+			}
+			
+			if(passwordFromCSV.equals(u.getPassword())) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	
@@ -364,11 +424,11 @@ public class UserService implements UserServiceIF {
 		List<User> record = userRepository.findAll();
 		
 		for(User s: record) {
-			
+
 			List<String> list = new ArrayList<>();
 			list.add(s.getUserName());
 			list.add(s.getEmail());
-			list.add(s.getPassword().replace('"',' '));
+			list.add(s.getPassword());
 			list.add(s.getRole().equals("Admin") ? "1" : "2");
 			outputList.add(list);
 		}
