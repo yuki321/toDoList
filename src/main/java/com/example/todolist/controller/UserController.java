@@ -287,4 +287,30 @@ public class UserController {
 	}
 	
 	
+	/**
+	 * CSVダウンロード
+	 * @param model
+	 * @return String
+	 */
+	@PostMapping("/download")
+	public String downloadCsvFile(Model model) {
+		try {
+			userService.downloadCsvFile();
+			return "redirect:/api/users/user";
+	    } catch (Exception e) {
+	        model.addAttribute("errorMessage", "CSVファイルのダウンロード中にエラーが発生しました: " + e.getMessage());
+	
+	        List<User> users = userService.getAllUsers();
+			final int userCount = users.size();
+	        model.addAttribute("user", new User()); 
+	        model.addAttribute("users", users); 
+	        model.addAttribute("userCount", userCount); 
+	        
+	        return "user";
+	    }
+		
+	}
+
+	
+	
 }

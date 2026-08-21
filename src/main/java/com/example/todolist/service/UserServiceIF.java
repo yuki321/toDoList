@@ -32,6 +32,8 @@ public interface UserServiceIF {
 	String getDbPassword(User user);
 
 	void uploadCsvFile(MultipartFile file) throws Exception;
+	
+	void downloadCsvFile() throws Exception;
 
 	void restoreUserDisplayFields(Long id, User user);
 	

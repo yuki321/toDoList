@@ -1,14 +1,21 @@
 package com.example.todolist.service;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.io.ByteOrderMark;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.UserRepository;
+import tools.jackson.dataformat.csv.CsvMapper;
+import tools.jackson.dataformat.csv.CsvSchema;
 
 @Service
 @Transactional
@@ -290,6 +299,10 @@ public class UserService implements UserServiceIF {
 	}
 	
 	
+	/**
+	 * CSVファイルアップロード
+	 * @param MultipartFile file
+	 */
 	@Override
 	@Transactional
 	public void uploadCsvFile(MultipartFile file) throws Exception {
@@ -330,6 +343,62 @@ public class UserService implements UserServiceIF {
 			throw new Exception("CSVファイルの読み込みに失敗しました", e);
 		}
 
+	}
+	
+	
+	/**
+	 * CSVファイルのダウンロード
+	 */
+	@Override
+	@Transactional
+	public void downloadCsvFile() throws Exception {
+
+		// Header
+		CsvSchema.Builder builder = CsvSchema.builder()
+				.addColumn("ユーザー名")
+				.addColumn("メールアドレス")
+				.addColumn("パスワード")
+				.addColumn("ロール");
+		
+		List<List<String>> outputList = new ArrayList<>();
+		List<User> record = userRepository.findAll();
+		
+		for(User s: record) {
+			
+			List<String> list = new ArrayList<>();
+			list.add(s.getUserName());
+			list.add(s.getEmail());
+			list.add(s.getPassword().replace('"',' '));
+			list.add(s.getRole().equals("Admin") ? "1" : "2");
+			outputList.add(list);
+		}
+
+		CsvMapper mapper = new CsvMapper();
+		CsvSchema schema = builder.build()
+		    .withHeader()
+		    .withColumnSeparator(',')
+		    .withQuoteChar('"')
+		    .withEscapeChar('\"')
+		    .withLineSeparator("\r\n");
+
+		// ファイルパス
+		Path path = Path.of(System.getProperty("user.home"), "Downloads");
+		String downloadPath = path.toString();
+		LocalDateTime time = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+		String formattedTime = time.format(formatter);
+		String fileName = "data_" + formattedTime + ".csv";
+		
+		//CSV出力
+		try(FileOutputStream stream = new FileOutputStream(downloadPath + "\\" + fileName)) {
+			//BOM出力
+		    byte[] bom = ByteOrderMark.UTF_8.getBytes();
+		    stream.write(bom);
+
+		    // CSVのデータをファイルにUTF-8で出力
+		    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream, "UTF-8"));
+		    mapper.writer(schema).writeValues(writer).writeAll(outputList).flush();
+		}
 		
 	}
 	

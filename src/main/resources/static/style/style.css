@@ -23,6 +23,10 @@ h1 {
 	font-weight: bold;
 	font-size: 20px;
 }
+.csvDownload {
+	margin-top: 30px;
+	margin-bottom: -30px;
+}
 
 input {
 	line-height: 2;
