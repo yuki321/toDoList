@@ -342,20 +342,20 @@ public class UserService implements UserServiceIF {
 				String[] values = line.split(",");
 				if (values.length >= 4) {
 					User user = new User();
-					user.setUserName(values[0].trim());
 					
+					String userNameFromCSV = values[0].trim();
 					String emailFromCSV = values[1].replace("\"", "").trim();
-					String passwordFromCSV = values[2].replace("\"", "").trim();
 					
 					/**
-					 *  CSV記載のメールアドレスとDBデータの重複をチェック（重複している場合trueを返す）
+					 *  CSV記載のユーザー名とメールアドレスとDBデータの重複をチェック（重複している場合trueを返す）
 					 *  重複している場合、処理を飛ばす
 					 */
-					boolean checkResult = duplicatedCheck(emailFromCSV, passwordFromCSV);
+					boolean checkResult = duplicatedCheck(userNameFromCSV, emailFromCSV);
 					if(checkResult) continue;
 					
+					user.setUserName(userNameFromCSV);
 					user.setEmail(emailFromCSV);
-					user.setPassword(passwordFromCSV);
+					user.setPassword(values[2].replace("\"", "").trim());
 					if(values[3].trim().equals("1")) {
 						user.setRole("Admin");
 					} else if(values[3].trim().equals("2")) {
@@ -382,22 +382,22 @@ public class UserService implements UserServiceIF {
 	
 
 	/**
-	 * CSV記載のメールアドレス / パスワードとDBデータの重複をチェック
+	 * CSV記載のユーザー名 / メールアドレスとDBデータの重複をチェック
 	 * 重複している場合trueを返す
 	 * 
 	 * @param String emailFromCSV
 	 * @return boolean
 	 */
-	public boolean duplicatedCheck(String emailFromCSV, String passwordFromCSV) {
+	public boolean duplicatedCheck(String userNameFromCSV, String emailFromCSV) {
 		
 		List<User> users = getAllUsers();
 		
 		for(User u: users) {
-			if(emailFromCSV.equals(u.getEmail())) {
+			if(userNameFromCSV.equals(u.getUserName())) {
 				return true;
 			}
 			
-			if(passwordFromCSV.equals(u.getPassword())) {
+			if(emailFromCSV.equals(u.getEmail())) {
 				return true;
 			}
 		}
