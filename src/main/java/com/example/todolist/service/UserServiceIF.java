@@ -29,8 +29,6 @@ public interface UserServiceIF {
 
 	List<String> checkPassword(PasswordChange form, User user);
 
-	String getDbPassword(User user);
-
 	void uploadCsvFile(MultipartFile file) throws Exception;
 	
 	void downloadCsvFile() throws Exception;

@@ -113,7 +113,6 @@ public class UserService implements UserServiceIF {
 	}
 	
 	
-	
 	/**
 	 * IDで指定して取得
 	 * @param Long id
@@ -312,8 +311,7 @@ public class UserService implements UserServiceIF {
 	 * @param User user
 	 * @return String password
 	 */
-	@Override
-	public String getDbPassword(@PathVariable User user) {
+	private String getDbPassword(@PathVariable User user) {
 		
 		String sql = "SELECT password FROM users WHERE id=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
@@ -388,7 +386,7 @@ public class UserService implements UserServiceIF {
 	 * @param String emailFromCSV
 	 * @return boolean
 	 */
-	public boolean duplicatedCheck(String userNameFromCSV, String emailFromCSV) {
+	private boolean duplicatedCheck(String userNameFromCSV, String emailFromCSV) {
 		
 		List<User> users = getAllUsers();
 		
