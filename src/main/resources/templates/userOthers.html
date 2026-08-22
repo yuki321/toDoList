@@ -17,14 +17,28 @@
 				</form>			
 			</div>
 			<div id="detail">
-				<p>退会処理</p>
+				<input th:unless="${role == 'Admin'}" class="link-delete delete" 
+						type="button" value="アカウント削除" onclick="onClickAccountDeleteBtn(this)"/><br>
 				<a class="link-list" th:href="@{/others/{id}/change-password-todo(id=${user?.id})}">パスワード変更</a>
 				<br>
 				<a class="link-list" th:href="@{/}">戻る</a>
 			</div>
 		</div>
 	</main>
+	<!-- アカウント削除確認ダイアログ -->
+	<dialog id="accountDeleteDialog">
+		<div class="dialog-container">
+			<form method="post" th:action="@{/others/{id}/deleteAccount(id=${id})}" >
+				<h2>アカウントを削除します</h2>
+				<p>削除すると復元できません！！<br>それでも削除しますか？</p>
+				<div class="buttons">
+					<input class="link-list" type="button" value="キャンセル" onclick="closeAccountDeleteDialog()"/>
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<input class="link-delete" type="submit" value="アカウント削除" />
+				</div>
+			</form>			
+		</div>
+	</dialog>
 	
 </body>
-
 </html>

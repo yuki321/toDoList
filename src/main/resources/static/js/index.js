@@ -104,5 +104,15 @@ function closeUserCreateDialog(){
 	dialog.close();
 }
 
+// アカウント削除ダイアログ
+function onClickAccountDeleteBtn(){
+	const dialog = document.querySelector("#accountDeleteDialog");
+	dialog.showModal();
+}
+function closeAccountDeleteDialog(){
+	const dialog = document.querySelector("#accountDeleteDialog");
+	dialog.close();
+}
+
 
 

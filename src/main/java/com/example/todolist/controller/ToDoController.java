@@ -157,7 +157,7 @@ public class ToDoController {
 	 * @return String
 	 */
 	@GetMapping("others/{id}")
-	public String getOthers(@PathVariable Long id, Model model){
+	public String getOthers(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id, Model model){
 		// idがLong型でない場合
 		if(!(id instanceof Long)) {
 			return "redirect:/";
@@ -168,6 +168,11 @@ public class ToDoController {
 
 			if(user.isPresent()) {
 				model.addAttribute("user", user.orElse(null));
+				
+				// ロールを取得（ロールがAdminの場合、アカウント削除ボタンは非表示）
+				Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+				model.addAttribute("role", userInfo.get("role"));
+				model.addAttribute("id", userInfo.get("id"));
 
 				return "userOthers";
 			}else {
@@ -244,6 +249,25 @@ public class ToDoController {
 		}
 		
 	}
+	
+	
+	/**
+	 * ユーザーアカウント削除
+	 * ※画面のGetmappingがToDoControllerに実装
+	 * されているため、UserControllerではなく、こちらに実装
+	 * @param Long id
+	 * @return String
+	 */
+	@PostMapping("/others/{id}/deleteAccount")
+    public String deleteUserAccount(@PathVariable("id") Long id) {
+        try {
+        	
+            userService.deleteUser(id);
+            return "redirect:/login";
+        } catch (IllegalArgumentException e) {
+        	return "redirect:/api/users/user";
+        }
+    }
 	
 
 	/**
