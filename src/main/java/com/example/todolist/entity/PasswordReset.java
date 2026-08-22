@@ -135,11 +135,10 @@ public class PasswordReset {
 	
 	
 	// String => LocalDateTimeへ変換
-	public static LocalDateTime toLocalDateTime(String date, String format) {
+	private static LocalDateTime toLocalDateTime(String date, String format) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
         return LocalDateTime.parse(date, dtf);
     }
-
 
 
 }

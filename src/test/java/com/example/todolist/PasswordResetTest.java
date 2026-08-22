@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +152,7 @@ public class PasswordResetTest {
 		// データ準備
 		String time = "2026-12-12 11:11:11";
 		String format = "yyyy-MM-dd HH:mm:ss";
-		LocalDateTime expired_at = PasswordReset.toLocalDateTime(time, format);
+		LocalDateTime expired_at = toLocalDateTime(time, format);
 
 		// 検証
 		assertTrue(expired_at instanceof LocalDateTime);
@@ -168,9 +169,15 @@ public class PasswordResetTest {
 		String format = "yyyy-MM-dd HH:mm:ss";
 
 		// 検証
-		assertThrows(DateTimeParseException.class, () -> PasswordReset.toLocalDateTime(time, format));
+		assertThrows(DateTimeParseException.class, () -> toLocalDateTime(time, format));
 		
 	}
+	
+	// String => LocalDateTimeへ変換
+	private static LocalDateTime toLocalDateTime(String date, String format) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        return LocalDateTime.parse(date, dtf);
+    }
 	
 	
 

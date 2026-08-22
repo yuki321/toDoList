@@ -78,7 +78,7 @@ public class MailService implements MailServiceIF {
 	 * @param Long userId
 	 * @return String password
 	 */
-	public String getDbPassword(Long userId) {
+	private String getDbPassword(Long userId) {
 		
 		String sql = "SELECT password FROM users WHERE id=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, userId);
@@ -94,7 +94,7 @@ public class MailService implements MailServiceIF {
 	 * @param String rawToken
 	 * @return Long userId
 	 */
-	public Long getUserId(List<Map<String, Object>> resultList, String rawToken) {
+	private Long getUserId(List<Map<String, Object>> resultList, String rawToken) {
 		
 		boolean matchResult = false;
 		String userId = null;
