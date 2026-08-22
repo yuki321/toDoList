@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.ByteOrderMark;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -420,7 +422,40 @@ public class UserService implements UserServiceIF {
 			}
 		}
 		
+		// ユーザー名が1-50文字の範囲でない場合、falseを返す
+		if(!(userNameFromCSV.length() >= 1) || !(userNameFromCSV.length() <= 50))
+			return false;
 		
+		// メールアドレスが8-100文字の範囲でない場合、falseを返す
+		if(!(emailFromCSV.length() >= 8) || !(emailFromCSV.length() <= 100))
+			return false;
+		
+		// メールアドレスに"@"または"."を含まない場合、falseを返す
+		if(!emailFromCSV.contains("@") || !emailFromCSV.contains(".")) return false;
+		
+		// ロールが"1"または"2"でない場合、falseを返す
+		String roleFromCSV =  record[3].replace("\"", "").trim();
+		if(!(roleFromCSV.equals("1")) || !(roleFromCSV.equals("2"))) return false;
+		
+		
+		/**
+		 *  ユーザー名の正規表現チェック
+		 *  日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ可能
+		 *  それ以外を含む場合、falseを返す
+		 */
+		Pattern userNamePattern = Pattern.compile("[^a-zA-Z0-9\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FFF\\u3000]");
+		Matcher userNameMatch = userNamePattern.matcher(userNameFromCSV);
+		if(userNameMatch.find()) return false;
+		
+		
+		/**
+		 *  メールアドレスの正規表現チェック
+		 *  英小文字、数字、@,-のみメールアドレスに含めることができる
+		 *  それ以外を含む場合、falseを返す
+		 */
+		Pattern emailPattern = Pattern.compile("[^a-zA-Z0-9@.-]");
+		Matcher emailMatch = emailPattern.matcher(emailFromCSV);
+		if(emailMatch.find()) return false;
 		
 		
 		return true;
