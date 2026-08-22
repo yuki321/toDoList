@@ -130,13 +130,7 @@ public class MailService implements MailServiceIF {
 				+ "\n"
 				+ "todolist";
 
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(email);
-		message.setFrom(mailFrom);
-		message.setSubject(subject);
-		message.setText(text);
-		mailSender.send(message);
-		
+		sendEmail(email, subject, text);
 	}
 	
 	
@@ -155,15 +149,24 @@ public class MailService implements MailServiceIF {
 				+ "\n"
 				+ "todolist";
 
+		sendEmail(email, subject, text);
+	}
+	
+	
+	/**
+	 * メール送信内容
+	 * @param String to
+	 * @param String subject
+	 * @param String text
+	 */
+	private void sendEmail(String to, String subject, String text) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(email);
+		message.setTo(to);
 		message.setFrom(mailFrom);
 		message.setSubject(subject);
 		message.setText(text);
 		mailSender.send(message);
-		
 	}
-	
 	
 }
 
