@@ -339,28 +339,18 @@ public class UserService implements UserServiceIF {
 				
 				String[] values = line.split(",");
 				if (values.length >= 4) {
-					User user = new User();
+					
+					/**
+					 * CSVファイルのチェック
+					 * 全項目のチェックに通過した場合、trueを返す
+					 */
+					boolean inputCheckResult = inputCheck(values);
+					if(!inputCheckResult) continue;
+
 					
 					String userNameFromCSV = values[0].trim();
 					String emailFromCSV = values[1].replace("\"", "").trim();
-					
-					/**
-					 * レコードの各項目のチェック
-			 		 * nullまたは空白文字または長さ0の文字列の時、falseを返す
-					 */
-					boolean emptyCheckResult = emptyCheck(values);
-					if(!emptyCheckResult) continue;
-					
-					/**
-					 *  CSV記載のユーザー名とメールアドレスとDBデータの重複をチェック（重複している場合 false を返す）
-					 *  重複している場合、処理を飛ばす
-					 */
-					boolean duplicatedCheckResult = duplicatedCheck(userNameFromCSV, emailFromCSV);
-					if(!duplicatedCheckResult) continue;
-					
-					// レコードに抜けがないかチェック（項目が4つか） / 抜けがある場合 false を返す
-					boolean recordCheckResult = recordCheck(values);
-					if(!recordCheckResult) continue;
+					User user = new User();
 					
 					user.setUserName(userNameFromCSV);
 					user.setEmail(emailFromCSV);
@@ -389,16 +379,35 @@ public class UserService implements UserServiceIF {
 
 	}
 	
-
+	
 	/**
-	 * CSV記載のユーザー名 / メールアドレスとDBデータの重複をチェック
-	 * 重複している場合 false を返す
-	 * 
-	 * @param String emailFromCSV
+	 * CSVファイルのチェック
+	 * 全項目のチェックに通過した場合、trueを返す
+	 * @param String[] record
 	 * @return boolean
 	 */
-	private boolean duplicatedCheck(String userNameFromCSV, String emailFromCSV) {
+	private boolean inputCheck(String[] record) {
 		
+		/**
+		 * レコードの各項目のチェック
+		 * nullまたは空白文字または長さ0の文字列の時、falseを返す
+		 */
+		for(String r: record) {
+			if(r == null || r.isBlank()) return false;
+		}
+		
+		/**
+		 * レコードに抜けがないかチェック（項目が4つか）
+		 * 抜けがある場合 false を返す
+		 */
+		if(record.length != 4) return false;
+		
+		/**
+		 * CSV記載のユーザー名 / メールアドレスとDBデータの重複をチェック
+		 * 重複している場合 false を返す
+		 */
+		String userNameFromCSV = record[0].trim();
+		String emailFromCSV = record[1].replace("\"", "").trim();
 		List<User> users = getAllUsers();
 		
 		for(User u: users) {
@@ -411,35 +420,8 @@ public class UserService implements UserServiceIF {
 			}
 		}
 		
-		return true;
-	}
-	
-	
-	/**
-	 * レコードに抜けがないかチェック（項目が4つか）
-	 * 抜けがある場合 false を返す
-	 * @param String[] record
-	 * @return boolean
-	 */
-	private boolean recordCheck(String[] record) {
 		
-		if(record.length != 4) return false;
 		
-		return true;
-	}
-	
-	
-	/**
-	 * レコードの各項目のチェック
-	 * nullまたは空白文字または長さ0の文字列の時、falseを返す
-	 * @param String[] record
-	 * @return boolean
-	 */
-	private boolean emptyCheck(String[] record) {
-		
-		for(String r: record) {
-			if(r == null || r.isBlank()) return false;
-		}
 		
 		return true;
 	}
