@@ -48,6 +48,35 @@ th button {
 	border: none;
 }
 
+.role {
+	display: inline-block;
+	padding: 4px 14px;
+	color: #ffffff; /* 文字色 */
+	text-decoration: none; /* 下線を消す */
+	font-weight: bold;
+	font-size: 12px;
+	border-radius: 4px; /* 角丸 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 影 */
+	transition: all 0.3s ease; /* アニメーションの設定 */
+	width: max-content;
+	border: none;
+		
+}
+#role-admin {
+	background-color: darkred;
+}
+/**
+#priority-medium {
+	background-color: #ffd400;
+}
+#priority-low {
+	background-color: green;
+}
+**/
+#role-general {
+	background-color: dimgray;
+}
+
 /** 編集ボタン **/
 .link-edit {
 	display: inline-block;

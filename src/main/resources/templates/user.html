@@ -67,7 +67,10 @@
 							<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>				
 							<th><span th:text="${user?.userName}"></span></th>
 							<th><span th:text="${user?.email}"></span></th>
-							<th><span th:text="${user?.role}"></span></th>
+							<th>
+								<span th:if="${user?.role == 'Admin'}" th:text="${user?.role}" id="role-admin" class="role"></span>
+								<span th:if="${user?.role == 'General'}" th:text="${user?.role}" id="role-general" class="role"></span>
+							</th>
 							<th><span th:text="${#temporals.format(user?.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>
 							<th><span th:text="${#temporals.format(user?.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>	
 							
