@@ -65,16 +65,12 @@ th button {
 #role-admin {
 	background-color: darkred;
 }
-/**
-#priority-medium {
-	background-color: #ffd400;
-}
-#priority-low {
-	background-color: green;
-}
-**/
 #role-general {
 	background-color: dimgray;
+}
+
+.time-font-size {
+	font-size: 14px;
 }
 
 /** 編集ボタン **/

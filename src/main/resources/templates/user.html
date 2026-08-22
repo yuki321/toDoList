@@ -71,8 +71,8 @@
 								<span th:if="${user?.role == 'Admin'}" th:text="${user?.role}" id="role-admin" class="role"></span>
 								<span th:if="${user?.role == 'General'}" th:text="${user?.role}" id="role-general" class="role"></span>
 							</th>
-							<th><span th:text="${#temporals.format(user?.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>
-							<th><span th:text="${#temporals.format(user?.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>	
+							<th><span class="time-font-size" th:text="${#temporals.format(user?.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>
+							<th><span class="time-font-size" th:text="${#temporals.format(user?.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></th>	
 							
 						</tbody>
 					</table>
