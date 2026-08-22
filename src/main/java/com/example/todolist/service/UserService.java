@@ -345,11 +345,22 @@ public class UserService implements UserServiceIF {
 					String emailFromCSV = values[1].replace("\"", "").trim();
 					
 					/**
-					 *  CSV記載のユーザー名とメールアドレスとDBデータの重複をチェック（重複している場合trueを返す）
+					 * レコードの各項目のチェック
+			 		 * nullまたは空白文字または長さ0の文字列の時、falseを返す
+					 */
+					boolean emptyCheckResult = emptyCheck(values);
+					if(!emptyCheckResult) continue;
+					
+					/**
+					 *  CSV記載のユーザー名とメールアドレスとDBデータの重複をチェック（重複している場合 false を返す）
 					 *  重複している場合、処理を飛ばす
 					 */
-					boolean checkResult = duplicatedCheck(userNameFromCSV, emailFromCSV);
-					if(checkResult) continue;
+					boolean duplicatedCheckResult = duplicatedCheck(userNameFromCSV, emailFromCSV);
+					if(!duplicatedCheckResult) continue;
+					
+					// レコードに抜けがないかチェック（項目が4つか） / 抜けがある場合 false を返す
+					boolean recordCheckResult = recordCheck(values);
+					if(!recordCheckResult) continue;
 					
 					user.setUserName(userNameFromCSV);
 					user.setEmail(emailFromCSV);
@@ -381,7 +392,7 @@ public class UserService implements UserServiceIF {
 
 	/**
 	 * CSV記載のユーザー名 / メールアドレスとDBデータの重複をチェック
-	 * 重複している場合trueを返す
+	 * 重複している場合 false を返す
 	 * 
 	 * @param String emailFromCSV
 	 * @return boolean
@@ -392,15 +403,45 @@ public class UserService implements UserServiceIF {
 		
 		for(User u: users) {
 			if(userNameFromCSV.equals(u.getUserName())) {
-				return true;
+				return false;
 			}
 			
 			if(emailFromCSV.equals(u.getEmail())) {
-				return true;
+				return false;
 			}
 		}
 		
-		return false;
+		return true;
+	}
+	
+	
+	/**
+	 * レコードに抜けがないかチェック（項目が4つか）
+	 * 抜けがある場合 false を返す
+	 * @param String[] record
+	 * @return boolean
+	 */
+	private boolean recordCheck(String[] record) {
+		
+		if(record.length != 4) return false;
+		
+		return true;
+	}
+	
+	
+	/**
+	 * レコードの各項目のチェック
+	 * nullまたは空白文字または長さ0の文字列の時、falseを返す
+	 * @param String[] record
+	 * @return boolean
+	 */
+	private boolean emptyCheck(String[] record) {
+		
+		for(String r: record) {
+			if(r == null || r.isBlank()) return false;
+		}
+		
+		return true;
 	}
 	
 	
