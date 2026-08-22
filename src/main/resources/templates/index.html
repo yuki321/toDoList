@@ -82,7 +82,7 @@
 	</main>
 	<!-- タスク作成ダイアログ -->
 	<dialog id="toDoCreateDialog">
-		<div id="dialog">
+		<div class="dialog">
 			<form method="post" th:action="@{/}" th:object="${todoCreate}">
 				<p class="error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
 
@@ -119,7 +119,7 @@
 	</dialog>
 	<!-- タスク編集ダイアログ -->
 	<dialog id="toDoEditDialog">
-		<div id="dialog">
+		<div class="dialog">
 			<form method="post" th:action="@{/edit}" th:object="${todoForm}">
 
 				<input type="hidden" name="id" id="editId" />
@@ -159,7 +159,7 @@
 	<!-- タスク削除ダイアログ --> 
 	<dialog id="deleteDialog">
 		<p>タスクを削除します</p>
-		<div id="dialog">
+		<div class="dialog">
 			<input class="link-list" id="closeDialog" type="button" value="キャンセル" onclick="closeToDoDeleteDialog()"/>
 			<form method="post" th:action="@{/delete}" id="delete-btn">
 				<input type="hidden" name="id" id="deleteTodoId"/>

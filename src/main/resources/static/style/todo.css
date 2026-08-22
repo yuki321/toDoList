@@ -191,7 +191,7 @@ dialog {
 #create-btn, #update-btn, #create-content-submit {
 	margin-top: 8px;
 }
-#toDoCreateDialog p, #dialog, 
+#toDoCreateDialog p, .dialog, 
 #input-edit-content, #input-create-content,
 .buttons 
 {
@@ -202,7 +202,7 @@ dialog {
 #delete-btn {
 	margin-top: 8px;
 }
-#dialog p {
+.dialog p {
 	font-size: 20px;
 }
 dialog p {
