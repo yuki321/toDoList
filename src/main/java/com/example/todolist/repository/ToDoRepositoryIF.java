@@ -14,9 +14,9 @@ import com.example.todolist.entity.ToDo;
 @Repository
 public interface ToDoRepositoryIF {
 
-    public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails);
+    public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal UserDetails userDetails);
     
-    List<ToDo> findAllCompletedToDo(UserDetails userDetails);
+    public List<Map<String, Object>> findAllCompletedToDo(UserDetails userDetails);
     
     int completeTask(ToDo todo) throws DataAccessException;
 

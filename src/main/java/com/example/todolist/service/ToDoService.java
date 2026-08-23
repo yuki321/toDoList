@@ -1,5 +1,7 @@
 package com.example.todolist.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,24 @@ public class ToDoService implements ToDoServiceIF {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
-		return toDoRepository.findAllToDo(userDetails);
+		
+		List<ToDo> todolist = new ArrayList<>();
+		List<Map<String, Object>> getList = toDoRepository.findAllToDo(userDetails);
+		
+		for(Map<String, Object> map: getList) {
+			ToDo todo = new ToDo();
+			todo.setId((Long)map.get("id"));
+			todo.setUserId((Long)map.get("user_id"));
+			todo.setContent((String)map.get("content"));
+			todo.setMemo((String)map.get("memo"));
+			todo.setStatus((Boolean)map.get("status"));
+			todo.setDeadline((LocalDateTime)map.get("deadline"));
+			todo.setPriority((String)map.get("priority"));
+				
+			todolist.add(todo);
+		}
+		
+		return todolist;
 	}
 	
 	/**
@@ -39,7 +58,24 @@ public class ToDoService implements ToDoServiceIF {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
-		return toDoRepository.findAllCompletedToDo(userDetails);
+		
+		List<ToDo> todolist = new ArrayList<>();
+		List<Map<String, Object>> getList = toDoRepository.findAllCompletedToDo(userDetails);
+		
+		for(Map<String, Object> map: getList) {
+			ToDo todo = new ToDo();
+			todo.setId((Long)map.get("id"));
+			todo.setUserId((Long)map.get("user_id"));
+			todo.setContent((String)map.get("content"));
+			todo.setMemo((String)map.get("memo"));
+			todo.setStatus((Boolean)map.get("status"));
+			todo.setDeadline((LocalDateTime)map.get("deadline"));
+			todo.setPriority((String)map.get("priority"));
+				
+			todolist.add(todo);
+		}
+		
+		return todolist;
 	}
 	
 	

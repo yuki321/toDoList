@@ -1,7 +1,5 @@
 package com.example.todolist.repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import com.example.todolist.entity.ToDo;
-import com.example.todolist.entity.User;
 import com.example.todolist.service.UserService;
 
 @Repository
@@ -31,9 +28,8 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @return List<ToDo>
 	 */
 	@Override
-	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
+	public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
 		
-		List<ToDo> todolist = new ArrayList<>();
 		String userName = userDetails.getUsername();
 		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
 				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.priority ASC";
@@ -41,20 +37,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		// ToDoテーブルのデータを全件取得
 		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
 		
-		for(Map<String, Object> map: getList) {
-			ToDo todo = new ToDo();
-			todo.setId((Long)map.get("id"));
-			todo.setUserId((Long)map.get("user_id"));
-			todo.setContent((String)map.get("content"));
-			todo.setMemo((String)map.get("memo"));
-			todo.setStatus((Boolean)map.get("status"));
-			todo.setDeadline((LocalDateTime)map.get("deadline"));
-			todo.setPriority((String)map.get("priority"));
-				
-			todolist.add(todo);
-		}
-		
-		return todolist;
+		return getList;
 	};
 	
 	
@@ -64,9 +47,8 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @return List<ToDo>
 	 */
 	@Override
-	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
+	public List<Map<String, Object>> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
 		
-		List<ToDo> todolist = new ArrayList<>();
 		String userName = userDetails.getUsername();
 		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
 				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.priority ASC";
@@ -74,20 +56,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		// ToDoテーブルのデータを全件取得
 		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
 		
-		for(Map<String, Object> map: getList) {
-			ToDo todo = new ToDo();
-			todo.setId((Long)map.get("id"));
-			todo.setUserId((Long)map.get("user_id"));
-			todo.setContent((String)map.get("content"));
-			todo.setMemo((String)map.get("memo"));
-			todo.setStatus((Boolean)map.get("status"));
-			todo.setDeadline((LocalDateTime)map.get("deadline"));
-			todo.setPriority((String)map.get("priority"));
-				
-			todolist.add(todo);
-		}
-		
-		return todolist;
+		return getList;
 	};
 	
 
@@ -201,9 +170,6 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		return num;
 	}
 
-
-	
-	
 }
 
 

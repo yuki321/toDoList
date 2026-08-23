@@ -3,6 +3,8 @@ package com.example.todolist;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,7 @@ class ToDoServiceTest {
     private ToDoService toDoService;
 
     private ToDo toDo;
+    
 
     @BeforeEach
     void setUp() {
@@ -45,39 +48,55 @@ class ToDoServiceTest {
         toDo.setDeadline(null);
         toDo.setPriority("1");
         
-
     }
+    
 
     @Nested
-    @DisplayName("findAllToDo メソッドのテスト")
+    @DisplayName("タスク全件取得のテスト")
     class FindAllToDoTest {
-        @Test
+
+    	@Test
         @DisplayName("全件取得が正しくリポジトリから返却されること")
         void testFindAllToDo() {
-            List<ToDo> expectedList = List.of(toDo);
-            when(toDoRepository.findAllToDo(userDetails)).thenReturn(expectedList);
 
-            List<ToDo> actualList = toDoService.findAllToDo(userDetails);
+    		List<Map<String, Object>> expectedMapList = getExpectedMapList();
+            when(toDoRepository.findAllToDo(userDetails)).thenReturn(expectedMapList);
 
-            assertThat(actualList).isEqualTo(expectedList);
+            List<Map<String, Object>> actualList = toDoRepository.findAllToDo(userDetails);
+            
+            assertThat(actualList).isEqualTo(expectedMapList);
             verify(toDoRepository, times(1)).findAllToDo(userDetails);
         }
-    }
-
-    @Nested
-    @DisplayName("findAllCompletedToDo メソッドのテスト")
-    class FindAllCompletedToDoTest {
+        
         @Test
         @DisplayName("完了済みToDoの全件取得が正しく返却されること")
         void testFindAllCompletedToDo() {
-            List<ToDo> expectedList = List.of(toDo);
-            when(toDoRepository.findAllCompletedToDo(userDetails)).thenReturn(expectedList);
 
-            List<ToDo> actualList = toDoService.findAllCompletedToDo(userDetails);
+        	List<Map<String, Object>> expectedMapList = getExpectedMapList();
+            when(toDoRepository.findAllCompletedToDo(userDetails)).thenReturn(expectedMapList);
             
-            assertThat(actualList).isEqualTo(expectedList);
+            List<Map<String, Object>> actualList = toDoRepository.findAllCompletedToDo(userDetails);
+            
+            assertThat(actualList).isEqualTo(expectedMapList);
             verify(toDoRepository, times(1)).findAllCompletedToDo(userDetails);
         }
+        
+        private List<Map<String, Object>> getExpectedMapList() {
+            List<Map<String, Object>> expectedMapList = new ArrayList<>();
+            Map<String, Object> map = new HashMap<>();
+            
+        	map.put("id", 1L);
+        	map.put("user_id", 1L);
+        	map.put("content", "テストコメント");
+        	map.put("memo", "Memo");
+        	map.put("status", true);
+        	map.put("deadline", null);
+        	map.put("priority", "1");
+        	expectedMapList.add(map);
+        	
+        	return expectedMapList;
+        }
+        
     }
 
     @Nested

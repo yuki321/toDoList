@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -255,17 +254,12 @@ public class UserService implements UserServiceIF {
 		
 		String sql = "SELECT * FROM users WHERE id=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
-		String userName = (String)getMap.get("user_name");
-		String email =  (String)getMap.get("email");
-		String role =  (String)getMap.get("role");
-		LocalDateTime updatedAt = LocalDateTime.now();
-		
-		String encodedPassword = passwordEncoder.encode(newPassword);
-		user.setUserName(userName);
-		user.setEmail(email);
-		user.setPassword(encodedPassword);
-		user.setRole(role);
-		user.setUpdatedAt(updatedAt);
+
+		user.setUserName((String)getMap.get("user_name"));
+		user.setEmail((String)getMap.get("email"));
+		user.setPassword(passwordEncoder.encode(newPassword));
+		user.setRole((String)getMap.get("role"));
+		user.setUpdatedAt(LocalDateTime.now());
 		
 		return userRepository.save(user);
 	}

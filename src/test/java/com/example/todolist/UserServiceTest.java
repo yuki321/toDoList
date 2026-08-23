@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -74,7 +72,6 @@ public class UserServiceTest {
         // findAll() が1回だけ呼ばれたことを検証
         verify(userRepository, times(1)).findAll();
 		
-		
 	}
 	
 	
@@ -110,7 +107,6 @@ public class UserServiceTest {
         // findById() が1回だけ呼ばれたことを検証
         verify(userRepository, times(1)).findById((long)1);
 		
-		
 	}
 	
 	
@@ -138,7 +134,6 @@ public class UserServiceTest {
         // findByEmail() が1回だけ呼ばれたことを検証
         verify(userRepository, times(1)).findByEmail(email);
 		
-		
 	}
 	
 	
@@ -161,7 +156,6 @@ public class UserServiceTest {
 
         // findByEmail()は一度しか実行されないことを検証
         verify(userRepository, times(1)).findByEmail(email);
-	    
 		
 	}
 	
@@ -204,7 +198,6 @@ public class UserServiceTest {
 	    verify(passwordEncoder).encode("1111");
 	    verify(userRepository).save(any(User.class));
 		
-		
 	}
 	
 	
@@ -234,7 +227,6 @@ public class UserServiceTest {
 
 	    // 重複エラーの場合は save メソッドが一度も呼ばれていない
         verify(userRepository, never()).save(any(User.class));
-		
 		
 	}
 	
@@ -298,7 +290,6 @@ public class UserServiceTest {
 }
 
 
-@Nested
 @DisplayName("isValidRecordStructure メソッドのテスト")
 class isValidRecordStructureTest {
     @Test
@@ -335,7 +326,6 @@ class isValidRecordStructureTest {
 }
 
 
-@Nested
 @DisplayName("isValidUserName メソッドのテスト")
 class isValidUserNameTest {
     @Test
@@ -377,7 +367,6 @@ class isValidUserNameTest {
 }
 
 
-@Nested
 @DisplayName("isValidEmail メソッドのテスト")
 class isValidEmailTest {
     @Test
@@ -418,7 +407,6 @@ class isValidEmailTest {
 }
 
 
-@Nested
 @DisplayName("isValidRole メソッドのテスト")
 class isValidRoleTest {
     @Test
@@ -450,7 +438,6 @@ class isValidRoleTest {
 }
 
 
-@Nested
 @DisplayName("isDuplicateUser メソッドのテスト")
 class isDuplicateUserTest {
 
