@@ -335,6 +335,12 @@ public class UserService implements UserServiceIF {
 			String line;
 			//ヘッダーレコードを飛ばすために１行だけ読み取る
             line = br.readLine();
+            
+            /**
+             *  ループ内でデータ取得するとパフォーマンス低下を招くので、
+             *  ここでユーザーデータを取得し、ループ内でチェックに利用する
+             */
+            List<User> users = getAllUsers();
 			
 			while ((line = br.readLine()) != null) {
 				
@@ -346,7 +352,7 @@ public class UserService implements UserServiceIF {
 					 * CSVファイルのチェック
 					 * 全項目のチェックに通過した場合、trueを返す
 					 */
-					boolean inputCheckResult = inputCheck(values);
+					boolean inputCheckResult = inputCheck(values, users);
 					if(!inputCheckResult) continue;
 
 					
@@ -386,79 +392,119 @@ public class UserService implements UserServiceIF {
 	 * CSVファイルのチェック
 	 * 全項目のチェックに通過した場合、trueを返す
 	 * @param String[] record
+	 * @param List<User> users
 	 * @return boolean
 	 */
-	private boolean inputCheck(String[] record) {
-		
-		/**
-		 * レコードの各項目のチェック
-		 * nullまたは空白文字または長さ0の文字列の時、falseを返す
-		 */
-		for(String r: record) {
-			if(r == null || r.isBlank()) return false;
-		}
-		
-		/**
-		 * レコードに抜けがないかチェック（項目が4つか）
-		 * 抜けがある場合 false を返す
-		 */
-		if(record.length != 4) return false;
-		
-		/**
-		 * CSV記載のユーザー名 / メールアドレスとDBデータの重複をチェック
-		 * 重複している場合 false を返す
-		 */
-		String userNameFromCSV = record[0].trim();
-		String emailFromCSV = record[1].replace("\"", "").trim();
-		List<User> users = getAllUsers();
-		
-		for(User u: users) {
-			if(userNameFromCSV.equals(u.getUserName())) {
-				return false;
-			}
-			
-			if(emailFromCSV.equals(u.getEmail())) {
-				return false;
-			}
-		}
-		
-		// ユーザー名が1-50文字の範囲でない場合、falseを返す
-		if(!(userNameFromCSV.length() >= 1) || !(userNameFromCSV.length() <= 50))
-			return false;
-		
-		// メールアドレスが8-100文字の範囲でない場合、falseを返す
-		if(!(emailFromCSV.length() >= 8) || !(emailFromCSV.length() <= 100))
-			return false;
-		
-		// メールアドレスに"@"または"."を含まない場合、falseを返す
-		if(!emailFromCSV.contains("@") || !emailFromCSV.contains(".")) return false;
-		
-		// ロールが"1"または"2"でない場合、falseを返す
-		String roleFromCSV =  record[3].replace("\"", "").trim();
-		if(!(roleFromCSV.equals("1")) || !(roleFromCSV.equals("2"))) return false;
-		
-		
-		/**
-		 *  ユーザー名の正規表現チェック
-		 *  日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ可能
-		 *  それ以外を含む場合、falseを返す
-		 */
-		Pattern userNamePattern = Pattern.compile("[^a-zA-Z0-9\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FFF\\u3000]");
-		Matcher userNameMatch = userNamePattern.matcher(userNameFromCSV);
+	private boolean inputCheck(String[] record, List<User> users) {
+	    // 1. 配列チェック
+	    if (!isValidRecordStructure(record)) {
+	        return false;
+	    }
+
+	    String userName = record[0].trim();
+	    String email = record[1].replace("\"", "").trim();
+	    String role = record[3].replace("\"", "").trim();
+
+	    // 2. 各項目チェック
+	    if (!isValidUserName(userName) || !isValidEmail(email) || !isValidRole(role)) {
+	        return false;
+	    }
+
+	    // 3. DBとCSVファイルの相関チェック（重複チェック）
+	    if (isDuplicateUser(userName, email, users)) {
+	        return false;
+	    }
+
+	    return true;
+	}
+
+
+	/**
+	 * 項目数チェック
+	 * 空白などが各項目にないかチェック
+	 * @param String[] record
+	 * @return boolean
+	 */
+	private boolean isValidRecordStructure(String[] record) {
+	    if (record == null || record.length != 4) {
+	        return false;
+	    }
+	    for (String r : record) {
+	        if (r == null || r.isBlank()) return false;
+	    }
+	    
+	    return true;
+	}
+
+	
+	/**
+	 * ユーザー名チェック
+	 * @param String userName
+	 * @return boolean
+	 */
+	private boolean isValidUserName(String userName) {
+	    if (userName.length() < 1 || userName.length() > 50) {
+	        return false;
+	    }
+	    
+	    // 日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ
+	    Pattern pattern = Pattern.compile("[^a-z0-9\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FFF\\u3000]");
+	    Matcher userNameMatch = pattern.matcher(userName);
 		if(userNameMatch.find()) return false;
 		
-		
-		/**
-		 *  メールアドレスの正規表現チェック
-		 *  英小文字、数字、@,-のみメールアドレスに含めることができる
-		 *  それ以外を含む場合、falseを返す
-		 */
-		Pattern emailPattern = Pattern.compile("[^a-zA-Z0-9@.-]");
-		Matcher emailMatch = emailPattern.matcher(emailFromCSV);
-		if(emailMatch.find()) return false;
-		
-		
-		return true;
+	    return true;
+	}
+
+	
+	/**
+	 * メールアドレスチェック
+	 * @param String email
+	 * @return boolean
+	 */
+	private boolean isValidEmail(String email) {
+	    if (email.length() < 8 || email.length() > 100) {
+	        return false;
+	    }
+	    if(!email.contains("@") || !email.contains(".")) {
+	    	return false;
+	    }
+	    
+	    // 英小文字、数字、@,-のみメールアドレスに含める
+	    Pattern pattern = Pattern.compile("[^a-z0-9@.-]");
+	    Matcher userNameMatch = pattern.matcher(email);
+	    if(userNameMatch.find()) return false;
+	    
+	    return true;
+	}
+
+	
+	/**
+	 * ロールチェック("1"または"2"以外はfalseを返す)
+	 * @param String role
+	 * @return boolean
+	 */
+	private boolean isValidRole(String role) {
+	    return "1".equals(role) || "2".equals(role);
+	}
+
+	
+	/**
+	 * ユーザー名とメールアドレスの重複チェック
+	 * CSVデータとDBデータで重複がないかチェック
+	 * @param String userName
+	 * @param String email
+	 * @param List<User> users
+	 * @return
+	 */
+	private boolean isDuplicateUser(String userName, String email, List<User> users) {
+
+	    for (User u : users) {
+	        if (userName.equals(u.getUserName()) || email.equals(u.getEmail())) {
+	            return true;
+	        }
+	    }
+	    
+	    return false;
 	}
 	
 	
