@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
@@ -31,9 +30,6 @@ public class UserController {
 
 	@Autowired
 	private UserServiceIF userService;
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private ToDoServiceIF toDoService;
