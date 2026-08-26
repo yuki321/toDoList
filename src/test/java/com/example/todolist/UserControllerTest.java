@@ -14,15 +14,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import com.example.todolist.entity.Pager;
 import com.example.todolist.controller.UserController;
 import com.example.todolist.entity.User;
 import com.example.todolist.service.ToDoService;
@@ -50,6 +60,12 @@ public class UserControllerTest {
 	
 	@Mock
 	private User user;
+	
+//	@Mock
+//	Pageable pageable;
+//	
+//	@Mock
+//	MockMvc mockMvc;
 	
 	@InjectMocks
 	private UserController userController;
@@ -82,6 +98,12 @@ public class UserControllerTest {
 		user2.setRole("1");
 		userList.add(user2);
 		
+//		mockMvc = MockMvcBuilders.standaloneSetup(userController)
+//	            // Pageableを正しく解決するためのリゾルバーを追加
+//	            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+//	            .build();
+		
+		
 	}
 
 	@Nested
@@ -98,7 +120,13 @@ public class UserControllerTest {
 			
 			Map<String, Object> userInfo = Map.of("role", "Admin");
 			when(toDoService.getUserInfo(userDetails)).thenReturn(userInfo);
-	        String viewName = userController.getAllUsers(userDetails, model);
+			
+			int page = 0;
+			Pageable pageable = PageRequest.of(0, 10);
+			Page<User> mockPage = new PageImpl<>(userList, pageable, userList.size());
+		    when(userService.getAllUsers(pageable)).thenReturn(mockPage);
+			
+	        String viewName = userController.getAllUsers(userDetails, model, pageable, page);
 	        
 	        // 検証
 	        assertEquals(viewName, "user");
@@ -121,7 +149,12 @@ public class UserControllerTest {
 			Map<String, Object> userInfo = Map.of("role", "General");
 			when(toDoService.getUserInfo(userDetails)).thenReturn(userInfo);
 			
-	        String viewName = userController.getAllUsers(userDetails, model);
+			int page = 0;
+			Pageable pageable = PageRequest.of(0, 10);
+			Page<User> mockPage = new PageImpl<>(userList, pageable, userList.size());
+		    when(userService.getAllUsers(pageable)).thenReturn(mockPage);
+	        
+		    String viewName = userController.getAllUsers(userDetails, model, pageable, page);
 	        
 	        // 検証
 	        assertEquals("redirect:/", viewName);
