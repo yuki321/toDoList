@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.todolist.entity.Pager;
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
 import com.example.todolist.service.ToDoServiceIF;
@@ -33,14 +37,22 @@ public class UserController {
 	
 	@Autowired
 	private ToDoServiceIF toDoService;
+	
+//	@Autowired
+//	private Page page;
 		
+	
 	/**
 	 * 全件取得
+	 * @param UserDetails userDetails
 	 * @param Model model
+	 * @param Pageable pageable
+	 * @param int page Xページ目（インデックスは0始まり）
 	 * @return String
 	 */
 	@GetMapping("user")
-	public String getAllUsers(@AuthenticationPrincipal UserDetails userDetails, Model model){
+	public String getAllUsers(@AuthenticationPrincipal UserDetails userDetails, Model model, 
+			@PageableDefault(page = 0, size = 10) Pageable pageable , @RequestParam(name = "page") int page){
 		
 		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
 		String role = (String) userIfo.get("role");
@@ -50,11 +62,21 @@ public class UserController {
 		}
 		
 		List<User> users = userService.getAllUsers();
-		final int userCount = users.size();
+		Page<User> usersPerPage = userService.getAllUsers(pageable);
 		
-		model.addAttribute("users", users);
+		// 表示するユーザーデータ
+		model.addAttribute("users", usersPerPage.getContent());
+		model.addAttribute("userCount", users.size());
 		model.addAttribute("user", new User());
-		model.addAttribute("userCount", userCount);
+
+		// ページャー関連のデータ
+		Pager pager = new Pager();
+		int topIndex = pager.getTopIndex(page, usersPerPage.getSize());
+		int lastIndex = pager.getLastIndex(page, usersPerPage.getSize());
+		
+		model.addAttribute("pages", usersPerPage);
+		model.addAttribute("topIndex", topIndex);
+		model.addAttribute("lastIndex", lastIndex);
 		
 		return "user";
 	}
@@ -91,7 +113,7 @@ public class UserController {
 		
 		// idがLong型でない場合
 		if(!(id instanceof Long)) {
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 		}
 
 		try {
@@ -101,11 +123,11 @@ public class UserController {
 				model.addAttribute("user", user.orElse(null));
 	            return "userDetail";
 			}else {
-				return "redirect:/api/users/user";
+				return "redirect:/api/users/user?page=0";
 			}
 			
 		}catch(IllegalArgumentException e) {
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 		}
 		
 	}
@@ -160,7 +182,7 @@ public class UserController {
 			User createdUser = userService.createUser(user);
 			
 			model.addAttribute(createdUser);
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.create", e.getMessage());
 			return "userCreate";
@@ -191,7 +213,7 @@ public class UserController {
 			User updatedUser = userService.updateUser(id, user);
 			model.addAttribute("user", updatedUser);
 			
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.update", e.getMessage());
 			userService.restoreUserDisplayFields(id, user);
@@ -210,9 +232,9 @@ public class UserController {
     public String deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
-            return "redirect:/api/users/user";
+            return "redirect:/api/users/user?page=0";
         } catch (IllegalArgumentException e) {
-        	return "redirect:/api/users/user";
+        	return "redirect:/api/users/user?page=0";
         }
     }
 	

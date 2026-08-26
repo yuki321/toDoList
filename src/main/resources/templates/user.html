@@ -47,7 +47,11 @@
 				</form>            
 		    </div>
 			<div id="content">
-				<div class="userCount">データ <span th:text="${userCount}"></span>件</div>
+				<div class="userCount">データ全 <span th:text="${userCount}"></span> 件（
+					<span th:text="${topIndex}"></span>~
+					<span th:if="${not pages.last}" th:text="${lastIndex}"></span>
+					<span th:if="${pages.last}" th:text="${userCount}"></span>件目 ）
+				</div>
 				<form class="csvDownload" th:action="@{/api/users/download}" method="post">
 					<button class="link-edit" type="submit">CSVダウンロード</button>
 				</form>
@@ -55,7 +59,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>編集</th>
+								<th></th>
 								<th>ユーザー名</th>
 								<th>メールアドレス</th>
 								<th>ロール</th>
@@ -76,6 +80,32 @@
 							
 						</tbody>
 					</table>
+					
+					<!-- ページリンク -->
+					<ul class="paging">
+						<li>
+							<span class="active" th:if="${pages.first}">最初</span>
+							<a th:if="${not pages.first}" th:href="@{${url}(page=0)}">最初</a>
+						</li>
+
+						<!-- 中間のページリンク -->
+						<li th:each="i:${#numbers.sequence(0, pages.totalPages-1)}">
+							<span class="active" th:if="${i}==${pages.number}" th:text="${i+1}"></span>
+							<a th:if="${i}!=${pages.number}" th:href="@{${url}(page=${i})}">
+								<span th:text="${i+1}"></span>
+							</a>
+						</li>
+
+						<!-- 末尾のページリンク -->
+						<li>
+							<span class="active" th:if="${pages.last}">最後</span>
+							<a th:if="${not pages.last}" th:href="@{${url}(page=(${pages.totalPages-1}))}">
+								最後
+							</a>
+						</li>
+
+					</ul>
+					
 					<form th:action="@{/api/users/upload}" method="post" enctype="multipart/form-data">
 						<input class="link-upload" type="file" name="file"><br>
 						<button id="upload-btn" type="submit">アップロード</button>

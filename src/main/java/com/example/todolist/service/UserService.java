@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.ByteOrderMark;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,18 @@ public class UserService implements UserServiceIF {
 	@Transactional(readOnly = true)
 	public List<User> getAllUsers(){
 		return userRepository.findAll();
+	}
+	
+	
+	/**
+	 * 全件取得（Pager）
+	 * @param Pageable pageable
+	 * @return Page<User>
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<User> getAllUsers(Pageable pageable){
+		return userRepository.findAll(pageable);
 	}
 	
 	

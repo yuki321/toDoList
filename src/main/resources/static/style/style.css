@@ -73,6 +73,53 @@ th button {
 	font-size: 14px;
 }
 
+/** ページリンクのレイアウト **/
+.paging {
+	margin: 25px 0;
+	font-size: 16px;
+	list-style-type: none;
+	
+	display: flex; 
+	padding: 0;
+	gap: 5px; 
+}
+
+.paging li {
+	display: inline-block;
+}
+/**
+.paging.current, .paging a {
+	padding: 0 3px;
+}**/
+
+.paging a, .paging li span {
+/**	display: block;
+**/
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;                  /* ボタンサイズ */
+	height: 36px;
+	border: 1.5px solid #ddd;       /* 枠線と丸み */
+	border-radius: 4px;
+	color: #333;
+	text-decoration: none;
+	transition: background-color 0.2s
+}
+/* ホバー時の背景色 */
+.paging a:hover {
+	background-color: #46aace;    
+	transition: background-color 1.0s
+}
+/* 現在のページの背景色 */
+.paging span.active {
+	background-color: #055ec1;    
+	border-color: #055ec1;
+	color: #fff;
+}
+
+
+
 /** 編集ボタン **/
 .link-edit {
 	display: inline-block;

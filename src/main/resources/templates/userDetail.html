@@ -62,7 +62,7 @@
 							</tr>		
 						</tbody>
 					</table>
-					<a class="link-list" th:href="@{/api/users/user}">戻る</a>
+					<a class="link-list" th:href="@{/api/users/user?page=0}">戻る</a>
 					<input class="link-update" type="submit" value="更新"/>
 					<input th:if="${user?.role} == 'General'"
 					class="link-delete" id="delete" type="button" value="削除" onclick="onClickDeleteBtn()"/>

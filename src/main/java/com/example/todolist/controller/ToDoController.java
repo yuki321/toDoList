@@ -265,7 +265,7 @@ public class ToDoController {
             userService.deleteUser(id);
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
-        	return "redirect:/api/users/user";
+        	return "redirect:/api/users/user?page=0";
         }
     }
 	
