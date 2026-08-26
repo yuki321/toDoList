@@ -42,15 +42,15 @@
 			            <input id="searchBtn" class="link-edit" type="submit" value="検索"/>
 					</div>
 		        </form>
-				<form th:action="@{/api/users/user}" method="get" th:object="${user}">
-					<input class="link-list" type="submit" value="リセット"/>
-				</form>            
+				<a class="link-list" th:href="@{/api/users/user?page=0}">リセット</a>
 		    </div>
 			<div id="content">
-				<div class="userCount">データ全 <span th:text="${userCount}"></span> 件（
-					<span th:text="${topIndex}"></span>~
-					<span th:if="${not pages.last}" th:text="${lastIndex}"></span>
-					<span th:if="${pages.last}" th:text="${userCount}"></span>件目 ）
+				<div th:if="${display}" class="userCountDisplay">
+					<div class="userCount">データ全 <span th:text="${userCount}"></span> 件（
+						<span th:text="${topIndex}"></span>~
+						<span th:if="${not pages.last}" th:text="${lastIndex}"></span>
+						<span th:if="${pages.last}" th:text="${userCount}"></span>件目 ）
+					</div>
 				</div>
 				<form class="csvDownload" th:action="@{/api/users/download}" method="post">
 					<button class="link-edit" type="submit">CSVダウンロード</button>
@@ -82,7 +82,7 @@
 					</table>
 					
 					<!-- ページリンク -->
-					<ul class="paging">
+					<ul th:if="${display}" class="paging userCountDisplay">
 						<li>
 							<span class="active" th:if="${pages.first}">最初</span>
 							<a th:if="${not pages.first}" th:href="@{${url}(page=0)}">最初</a>

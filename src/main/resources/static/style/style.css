@@ -73,6 +73,7 @@ th button {
 	font-size: 14px;
 }
 
+
 /** ページリンクのレイアウト **/
 .paging {
 	margin: 25px 0;
@@ -87,14 +88,9 @@ th button {
 .paging li {
 	display: inline-block;
 }
-/**
-.paging.current, .paging a {
-	padding: 0 3px;
-}**/
 
 .paging a, .paging li span {
-/**	display: block;
-**/
+
 	display: flex;
 	align-items: center;
 	justify-content: center;

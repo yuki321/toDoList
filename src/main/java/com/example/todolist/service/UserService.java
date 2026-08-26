@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.ByteOrderMark;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.todolist.entity.Pager;
 import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.User;
 import com.example.todolist.repository.UserRepository;
@@ -72,11 +74,12 @@ public class UserService implements UserServiceIF {
 	/**
 	 * ユーザー検索
 	 * @param User _user
-	 * @return List<User>
+	 * @param Pageable pageable
+	 * @return Page<User>
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<User> searchUsers(User _user){
+	public Page<User> searchUsers(User _user, Pageable pageable){
     	
 		// 検索条件を取得
 		String userName = _user.getUserName();
@@ -106,12 +109,14 @@ public class UserService implements UserServiceIF {
 		 * 1.クエリを実行
 		 * 2.クエリ実行結果をモデルに詰める
 		 */
-    	List<User> userlist = new ArrayList<>();
     	String sql = "SELECT * FROM users "
-    			+ "WHERE user_name LIKE ? AND email LIKE ? AND role LIKE ? ORDER BY role ASC, updated_at DESC";
+    			+ "WHERE user_name LIKE ? AND email LIKE ? AND role LIKE ? "
+    			+ "ORDER BY role ASC, updated_at DESC ";
+
     	List<Map<String, Object>> resultList = jdbc.queryForList(sql, userName, email, role);
+
     	
-    	
+    	List<User> userlist = new ArrayList<>();
     	for(Map<String, Object> map: resultList) {
 			User user = new User();
 			user.setId((Long)map.get("id"));
@@ -124,7 +129,8 @@ public class UserService implements UserServiceIF {
 			userlist.add(user);
 		}
     	
-    	return userlist;
+    	
+    	return new PageImpl<>(userlist, pageable, userlist.size());
 	}
 	
 	

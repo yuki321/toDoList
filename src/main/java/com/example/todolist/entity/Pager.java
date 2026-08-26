@@ -1,8 +1,5 @@
 package com.example.todolist.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class Pager {
 
@@ -12,62 +9,6 @@ public class Pager {
 	
 	}
 	
-	
-	/**
-	 * ページ数の取得
-	 * @param int userCount
-	 * @return int
-	 */
-	public int getPageCount(int userCount) {
-		if(userCount <= USER_PER_PAGE) return 1;
-		
-		return (userCount / USER_PER_PAGE) + 1;
-	}
-	
-	
-	/**
-	 * 最終ページのデータ数の取得
-	 * @param int userCount
-	 * @return int 
-	 */
-	public int getPageCountOffset(int userCount) {
-		if(userCount >= USER_PER_PAGE) return 0;
-		
-		return userCount % USER_PER_PAGE;
-	}
-	
-	
-	/**
-	 * 1ページにつきのデータ数の取得
-	 * @return int
-	 */
-	public int getUserPerPage() {
-		return USER_PER_PAGE;
-	}
-	
-	
-	public List<User> getUserListPerPage(List<User> userList, int currentPage){
-		
-		int userCount = userList.size();
-		/**
-		 * 取得するデータのインデックス（先頭、末尾）
-		 */
-		int topIndex = getTopIndex(currentPage, userCount);
-		int lastIndex = getLastIndex(currentPage, userCount);
-//		if(currentPage == 1) {
-//			topIndex = 1;
-//			lastIndex = USER_PER_PAGE - 1;
-//		}
-		
-		List<User> currentPageUserList = new ArrayList<>();
-		
-		for(int i = topIndex; i < lastIndex; i++) {
-			currentPageUserList.add(userList.get(i));
-		}
-		
-		return currentPageUserList;
-	}
-
 	
 	/**
 	 * ページに表示する先頭データのインデックスを取得

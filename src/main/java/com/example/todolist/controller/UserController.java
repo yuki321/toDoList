@@ -38,9 +38,7 @@ public class UserController {
 	@Autowired
 	private ToDoServiceIF toDoService;
 	
-//	@Autowired
-//	private Page page;
-		
+
 	
 	/**
 	 * 全件取得
@@ -52,7 +50,8 @@ public class UserController {
 	 */
 	@GetMapping("user")
 	public String getAllUsers(@AuthenticationPrincipal UserDetails userDetails, Model model, 
-			@PageableDefault(page = 0, size = 10) Pageable pageable , @RequestParam(name = "page") int page){
+			@PageableDefault(page = 0, size = 10) Pageable pageable, 
+			@RequestParam(name = "page") int page){
 		
 		Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
 		String role = (String) userIfo.get("role");
@@ -78,6 +77,9 @@ public class UserController {
 		model.addAttribute("topIndex", topIndex);
 		model.addAttribute("lastIndex", lastIndex);
 		
+		// データ件数・ページャーの表示
+		model.addAttribute("display", true);
+		
 		return "user";
 	}
 	
@@ -89,14 +91,32 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("search")
-	public String searchUsers(@ModelAttribute("user") User user, Model model) {
-		
-		List<User> users = userService.searchUsers(user);
-		final int userCount = users.size();
-		
-		model.addAttribute("users", users);
+	public String searchUsers(@ModelAttribute("user") User user, Model model
+			, @PageableDefault(page = 0, size = 10) Pageable pageable){
+
+		Page<User> users = userService.searchUsers(user, pageable);
+		final int userCount = users.getContent().size();
+
+
+		if(userCount < 0) return "redirect:/api/users/user?page=0";
+
+		model.addAttribute("users", users.getContent());
 		model.addAttribute("user", new User());
 		model.addAttribute("userCount", userCount);
+		
+		
+		// ページャー関連のデータ
+		Pager pager = new Pager();
+		int topIndex = pager.getTopIndex(0, users.getSize());
+		int lastIndex = pager.getLastIndex(0, users.getSize());
+		
+		model.addAttribute("pages", users);
+		model.addAttribute("topIndex", topIndex);
+		model.addAttribute("lastIndex", lastIndex);
+		
+		// データ件数・ページャーの非表示
+		model.addAttribute("display", false);
+		
 		
 		return "user";
 	}
@@ -279,9 +299,9 @@ public class UserController {
 			String newPassword = passwordChange.getNewPassword();
 			userService.savePassword(user, newPassword);
 			
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 		}
 		
 	}
@@ -297,7 +317,7 @@ public class UserController {
 	public String uploadCsvFile(@RequestParam("file") MultipartFile file, Model model) {
 	    try {
 	        userService.uploadCsvFile(file);
-	        return "redirect:/api/users/user";
+	        return "redirect:/api/users/user?page=0";
 	    } catch (Exception e) {
 	        model.addAttribute("errorMessage", "CSVファイルのインポート中にエラーが発生しました: " + e.getMessage());
 	        return "user";
@@ -314,7 +334,7 @@ public class UserController {
 	public String downloadCsvFile(Model model) {
 		try {
 			userService.downloadCsvFile();
-			return "redirect:/api/users/user";
+			return "redirect:/api/users/user?page=0";
 	    } catch (Exception e) {
 	        model.addAttribute("errorMessage", "CSVファイルのダウンロード中にエラーが発生しました: " + e.getMessage());
 	
