@@ -107,7 +107,7 @@
 					</ul>
 					
 					<form th:action="@{/api/users/upload}" method="post" enctype="multipart/form-data">
-						<input class="link-upload" type="file" name="file"><br>
+						<input class="link-upload" type="file" name="file" required><br>
 						<button id="upload-btn" type="submit">アップロード</button>
 					</form>
 				</div>
