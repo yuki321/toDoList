@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 public class CSV {
 
 	public CSV() {
@@ -39,6 +42,30 @@ public class CSV {
 	    }
 
 	    return true;
+	}
+	
+	
+	/**
+	 * CSVファイルチェック
+	 * @param MultipartFile file
+	 * @return boolean
+	 */
+	public boolean isCsvFile(MultipartFile file) {
+
+		if (file == null || file.isEmpty()) {
+            return false;
+        }
+
+        // 元のファイル名を取得
+        String originalFilename = file.getOriginalFilename();
+
+        // ファイル名が存在しない場合は false（ファイルを選択せずフォームを送信した場合）
+        if (!StringUtils.hasText(originalFilename)) {
+            return false;
+        }
+
+        // 大文字・小文字を区別せずに .csv で終わるかチェック
+        return originalFilename.toLowerCase().endsWith(".csv");
 	}
 
 

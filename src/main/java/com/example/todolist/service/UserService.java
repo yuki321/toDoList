@@ -346,6 +346,16 @@ public class UserService implements UserServiceIF {
 	public void uploadCsvFile(MultipartFile file) throws Exception {
 		// CSVファイルを読み込む
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+			
+			CSV csv = new CSV();
+			// CSVファイルチェック
+			boolean csvFileCheckResult = csv.isCsvFile(file);
+			if(!csvFileCheckResult) {
+				System.out.println("CSVファイルに問題が発生しています");
+				return;
+			}
+			
+			
 			String line;
 			//ヘッダーレコードを飛ばすために１行だけ読み取る
             line = br.readLine();
@@ -366,7 +376,6 @@ public class UserService implements UserServiceIF {
 					 * CSVファイルのチェック
 					 * 全項目のチェックに通過した場合、trueを返す
 					 */
-					CSV csv = new CSV();
 					boolean inputCheckResult = csv.inputCheck(values, users);
 					if(!inputCheckResult) continue;
 
