@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.todolist.entity.PasswordChange;
@@ -32,7 +33,7 @@ public interface UserServiceIF {
 
 	List<String> checkPassword(PasswordChange form, User user);
 
-	void uploadCsvFile(MultipartFile file) throws Exception;
+	List<String> uploadCsvFile(MultipartFile file) throws Exception;
 	
 	void downloadCsvFile() throws Exception;
 

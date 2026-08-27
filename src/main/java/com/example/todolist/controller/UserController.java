@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -310,18 +311,23 @@ public class UserController {
 	/**
 	 * CSVアップロード
 	 * @param MultipartFile file
-	 * @param Model model
+	 * @RedirectAttributes redirectAttributes
 	 * @return String
 	 */
 	@PostMapping("/upload")
-	public String uploadCsvFile(@RequestParam("file") MultipartFile file, Model model) {
+	public String uploadCsvFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 	    try {
-	        userService.uploadCsvFile(file);
-	        return "redirect:/api/users/user?page=0";
+	        List<String> errors = userService.uploadCsvFile(file);
+	        
+	        if(!errors.isEmpty()) {
+	        	redirectAttributes.addFlashAttribute("CSV_errors", errors);	        	
+	        }
+	        
 	    } catch (Exception e) {
-	        model.addAttribute("errorMessage", "CSVファイルのインポート中にエラーが発生しました: " + e.getMessage());
-	        return "user";
+	    	redirectAttributes.addFlashAttribute("errorMessage", "CSVファイルのインポート中にエラーが発生しました: " + e.getMessage());
 	    }
+	    
+        return "redirect:/api/users/user?page=0";
 	}
 	
 	

@@ -110,6 +110,10 @@
 						<input class="link-upload" type="file" name="file" required><br>
 						<button id="upload-btn" type="submit">アップロード</button>
 					</form>
+					<div th:each="e: ${CSV_errors}">
+						<span class="error" th:text="${e}"></span>
+					</div>
+					
 				</div>
 				<p id="no-user" th:if="${#lists.isEmpty(users)}">該当条件のユーザーは存在しません</p>
 			</div>

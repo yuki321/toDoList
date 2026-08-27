@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -340,19 +341,24 @@ public class UserService implements UserServiceIF {
 	/**
 	 * CSVファイルアップロード
 	 * @param MultipartFile file
+	 * @return List<String>
 	 */
 	@Override
 	@Transactional
-	public void uploadCsvFile(MultipartFile file) throws Exception {
+	public List<String> uploadCsvFile(MultipartFile file) throws Exception {
 		// CSVファイルを読み込む
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 			
 			CSV csv = new CSV();
+			List<String> errors = new ArrayList<>();
+			
 			// CSVファイルチェック
-			boolean csvFileCheckResult = csv.isCsvFile(file);
+			boolean csvFileCheckResult = csv.isCsvFile(file, errors);
 			if(!csvFileCheckResult) {
 				System.out.println("CSVファイルに問題が発生しています");
-				return;
+				
+				String message = "・CSVファイルに問題が発生しています";
+				csv.setErrorMessage(message, errors);
 			}
 			
 			
@@ -376,8 +382,11 @@ public class UserService implements UserServiceIF {
 					 * CSVファイルのチェック
 					 * 全項目のチェックに通過した場合、trueを返す
 					 */
-					boolean inputCheckResult = csv.inputCheck(values, users);
-					if(!inputCheckResult) continue;
+					boolean inputCheckResult = csv.inputCheck(values, users, errors);
+					if(!inputCheckResult) {
+						System.out.println("inputCheckResult: エラー発生!!");
+						continue;
+					}
 
 					
 					String userNameFromCSV = values[0].trim();
@@ -404,7 +413,10 @@ public class UserService implements UserServiceIF {
 					// ユーザーを保存
 					createUserFromCsv(user);
 				}
+				
 			}
+			
+			return errors;
 		} catch (IOException e) {
 			throw new Exception("CSVファイルの読み込みに失敗しました", e);
 		}
