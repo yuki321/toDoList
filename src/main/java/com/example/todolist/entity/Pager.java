@@ -3,8 +3,6 @@ package com.example.todolist.entity;
 
 public class Pager {
 
-	private final int USER_PER_PAGE = 10;
-	
 	public Pager() {
 	
 	}
@@ -18,7 +16,7 @@ public class Pager {
 	 */
 	public int getTopIndex(int currentPage, int dataCountPerPage) {
 		// Pathvariableのpageは 0 から始まるため、currentPage + 1とする
-		if((currentPage + 1) == 1) return 1;
+		if((currentPage + 1) <= 1) return 1;
 		
 		// 表示ページ2ページ目(page=1)、10レコード/page の場合、先頭データのインデックスは
 		// ((1 + 1) * 10) - (10 - 1) = 11
@@ -36,11 +34,11 @@ public class Pager {
 	 */
 	public int getLastIndex(int currentPage, int dataCountPerPage) {
 		// Pathvariableのpageは 0 から始まるため、currentPage + 1とする
-		if((currentPage + 1) == 1) return dataCountPerPage;
+		if((currentPage + 1) <= 1) return dataCountPerPage;
 		
 		// 表示ページ2ページ目、10レコード/page の場合、インデックスは
-		// 2 * 10 - 1 = 19
-		int result = ((currentPage + 1) * USER_PER_PAGE);
+		// (1 + 1) * 10 = 20
+		int result = ((currentPage + 1) * dataCountPerPage);
 		
 		return result;
 	}
