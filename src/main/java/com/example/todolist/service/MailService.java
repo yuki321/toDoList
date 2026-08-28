@@ -51,14 +51,14 @@ public class MailService implements MailServiceIF {
 		
 		List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
 
-		Long userId_L = getUserId(resultList, rawToken);
+		String email = getEmail(resultList, rawToken);
 		
 		// 新パスワード
 		String newPassword = passwordReset.getNewPassword();
 		// 新パスワード（確認用）
 		String confirmedPassword = passwordReset.getConfirmPassword();
 		// DBから取得した現在のパスワード
-		String DBPassword = getDbPassword(userId_L);
+		String DBPassword = getDBPassword(email);
 		
 		// 新パスワードと新パスワード（確認用）が一致しない
 		if(!newPassword.equals(confirmedPassword)) {
@@ -75,13 +75,13 @@ public class MailService implements MailServiceIF {
 	
 	/**
 	 * パスワードをusersテーブルから取得
-	 * @param Long userId
+	 * @param String email
 	 * @return String password
 	 */
-	private String getDbPassword(Long userId) {
+	private String getDBPassword(String email) {
 		
-		String sql = "SELECT password FROM users WHERE id=?";
-		Map<String, Object> getMap = jdbc.queryForMap(sql, userId);
+		String sql = "SELECT password FROM users WHERE email=?";
+		Map<String, Object> getMap = jdbc.queryForMap(sql, email);
 		String password = (String)getMap.get("password");
 		
 		return password;
@@ -94,10 +94,10 @@ public class MailService implements MailServiceIF {
 	 * @param String rawToken
 	 * @return Long userId
 	 */
-	private Long getUserId(List<Map<String, Object>> resultList, String rawToken) {
+	private String getEmail(List<Map<String, Object>> resultList, String rawToken) {
 		
 		boolean matchResult = false;
-		String userId = null;
+		String email = null;
 		for(Map<String, Object> map: resultList) {
 	
 			String token_hash = (String)map.get("token_hash");
@@ -105,13 +105,13 @@ public class MailService implements MailServiceIF {
 	
 			if(matchResult) {
 				// マッチした組み合わせを次の判定で利用
-				userId = map.get("user_id").toString();
+				email = map.get("email").toString();
 				break;
 			}
 			
 		}
 		
-		return Long.valueOf(userId);
+		return email;
 	}
 	
 	

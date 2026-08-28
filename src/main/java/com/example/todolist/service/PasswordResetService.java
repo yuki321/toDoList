@@ -27,12 +27,12 @@ public class PasswordResetService implements PasswordResetServiceIF {
 	@Override
 	public boolean passwordResetTransanction(String rawToken, String newPassword, Model model) {
 
-		// 1.password-reset-tokensテーブルからuser_idを取得
+		// 1.password-reset-tokensテーブルからメールアドレスを取得
 		// 全有効トーケンを取得して、ハッシュ化されていない平文トークンと比較
 		List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
 
 		boolean matchResult = false;
-		String userId = null;
+		String email = null;
 		for(Map<String, Object> m: resultList) {
 	
 			String token_hash = (String)m.get("token_hash");
@@ -40,7 +40,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 	
 			if(matchResult) {
 				// マッチした組み合わせを次の判定で利用
-				userId = m.get("user_id").toString();
+				email = m.get("email").toString();
 				break;
 			}
 			
@@ -51,10 +51,8 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		}
 		
 		// 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
-		Long userId_L = Long.valueOf(userId);
-
 		try {
-			int num = passwordResetRepository.updateResetTokenUsedAt(userId_L);
+			int num = passwordResetRepository.updateResetTokenUsedAt(email);
 
 			if(num < 0) {
 				return false;
@@ -73,7 +71,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		
 		// 3.Userテーブルのパスワードを更新
 		try {
-			int num = passwordResetRepository.resetPassword(userId_L, newPassword);
+			int num = passwordResetRepository.resetPassword(email, newPassword);
 			if(num < 0) {
 				return false;
 			}
@@ -91,7 +89,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		
 		// 4.password-reset-tokensテーブルの該当レコードを削除する
 		try {
-			int num = passwordResetRepository.deleteRecord(userId_L);
+			int num = passwordResetRepository.deleteRecord(email);
 			if(num < 0) {
 				return false;
 			}

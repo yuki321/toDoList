@@ -22,28 +22,28 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	PasswordEncoder passwordEncoder;
 	
 	/**
-	 * 1.password-reset-tokensテーブルからuser_idを取得
+	 * 1.password-reset-tokensテーブルからメールアドレスを取得
 	 *  ServiceクラスでpasswordResetTokenRepository.findAllTokenHash()を利用して
-	 *  user_idを取得
+	 *  メールアドレスを取得
 	 */
 
 	
 	
 	/**
 	 * 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
-	 * @param Long userId
+	 * @param String email
 	 * @return int num
 	 * @throws DataAccessException
 	 */
 	@Override
 	@Transactional
-	public int updateResetTokenUsedAt(Long userId) throws DataAccessException {
+	public int updateResetTokenUsedAt(String email) throws DataAccessException {
 		
 		String sql = "UPDATE password_reset_tokens "
-				+ "SET used_at = ? WHERE user_id=?";
+				+ "SET used_at = ? WHERE email=?";
 		int num = 0;
 		try {
-			num = jdbc.update(sql, LocalDateTime.now(), userId);
+			num = jdbc.update(sql, LocalDateTime.now(), email);
 			
 		}catch(DataAccessException e) {
 			System.out.println("Error Message: " + e);
@@ -55,18 +55,18 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	
 	/**
 	 * 3.Userテーブルのパスワードを更新
-	 * @param Long userId
+	 * @param String email
 	 * @param String newPassword
 	 * @return int num
 	 * @throws DataAccessException
 	 */
 	@Override
 	@Transactional
-	public int resetPassword(Long userId, String newPassword) throws DataAccessException {
-		String sql = "UPDATE users SET password = ? WHERE id=?";
+	public int resetPassword(String email, String newPassword) throws DataAccessException {
+		String sql = "UPDATE users SET password = ? WHERE email=?";
 
 		String encodedPassword = passwordEncoder.encode(newPassword);
-		int num = jdbc.update(sql, encodedPassword, userId);
+		int num = jdbc.update(sql, encodedPassword, email);
 		
 		return num;
 	}
@@ -74,15 +74,15 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	
 	/**
 	 * 4.password-reset-tokensテーブルの該当レコードを削除する
-	 * @param Long userId
+	 * @param String email
 	 * @return int num
 	 * @throws DataAccessException
 	 */
 	@Override
 	@Transactional
-	public int deleteRecord(Long userId) throws DataAccessException {
-		String sql = "DELETE FROM password_reset_tokens WHERE user_id=?";
-		int num = jdbc.update(sql, userId);
+	public int deleteRecord(String email) throws DataAccessException {
+		String sql = "DELETE FROM password_reset_tokens WHERE email=?";
+		int num = jdbc.update(sql, email);
 
 		return num;
 	}
@@ -90,15 +90,15 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	
 	
 	/**
-	 * ユーザーIDに紐づくパスワードリセットトークンの件数を取得する
-	 * @param Long userId
+	 * メールアドレスに紐づくパスワードリセットトークンの件数を取得する
+	 * @param String email
 	 * @return int count
 	 * @throws 
 	 */
 	@Override
-	public int selectCountByUserId(Long userId) throws DataAccessException {
-		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE user_id = ?";
-		int count = jdbc.queryForObject(sql, Integer.class, userId);
+	public int selectCountByUserId(String email) throws DataAccessException {
+		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
+		int count = jdbc.queryForObject(sql, Integer.class, email);
 		return count;
 	}
 	
@@ -118,22 +118,22 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	
 	/**
 	 * パスワードリセットトークンのレコードを挿入する
-	 * @param userId ユーザーID
+	 * @param String email
 	 * @param tokenHash トークンのハッシュ値
 	 * @return 1:挿入成功, 0:挿入失敗
 	 * @throws DataAccessException データアクセス例外
 	 */
 	@Override
-	public int insertRecord(Long userId, String tokenHash) throws DataAccessException {
+	public int insertRecord(String email, String tokenHash) throws DataAccessException {
 		
 		// トークンの有効期限（時間単位）
 		int EXPIRATION_HOUR_UNIT = 1; 
 		
 		String sql = "INSERT INTO password_reset_tokens "
-				+ "(user_id, token_hash, created_at, expires_at, used_at) "
+				+ "(email, token_hash, created_at, expires_at, used_at) "
 				+ "VALUES(?, ?, ?, ?, ?)";
 		int num = jdbc.update(sql,
-				userId,
+				email,
 				tokenHash,
 				LocalDateTime.now(),
 				// 有効期限を1時間後に設定
@@ -145,16 +145,16 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	}
 	
 	/**
-	 * ユーザーIDに紐づくパスワードリセットトークンのレコードを削除する
-	 * @param Long userId
+	 * メールアドレスに紐づくパスワードリセットトークンのレコードを削除する
+	 * @param String email
 	 * @return int num 
 	 * @throws 
 	 */	
 	@Override
-	public int deleteResetToken(Long userId) throws DataAccessException {
+	public int deleteResetToken(String email) throws DataAccessException {
 		
-		String sql = "DELETE FROM password_reset_tokens WHERE user_id = ?";
-		int num = jdbc.update(sql, userId);
+		String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
+		int num = jdbc.update(sql, email);
 		
 		return num;
 	}

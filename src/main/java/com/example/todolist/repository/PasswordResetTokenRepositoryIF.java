@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 
 public interface PasswordResetTokenRepositoryIF {
-	int selectCountByUserId(Long userId);
+	int selectCountByEmail(String email);
 	
 	List<java.util.Map<String, Object>> findAllTokenHash();
 
-	int insertRecord(Long userId, String tokenHash);
+	int insertRecord(String email, String tokenHash);
 	
-	int deleteResetToken(Long userId) throws DataAccessException;
+	int deleteResetToken(String email) throws DataAccessException;
 
 }

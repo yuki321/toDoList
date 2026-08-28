@@ -56,54 +56,59 @@ public class MailController {
 	
 	
 	@PostMapping("/send")
-	public String sendMail(@Valid @ModelAttribute PasswordChange mail, Model model) {
+	public String sendMail(@ModelAttribute PasswordChange mail, BindingResult bindingResult, Model model) {
+
+		if (bindingResult.hasErrors()) {
+	        System.out.println("Validation Errors: " + bindingResult.getAllErrors());
+	        return "index"; 
+	    }
 
 		// メール送信先のメールアドレス
 		String email = mail.getPasswordChange();
-		boolean isExistsByEmail = false;
+		boolean isEmailExists = false;
 		// メールアドレスの存在チェック
 		try {
-			isExistsByEmail = userRepository.existsByEmail(email);
+			isEmailExists = userRepository.existsByEmail(email);
 			
 		}catch (Exception e) {
+			System.out.println("/reset-password/send sendMail()");
 			return "login";
 		}
 		
-		if(!isExistsByEmail) {
+		String kind = mail.getKind();
+		if((!isEmailExists) && kind.equals("PW_RESET")) {
 			// ユーザーが見つからない場合の処理
 			model.addAttribute("errorMessage", "メールアドレスが登録されていません。");
 			return "login";
 		}
 
-		List<User> userList = userRepository.findByEmail(email);
-
-		// メールアドレスはユニークなため、get(0)で取得して問題ない
-		Long userId = userList.get(0).getId();
-
 		
-		// 過去に作成した、未使用トークンが存在する場合は削除する
-		int count = passwordResetTokenRepository.selectCountByUserId(userId);
-		
-		if(count > 0) {
+		if(kind.equals("PW_RESET")) {
+			
 			// 過去に作成した、未使用トークンが存在する場合は削除する
-			int num = passwordResetTokenRepository.deleteResetToken(userId);
-			if(num < 0) {
-				// トークンの削除に失敗した場合の処理
-				model.addAttribute("errorMessage", "トークンの削除に失敗しました。");
-				return "login";
+			int count = passwordResetTokenRepository.selectCountByEmail(email);
+			
+			if(count > 0) {
+				// 過去に作成した、未使用トークンが存在する場合は削除する
+				int num = passwordResetTokenRepository.deleteResetToken(email);
+				if(num < 0) {
+					// トークンの削除に失敗した場合の処理
+					model.addAttribute("errorMessage", "トークンの削除に失敗しました。");
+					return "login";
+				}
 			}
 		}
 		
 		
 		// ランダムなトークンを生成し、メールに設定する
-		String token  = UUID.randomUUID().toString(); 
+		String token = UUID.randomUUID().toString(); 
 		
 		// トークンをエンコード(BCryptPasswordEncoder) → DBに保存する
 		String encodedToken = passwordEncoder.encode(token);
 		
 
 		// エンコードされたトークンをDBに保存する処理
-		int num = passwordResetTokenRepository.insertRecord(userId, encodedToken);
+		int num = passwordResetTokenRepository.insertRecord(email, encodedToken);
 		
 		if(num < 0) {
 			// トークンの保存に失敗した場合の処理
@@ -112,7 +117,6 @@ public class MailController {
 		}
 		
 		// パスワードリセットメールを送信する
-		String kind = mail.getKind();
 		if(kind.equals("PW_RESET")) {
 			mailService.sendPasswordResetEmail(email, token);
 		}
@@ -159,7 +163,7 @@ public class MailController {
 		
 		/**
 		 * 処理の流れ
-		 * 1.password-reset-tokensテーブルからuser_idを取得
+		 * 1.password-reset-tokensテーブルからメールアドレスを取得
 		 * 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
 		 * 3.Userテーブルのパスワードを更新
 		 * 4.password-reset-tokensテーブルの該当レコードを削除する

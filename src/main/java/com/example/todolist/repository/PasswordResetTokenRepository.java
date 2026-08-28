@@ -17,15 +17,15 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	JdbcTemplate jdbc;
 	
 	/**
-	 * ユーザーIDに紐づくパスワードリセットトークンの件数を取得する
-	 * @param Long userId
+	 * メールアドレスに紐づくパスワードリセットトークンの件数を取得する
+	 * @param String email
 	 * @return int count
 	 * @throws 
 	 */
 	@Override
-	public int selectCountByUserId(Long userId) throws DataAccessException {
-		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE user_id = ?";
-		int count = jdbc.queryForObject(sql, Integer.class, userId);
+	public int selectCountByEmail(String email) throws DataAccessException {
+		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
+		int count = jdbc.queryForObject(sql, Integer.class, email);
 		return count;
 	}
 	
@@ -45,22 +45,22 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	
 	/**
 	 * パスワードリセットトークンのレコードを挿入する
-	 * @param userId ユーザーID
-	 * @param tokenHash トークンのハッシュ値
-	 * @return 1:挿入成功, 0:挿入失敗
+	 * @param String email
+	 * @param String tokenHash トークンのハッシュ値
+	 * @return int 1:挿入成功, 0:挿入失敗
 	 * @throws DataAccessException データアクセス例外
 	 */
 	@Override
-	public int insertRecord(Long userId, String tokenHash) throws DataAccessException {
+	public int insertRecord(String email, String tokenHash) throws DataAccessException {
 		
 		// トークンの有効期限（時間単位）
 		int EXPIRATION_HOUR_UNIT = 1; 
 		
 		String sql = "INSERT INTO password_reset_tokens "
-				+ "(user_id, token_hash, created_at, expires_at, used_at) "
+				+ "(email, token_hash, created_at, expires_at, used_at) "
 				+ "VALUES(?, ?, ?, ?, ?)";
 		int num = jdbc.update(sql,
-				userId,
+				email,
 				tokenHash,
 				LocalDateTime.now(),
 				// 有効期限を1時間後に設定
@@ -72,16 +72,16 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	}
 	
 	/**
-	 * ユーザーIDに紐づくパスワードリセットトークンのレコードを削除する
-	 * @param Long userId
+	 * メールアドレスに紐づくパスワードリセットトークンのレコードを削除する
+	 * @param String email
 	 * @return int num 
 	 * @throws 
 	 */	
 	@Override
-	public int deleteResetToken(Long userId) throws DataAccessException {
+	public int deleteResetToken(String email) throws DataAccessException {
 		
-		String sql = "DELETE FROM password_reset_tokens WHERE user_id = ?";
-		int num = jdbc.update(sql, userId);
+		String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
+		int num = jdbc.update(sql, email);
 		
 		return num;
 	}
