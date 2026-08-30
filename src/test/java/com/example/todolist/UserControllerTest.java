@@ -55,12 +55,6 @@ public class UserControllerTest {
 	@Mock
 	private User user;
 	
-//	@Mock
-//	Pageable pageable;
-//	
-//	@Mock
-//	MockMvc mockMvc;
-	
 	@InjectMocks
 	private UserController userController;
 
@@ -91,11 +85,6 @@ public class UserControllerTest {
 		user2.setPassword("1111");
 		user2.setRole("1");
 		userList.add(user2);
-		
-//		mockMvc = MockMvcBuilders.standaloneSetup(userController)
-//	            // Pageableを正しく解決するためのリゾルバーを追加
-//	            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-//	            .build();
 		
 		
 	}

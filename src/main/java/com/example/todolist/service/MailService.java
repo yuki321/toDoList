@@ -43,7 +43,7 @@ public class MailService implements MailServiceIF {
 	 * パスワードチェック
 	 * @param passwordReset
 	 * @param rawToken
-	 * @return
+	 * @return List<String>
 	 */
 	public List<String> checkPassword(PasswordReset passwordReset, String rawToken){
 		
@@ -89,10 +89,10 @@ public class MailService implements MailServiceIF {
 	
 	
 	/**
-	 * ユーザーIDの取得
+	 * メールアドレスの取得
 	 * @param List<Map<String, Object>> resultList
 	 * @param String rawToken
-	 * @return Long userId
+	 * @return String
 	 */
 	private String getEmail(List<Map<String, Object>> resultList, String rawToken) {
 		
