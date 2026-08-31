@@ -7,19 +7,19 @@ import org.springframework.dao.DataAccessException;
 
 public interface PasswordResetRepositoryIF {
 	
-	int updateResetTokenUsedAt(String email);
+	int updateResetTokenUsedAt(final String email);
 	
-	int resetPassword(String email, String newPassword) throws DataAccessException;
+	int resetPassword(final String email, final String newPassword) throws DataAccessException;
 
-	int deleteRecord(String email) throws DataAccessException;
+	int deleteRecord(final String email) throws DataAccessException;
 
-	int selectCountByUserId(String email) throws DataAccessException;
+	int selectCountByUserId(final String email) throws DataAccessException;
 
 	List<Map<String, Object>> findAllTokenHash() throws DataAccessException;
 
-	int insertRecord(String email, String tokenHash) throws DataAccessException;
+	int insertRecord(final String email, final String tokenHash) throws DataAccessException;
 
-	int deleteResetToken(String email) throws DataAccessException;
+	int deleteResetToken(final String email) throws DataAccessException;
 
 	
 }

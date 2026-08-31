@@ -23,9 +23,9 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 * @throws 
 	 */
 	@Override
-	public int selectCountByEmail(String email) throws DataAccessException {
-		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
-		int count = jdbc.queryForObject(sql, Integer.class, email);
+	public int selectCountByEmail(final String email) throws DataAccessException {
+		final String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
+		final int count = jdbc.queryForObject(sql, Integer.class, email);
 		return count;
 	}
 	
@@ -36,8 +36,8 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 */
 	@Override
 	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
-		String sql = "SELECT * FROM password_reset_tokens";
-		List<Map<String, Object>> list = jdbc.queryForList(sql);
+		final String sql = "SELECT * FROM password_reset_tokens";
+		final List<Map<String, Object>> list = jdbc.queryForList(sql);
 	
 		return list;
 	}
@@ -51,15 +51,15 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 * @throws DataAccessException データアクセス例外
 	 */
 	@Override
-	public int insertRecord(String email, String tokenHash) throws DataAccessException {
+	public int insertRecord(final String email, final String tokenHash) throws DataAccessException {
 		
 		// トークンの有効期限（時間単位）
-		int EXPIRATION_HOUR_UNIT = 1; 
+		final int EXPIRATION_HOUR_UNIT = 1; 
 		
-		String sql = "INSERT INTO password_reset_tokens "
+		final String sql = "INSERT INTO password_reset_tokens "
 				+ "(email, token_hash, created_at, expires_at, used_at) "
 				+ "VALUES(?, ?, ?, ?, ?)";
-		int num = jdbc.update(sql,
+		final int num = jdbc.update(sql,
 				email,
 				tokenHash,
 				LocalDateTime.now(),
@@ -78,10 +78,10 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 * @throws 
 	 */	
 	@Override
-	public int deleteResetToken(String email) throws DataAccessException {
+	public int deleteResetToken(final String email) throws DataAccessException {
 		
-		String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
-		int num = jdbc.update(sql, email);
+		final String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
+		final int num = jdbc.update(sql, email);
 		
 		return num;
 	}

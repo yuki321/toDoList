@@ -12,21 +12,21 @@ import com.example.todolist.entity.ToDo;
 @Service
 public interface ToDoServiceIF {
 	
-	List<ToDo> findAllToDo(UserDetails userDetails);
+	List<ToDo> findAllToDo(final UserDetails userDetails);
 
-	List<ToDo> findAllCompletedToDo(UserDetails userDetails);
+	List<ToDo> findAllCompletedToDo(final UserDetails userDetails);
 
-	boolean completeTask(ToDo todo) throws DataAccessException;
+	boolean completeTask(final ToDo todo) throws DataAccessException;
 
-	boolean undoCompletedTask(ToDo todo) throws DataAccessException;
+	boolean undoCompletedTask(final ToDo todo) throws DataAccessException;
 
-	Map<String, Object> getUserInfo(UserDetails userDetails);
+	Map<String, Object> getUserInfo(final UserDetails userDetails);
 
-	boolean insertRecord(ToDo todo);
+	boolean insertRecord(final ToDo todo);
 
-	boolean updateRecord(ToDo todo) throws DataAccessException;
+	boolean updateRecord(final ToDo todo) throws DataAccessException;
 
-	boolean deleteRecord(Long id) throws DataAccessException;
+	boolean deleteRecord(final Long id) throws DataAccessException;
 	
 
 }

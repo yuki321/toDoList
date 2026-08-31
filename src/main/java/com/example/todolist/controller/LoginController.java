@@ -9,7 +9,7 @@ import com.example.todolist.entity.PasswordChange;
 @Controller
 public class LoginController {
 	@GetMapping("/login")
-	public String login(Model model) {
+	public String login(final Model model) {
 		model.addAttribute("passwordChange", new PasswordChange());
 		return "login";
 	}

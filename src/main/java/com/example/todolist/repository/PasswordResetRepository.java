@@ -35,11 +35,10 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */
 	@Override
 	@Transactional
-	public int updateResetTokenUsedAt(String email) {
+	public int updateResetTokenUsedAt(final String email) {
 		
-		String sql = "UPDATE password_reset_tokens "
-				+ "SET used_at = ? WHERE email=?";
-		int num = jdbc.update(sql, LocalDateTime.now(), email);
+		final String sql = "UPDATE password_reset_tokens SET used_at = ? WHERE email=?";
+		final int num = jdbc.update(sql, LocalDateTime.now(), email);
 			
 		return num;
 	}
@@ -53,11 +52,11 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */
 	@Override
 	@Transactional
-	public int resetPassword(String email, String newPassword) {
-		String sql = "UPDATE users SET password = ? WHERE email=?";
+	public int resetPassword(final String email, final String newPassword) {
+		final String sql = "UPDATE users SET password = ? WHERE email=?";
 
-		String encodedPassword = passwordEncoder.encode(newPassword);
-		int num = jdbc.update(sql, encodedPassword, email);
+		final String encodedPassword = passwordEncoder.encode(newPassword);
+		final int num = jdbc.update(sql, encodedPassword, email);
 		
 		return num;
 	}
@@ -70,9 +69,9 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */
 	@Override
 	@Transactional
-	public int deleteRecord(String email) {
-		String sql = "DELETE FROM password_reset_tokens WHERE email=?";
-		int num = jdbc.update(sql, email);
+	public int deleteRecord(final String email) {
+		final String sql = "DELETE FROM password_reset_tokens WHERE email=?";
+		final int num = jdbc.update(sql, email);
 
 		return num;
 	}
@@ -85,9 +84,9 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 * @return int count
 	 */
 	@Override
-	public int selectCountByUserId(String email) {
-		String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
-		int count = jdbc.queryForObject(sql, Integer.class, email);
+	public int selectCountByUserId(final String email) {
+		final String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
+		final int count = jdbc.queryForObject(sql, Integer.class, email);
 		return count;
 	}
 	
@@ -97,8 +96,8 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */
 	@Override
 	public List<Map<String, Object>> findAllTokenHash() {
-		String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
-		List<Map<String, Object>> list = jdbc.queryForList(sql);
+		final String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
+		final List<Map<String, Object>> list = jdbc.queryForList(sql);
 		
 		return list;
 	}
@@ -111,15 +110,15 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 * @return 1:挿入成功, 0:挿入失敗
 	 */
 	@Override
-	public int insertRecord(String email, String tokenHash) {
+	public int insertRecord(final String email, final String tokenHash) {
 		
 		// トークンの有効期限（時間単位）
-		int EXPIRATION_HOUR_UNIT = 1; 
+		final int EXPIRATION_HOUR_UNIT = 1; 
 		
-		String sql = "INSERT INTO password_reset_tokens "
+		final String sql = "INSERT INTO password_reset_tokens "
 				+ "(email, token_hash, created_at, expires_at, used_at) "
 				+ "VALUES(?, ?, ?, ?, ?)";
-		int num = jdbc.update(sql,
+		final int num = jdbc.update(sql,
 				email,
 				tokenHash,
 				LocalDateTime.now(),
@@ -137,10 +136,10 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 * @return int num 
 	 */	
 	@Override
-	public int deleteResetToken(String email) {
+	public int deleteResetToken(final String email) {
 		
-		String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
-		int num = jdbc.update(sql, email);
+		final String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
+		final int num = jdbc.update(sql, email);
 		
 		return num;
 	}

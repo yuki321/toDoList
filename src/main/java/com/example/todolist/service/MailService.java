@@ -53,7 +53,7 @@ public class MailService implements MailServiceIF {
 	 * @param rawToken
 	 * @return List<String>
 	 */
-	public List<String> checkPassword(PasswordReset passwordReset, String rawToken){
+	public List<String> checkPassword(final PasswordReset passwordReset, final String rawToken){
 		
 		List<String> errors = new ArrayList<>();
 		
@@ -86,7 +86,7 @@ public class MailService implements MailServiceIF {
 	 * @param String email
 	 * @return String password
 	 */
-	private String getDBPassword(String email) {
+	private String getDBPassword(final String email) {
 		
 		String sql = "SELECT password FROM users WHERE email=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, email);
@@ -102,7 +102,7 @@ public class MailService implements MailServiceIF {
 	 * @param String rawToken
 	 * @return String
 	 */
-	private String getEmail(List<Map<String, Object>> resultList, String rawToken) {
+	private String getEmail(final List<Map<String, Object>> resultList, final String rawToken) {
 		
 		if(resultList == null || resultList.isEmpty()) return null;
 		if(rawToken == null || rawToken.isEmpty()) return null;
@@ -131,7 +131,7 @@ public class MailService implements MailServiceIF {
 	 * @param token
 	 * @param email
 	 */
-	public void sendPasswordResetEmail(String email, String token) {
+	public void sendPasswordResetEmail(final String email, final String token) {
 		
 		String subject = "[todolist]パスワードリセットのご案内";
 		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=reset";
@@ -150,7 +150,7 @@ public class MailService implements MailServiceIF {
 	 * @param token
 	 * @param email
 	 */
-	public void sendUserCreateEmail(String email, String token) {
+	public void sendUserCreateEmail(final String email, final String token) {
 		
 		String subject = "[todolist]ユーザー登録のご案内";
 		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=registration";
@@ -170,7 +170,7 @@ public class MailService implements MailServiceIF {
 	 * @param String subject
 	 * @param String text
 	 */
-	private void sendEmail(String to, String subject, String text) {
+	private void sendEmail(final String to, final String subject, final String text) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(to);
 		message.setFrom(mailFrom);
@@ -187,7 +187,7 @@ public class MailService implements MailServiceIF {
 	 * @return String
 	 */
 	@Override
-	public String sendMailProcess(PasswordChange mail, Model model) {
+	public String sendMailProcess(final PasswordChange mail, Model model) {
 		
 		// メール送信先のメールアドレス
 		String email = mail.getPasswordChange();

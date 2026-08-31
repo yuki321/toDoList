@@ -18,13 +18,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //	Optional<User> findById(Long id);
 	
 	//　バリデーション（存在チェック）
-	boolean existsByUserName(String userName);
-    boolean existsByEmail(String email);
+	boolean existsByUserName(final String userName);
+    boolean existsByEmail(final String email);
     
 //    Optional<User> findByLoginId(String userName);
-    Optional<User> findByUserName(String userName);
+    Optional<User> findByUserName(final String userName);
 
-    List<User> findByEmail(String email);
+    List<User> findByEmail(final String email);
     
 }
 

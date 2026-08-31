@@ -54,7 +54,7 @@ public class MailController {
 	
 	
 	@PostMapping("/send")
-	public String sendMail(@ModelAttribute PasswordChange mail, BindingResult bindingResult, Model model) {
+	public String sendMail(@ModelAttribute final PasswordChange mail, final BindingResult bindingResult, final Model model) {
 
 		if (bindingResult.hasErrors()) {
 	        System.out.println("Validation Errors: " + bindingResult.getAllErrors());
@@ -74,17 +74,17 @@ public class MailController {
 	 * @return String
 	 */
 	@PostMapping
-	public String resetPassword(@Valid @ModelAttribute("resetPassword") PasswordReset passwordReset,
-			@RequestParam("token") String rawToken, 
-			BindingResult bindingResult, 
-			Model model
+	public String resetPassword(@Valid @ModelAttribute("resetPassword") final PasswordReset passwordReset,
+			@RequestParam("token") final String rawToken, 
+			final BindingResult bindingResult, 
+			final Model model
 			) {
 		
 		if(bindingResult.hasErrors()) {
 			return "resetPassword";
 		}
 		
-		List<String> errors = mailService.checkPassword(passwordReset, rawToken);
+		final List<String> errors = mailService.checkPassword(passwordReset, rawToken);
 		
 		if(!errors.isEmpty()) {
 			for(String error: errors) {
@@ -101,7 +101,7 @@ public class MailController {
 		 * 3.Userテーブルのパスワードを更新
 		 * 4.password-reset-tokensテーブルの該当レコードを削除する
 		 */
-		boolean result = passwordResetService.passwordResetTransanction(rawToken, passwordReset.getNewPassword(), model);
+		final boolean result = passwordResetService.passwordResetTransaction(rawToken, passwordReset.getNewPassword(), model);
 
 		if(!result) {
 

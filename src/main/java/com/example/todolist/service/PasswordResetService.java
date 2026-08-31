@@ -25,7 +25,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 	PasswordEncoder passwordEncoder;
 	
 	@Override
-	public boolean passwordResetTransanction(String rawToken, String newPassword, Model model) {
+	public boolean passwordResetTransaction(final String rawToken, final String newPassword, final Model model) {
 
 		// 1.password-reset-tokensテーブルからメールアドレスを取得
 		// 全有効トーケンを取得して、ハッシュ化されていない平文トークンと比較

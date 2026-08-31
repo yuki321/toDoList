@@ -37,12 +37,12 @@ public class ValidateTokenController {
 	 * @return String
 	 */
 	@GetMapping("/validate_token")
-	public String validateToken(@RequestParam("token") String token, @RequestParam("kind") String kind, Model model) {
+	public String validateToken(@RequestParam("token") final String token, @RequestParam("kind") final String kind, final Model model) {
 
-		PasswordReset passwordReset = new PasswordReset();
+		final PasswordReset passwordReset = new PasswordReset();
 		
 		// トークンの検証
-		boolean result = passwordReset.validatePasswordResetToken(token, passwordEncoder, passwordResetTokenRepository);
+		final boolean result = passwordReset.validatePasswordResetToken(token, passwordEncoder, passwordResetTokenRepository);
 		if(!result) {
 			model.addAttribute("errorMessage", "トークンが不正です");
 			

@@ -45,12 +45,12 @@ public class ToDoController {
 	 * @return String
 	 */
 	@GetMapping("/")
-	public String getAllToDo(@AuthenticationPrincipal UserDetails userDetails, 
-			@ModelAttribute User user,
-			Model model){
+	public String getAllToDo(@AuthenticationPrincipal final UserDetails userDetails, 
+			@ModelAttribute final User user,
+			final Model model){
 
 		// ログイン情報を基にタスク一覧を表示
-		List<ToDo> todos = toDoService.findAllToDo(userDetails);
+		final List<ToDo> todos = toDoService.findAllToDo(userDetails);
 		final int todoCount = todos.size();
 		
 		model.addAttribute("todos", todos);
@@ -61,13 +61,13 @@ public class ToDoController {
 		model.addAttribute("undoTask", new ToDo());
 		
 		// 完了済みタスク
-		List<ToDo> completedTodos = toDoService.findAllCompletedToDo(userDetails);
+		final List<ToDo> completedTodos = toDoService.findAllCompletedToDo(userDetails);
 		final int completedCount = completedTodos.size();
 		model.addAttribute("completedTodos", completedTodos);
 		model.addAttribute("completedCount", completedCount);
 
 		// ロールを取得（ロールがAdminの場合、管理者画面へのリンクを表示する）
-		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		model.addAttribute("role", userInfo.get("role"));
 
 		// ユーザー編集 
@@ -86,19 +86,19 @@ public class ToDoController {
 	 */
 	@PostMapping("/complete")
 	public String getTaskCompleted(
-			@Valid @ModelAttribute("todoComplete") ToDo todo, 
-			BindingResult bindingResult, 
-			@AuthenticationPrincipal UserDetails userDetails,
-			Model model
+			@Valid @ModelAttribute("todoComplete") final ToDo todo, 
+			final BindingResult bindingResult, 
+			@AuthenticationPrincipal final UserDetails userDetails,
+			final Model model
 			) {
 		
 		// userIdを取得
-		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		todo.setUserId((Long) userInfo.get("id"));		
 		model.addAttribute("todo", todo);
 		
 		try {
-			boolean result = toDoService.completeTask(todo);
+			final boolean result = toDoService.completeTask(todo);
 			if (result) {
 				System.out.println("編集成功！");
 			} else {
@@ -123,19 +123,19 @@ public class ToDoController {
 	 */
 	@PostMapping("/undoTask")
 	public String undoCompletedTask(
-			@Valid @ModelAttribute("undoTask") ToDo todo, 
-			BindingResult bindingResult, 
-			@AuthenticationPrincipal UserDetails userDetails,
-			Model model
+			@Valid @ModelAttribute("undoTask") final ToDo todo, 
+			final BindingResult bindingResult, 
+			@AuthenticationPrincipal final UserDetails userDetails,
+			final Model model
 			) {
 		
 		// userIdを取得
-		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		todo.setUserId((Long) userInfo.get("id"));		
 		model.addAttribute("todo", todo);
 		
 		try {
-			boolean result = toDoService.undoCompletedTask(todo);
+			final boolean result = toDoService.undoCompletedTask(todo);
 			if (result) {
 				System.out.println("編集成功！");
 			} else {
@@ -157,20 +157,20 @@ public class ToDoController {
 	 * @return String
 	 */
 	@GetMapping("others/{id}")
-	public String getOthers(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id, Model model){
+	public String getOthers(@AuthenticationPrincipal final UserDetails userDetails, @PathVariable final Long id, final Model model){
 		// idがLong型でない場合
 		if(!(id instanceof Long)) {
 			return "redirect:/";
 		}
 
 		try {
-			Optional<User> user = userService.getUserById(id);
+			final Optional<User> user = userService.getUserById(id);
 
 			if(user.isPresent()) {
 				model.addAttribute("user", user.orElse(null));
 				
 				// ロールを取得（ロールがAdminの場合、アカウント削除ボタンは非表示）
-				Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+				final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 				model.addAttribute("role", userInfo.get("role"));
 				model.addAttribute("id", userInfo.get("id"));
 
@@ -194,7 +194,7 @@ public class ToDoController {
 	 * @return String
 	 */
 	@GetMapping("others/{id}/change-password-todo")
-	public String changePasswordFromToDo(@PathVariable Long id, Model model, @ModelAttribute User user) {
+	public String changePasswordFromToDo(@PathVariable final Long id, final Model model, @ModelAttribute final User user) {
 		model.addAttribute("user", user);
 		
 		// changePasswordメソッドで利用
@@ -215,13 +215,13 @@ public class ToDoController {
 	 */
 	@PostMapping("others/{id}/change-password-todo")
 	public String changePasswordFromToDo(
-			User user,
-			@PathVariable Long id, 
-			@AuthenticationPrincipal UserDetails userDetails,
+			final User user,
+			@PathVariable final Long id, 
+			@AuthenticationPrincipal final UserDetails userDetails,
 			@Validated(PasswordChange.PasswordUpdate.class) 
-			@ModelAttribute PasswordChange passwordChange,
-			BindingResult bindingResult,
-			Model model
+			@ModelAttribute final PasswordChange passwordChange,
+			final BindingResult bindingResult,
+			final Model model
 			) {
 		
 		if(bindingResult.hasErrors()) {
@@ -231,7 +231,7 @@ public class ToDoController {
 		try {
 			
 			// 入力したパスワードが現在のパスワードと一致しているか確認
-			List<String> errors = userService.checkPassword(passwordChange, user);
+			final List<String> errors = userService.checkPassword(passwordChange, user);
 			
 			if(!errors.isEmpty()) {
 				for(String error: errors) {
@@ -240,7 +240,7 @@ public class ToDoController {
 				return "changePasswordFromToDo";
 			}
 			
-			String newPassword = passwordChange.getNewPassword();
+			final String newPassword = passwordChange.getNewPassword();
 			userService.savePassword(user, newPassword);
 			
 			return "redirect:/";
@@ -259,7 +259,7 @@ public class ToDoController {
 	 * @return String
 	 */
 	@PostMapping("/others/{id}/deleteAccount")
-    public String deleteUserAccount(@PathVariable("id") Long id) {
+    public String deleteUserAccount(@PathVariable("id") final Long id) {
         try {
         	
             userService.deleteUser(id);
@@ -279,10 +279,10 @@ public class ToDoController {
 	 * @return String
 	 */
 	@PostMapping("/")
-	public String createToDo(@Validated @ModelAttribute("todoCreate") ToDo todo,
-			BindingResult bindingResult,
-			@AuthenticationPrincipal UserDetails userDetails,
-			Model model) {
+	public String createToDo(@Validated @ModelAttribute("todoCreate") final ToDo todo,
+			final BindingResult bindingResult,
+			@AuthenticationPrincipal final UserDetails userDetails,
+			final Model model) {
 
 		if (bindingResult.hasErrors()) {
 			
@@ -297,12 +297,12 @@ public class ToDoController {
 			return "index";
 		}
 
-		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		todo.setUserId((Long) userInfo.get("id"));
 		todo.setStatus(true);
 
 		try {
-			boolean result = toDoService.insertRecord(todo);
+			final boolean result = toDoService.insertRecord(todo);
 
 			if (result) {
 				System.out.println("作成成功！");
@@ -319,7 +319,7 @@ public class ToDoController {
 
 	}
 
-	private void addIndexModelAttributes(UserDetails userDetails, Model model) {
+	private void addIndexModelAttributes(final UserDetails userDetails, final Model model) {
 		model.addAttribute("todos", toDoService.findAllToDo(userDetails));
 		model.addAttribute("role", toDoService.getUserInfo(userDetails).get("role"));
 	}
@@ -335,20 +335,20 @@ public class ToDoController {
 	 */
 	@PostMapping("/edit")
 	public String editToDo(
-			@Valid @ModelAttribute("todoForm") ToDo todo, 
-			BindingResult bindingResult, 
-			@AuthenticationPrincipal UserDetails userDetails,
-			Model model
+			@Valid @ModelAttribute("todoForm") final ToDo todo, 
+			final BindingResult bindingResult, 
+			@AuthenticationPrincipal final UserDetails userDetails,
+			final Model model
 			) {
 		
 		
 		// userIdを取得
-		Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
+		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		todo.setUserId((Long) userInfo.get("id"));		
 		model.addAttribute("todo", todo);
 		
 		try {
-			boolean result = toDoService.updateRecord(todo);
+			final boolean result = toDoService.updateRecord(todo);
 			if (result) {
 				System.out.println("編集成功！");
 			} else {
@@ -370,7 +370,7 @@ public class ToDoController {
 	 * @return
 	 */
 	@PostMapping("/delete")
-	public String deleteToDo(@RequestParam String id) {
+	public String deleteToDo(@RequestParam final String id) {
 		
 		try {
 			toDoService.deleteRecord(Long.parseLong(id));

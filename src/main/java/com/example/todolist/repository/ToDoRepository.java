@@ -28,14 +28,14 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @return List<ToDo>
 	 */
 	@Override
-	public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
+	public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
-		String userName = userDetails.getUsername();
-		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
+		final String userName = userDetails.getUsername();
+		final String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
 				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.priority ASC";
 		
 		// ToDoテーブルのデータを全件取得
-		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
+		final List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
 		
 		return getList;
 	};
@@ -47,14 +47,14 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @return List<ToDo>
 	 */
 	@Override
-	public List<Map<String, Object>> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
+	public List<Map<String, Object>> findAllCompletedToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
-		String userName = userDetails.getUsername();
-		String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
+		final String userName = userDetails.getUsername();
+		final String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
 				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.priority ASC";
 		
 		// ToDoテーブルのデータを全件取得
-		List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
+		final List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
 		
 		return getList;
 	};
@@ -67,10 +67,10 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public int completeTask(ToDo todo) throws DataAccessException {
+	public int completeTask(final ToDo todo) throws DataAccessException {
 		
-		String sql = "UPDATE todo SET status = 2 WHERE id=? and status = 1";
-		int num = jdbc.update(sql, todo.getId());
+		final String sql = "UPDATE todo SET status = 2 WHERE id=? and status = 1";
+		final int num = jdbc.update(sql, todo.getId());
 		
 		return num;
 	}
@@ -83,10 +83,10 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public int undoCompletedTask(ToDo todo) throws DataAccessException {
+	public int undoCompletedTask(final ToDo todo) throws DataAccessException {
 	
-		String sql = "UPDATE todo SET status = 1 WHERE id=? and status = 2";
-		int num = jdbc.update(sql, todo.getId());
+		final String sql = "UPDATE todo SET status = 1 WHERE id=? and status = 2";
+		final int num = jdbc.update(sql, todo.getId());
 		
 		return num;
 	}
@@ -98,11 +98,11 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @return Map<String, Object> userInfo
 	 */
 	@Override
-	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
+	public Map<String, Object> getUserInfo(@AuthenticationPrincipal final UserDetails userDetails){
 	
-		String userName = userDetails.getUsername();
-		String sql = "SELECT * FROM users WHERE user_name=?";
-		Map<String, Object> userInfo = jdbc.queryForMap(sql, userName);
+		final String userName = userDetails.getUsername();
+		final String sql = "SELECT * FROM users WHERE user_name=?";
+		final Map<String, Object> userInfo = jdbc.queryForMap(sql, userName);
 
 		return userInfo;
 	}
@@ -115,9 +115,9 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public int insertRecord(ToDo todo) throws DataAccessException {
+	public int insertRecord(final ToDo todo) throws DataAccessException {
 		
-		int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
+		final int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),
 				todo.getContent(),

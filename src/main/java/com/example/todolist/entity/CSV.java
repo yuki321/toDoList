@@ -22,20 +22,20 @@ public class CSV {
 	 * @param List<String> errors
 	 * @return boolean
 	 */
-	public boolean inputCheck(String[] record, List<User> users, List<String> errors) {
+	public boolean inputCheck(final String[] record, final List<User> users, final List<String> errors) {
 	    // 1. 配列チェック
 	    if (!isValidRecordStructure(record)) {
 	    	
-	    	String message = "レコードの項目が不足しています（空白が存在します）";
+	    	final String message = "レコードの項目が不足しています（空白が存在します）";
 	    	setErrorMessage(message, errors);
 	    	
 			System.out.println("CSVレコードの項目数チェック: エラー発生!!");
 	        return false;
 	    }
 
-	    String userName = record[0].trim();
-	    String email = record[1].replace("\"", "").trim();
-	    String role = record[3].replace("\"", "").trim();
+	    final String userName = record[0].trim();
+	    final String email = record[1].replace("\"", "").trim();
+	    final String role = record[3].replace("\"", "").trim();
 
 	    // 2. 各項目チェック
 	    if (!isValidUserName(userName, errors) || !isValidEmail(email, errors) 
@@ -60,22 +60,22 @@ public class CSV {
 	 * @param List<String> errors
 	 * @return boolean
 	 */
-	public boolean isCsvFile(MultipartFile file, List<String> errors) {
+	public boolean isCsvFile(final MultipartFile file, final List<String> errors) {
 
 		if (file == null || file.isEmpty()) {
 			
-	    	String message = "・ファイルが存在していない。またはファイルサイズが0です";
+			final String message = "・ファイルが存在していない。またはファイルサイズが0です";
 	    	setErrorMessage(message, errors);
             return false;
         }
 
         // 元のファイル名を取得
-        String originalFilename = file.getOriginalFilename();
+		final String originalFilename = file.getOriginalFilename();
 
         // ファイル名が存在しない場合は false（ファイルを選択せずフォームを送信した場合）
         if (!StringUtils.hasText(originalFilename)) {
         	
-	    	String message = "・ファイルが選択されていない可能性があります";
+        	final String message = "・ファイルが選択されていない可能性があります";
 	    	setErrorMessage(message, errors);
             return false;
         }
@@ -83,7 +83,7 @@ public class CSV {
         // 大文字・小文字を区別せずに .csv で終わるかチェック
         if(!originalFilename.toLowerCase().endsWith(".csv")) {
         	
-	    	String message = "・CSVファイルではないファイルがインポートされました";
+        	final String message = "・CSVファイルではないファイルがインポートされました";
 	    	setErrorMessage(message, errors);
         	return false;
         }
@@ -98,7 +98,7 @@ public class CSV {
 	 * @param String[] record
 	 * @return boolean
 	 */
-	private boolean isValidRecordStructure(String[] record) {
+	private boolean isValidRecordStructure(final String[] record) {
 	    if (record == null || record.length != 4) {
 	        return false;
 	    }
@@ -116,20 +116,20 @@ public class CSV {
 	 * @param List<String> errors
 	 * @return boolean
 	 */
-	private boolean isValidUserName(String userName, List<String> errors) {
+	private boolean isValidUserName(final String userName, final List<String> errors) {
 	    if (userName.length() < 1 || userName.length() > 50) {
 	    	
-	    	String message = "・ユーザー名の文字数は1~50にしてください";
+	    	final String message = "・ユーザー名の文字数は1~50にしてください";
 	    	setErrorMessage(message, errors);
 	    	return false;
 	    }
 	    
 	    // 日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ
-	    Pattern pattern = Pattern.compile("[^a-z0-9\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FFF\\u3000]");
-	    Matcher userNameMatch = pattern.matcher(userName);
+	    final Pattern pattern = Pattern.compile("[^a-z0-9\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FFF\\u3000]");
+	    final Matcher userNameMatch = pattern.matcher(userName);
 		if(userNameMatch.find()) {
 	    	
-			String message = "・ユーザー名の文字種は「日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ」使用可能です";
+			final String message = "・ユーザー名の文字種は「日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ」使用可能です";
 	    	setErrorMessage(message, errors);
 			return false;
 		}
@@ -144,27 +144,27 @@ public class CSV {
 	 * @param List<String> errors
 	 * @return boolean
 	 */
-	private boolean isValidEmail(String email, List<String> errors) {
+	private boolean isValidEmail(final String email, final List<String> errors) {
 	    if (email.length() < 8 || email.length() > 100) {
 	    	
-	    	String message = "・メールアドレスの文字数は8~100にしてください";
+	    	final String message = "・メールアドレスの文字数は8~100にしてください";
 	    	setErrorMessage(message, errors);
 	    	
 	        return false;
 	    }
 	    if(!email.contains("@") || !email.contains(".")) {
 
-	    	String message = "・メールアドレスには'@', '.'を必ず含めてください";
+	    	final String message = "・メールアドレスには'@', '.'を必ず含めてください";
 	    	setErrorMessage(message, errors);
 	    	return false;
 	    }
 	    
 	    // 英小文字、数字、@,-のみメールアドレスに含める
-	    Pattern pattern = Pattern.compile("[^a-z0-9@.-]");
-	    Matcher userNameMatch = pattern.matcher(email);
+	    final Pattern pattern = Pattern.compile("[^a-z0-9@.-]");
+	    final  Matcher userNameMatch = pattern.matcher(email);
 	    if(userNameMatch.find()) {
 
-	    	String message = "・メールアドレスには'英小文字、数字、@,-'のみ使用可能です";
+	    	final String message = "・メールアドレスには'英小文字、数字、@,-'のみ使用可能です";
 	    	setErrorMessage(message, errors);
 	    	return false;
 	    }
@@ -179,9 +179,9 @@ public class CSV {
 	 * @param List<String> errors
 	 * @return boolean
 	 */
-	private boolean isValidRole(String role, List<String> errors) {
+	private boolean isValidRole(final String role, final List<String> errors) {
 		
-		String message = "・roleには'1'または'2'のみ設定してください";
+		final String message = "・roleには'1'または'2'のみ設定してください";
     	setErrorMessage(message, errors);
 	    return "1".equals(role) || "2".equals(role);
 	}
@@ -196,13 +196,13 @@ public class CSV {
 	 * @param List<String> errors
 	 * @return
 	 */
-	private boolean isDuplicateUser(String userName, String email, 
-			List<User> users, List<String> errors) {
+	private boolean isDuplicateUser(final String userName, final String email, 
+			final List<User> users, final List<String> errors) {
 
 	    for (User u : users) {
 	        if (userName.equals(u.getUserName()) || email.equals(u.getEmail())) {
 	    		
-	        	String message = "・ユーザー名またはメールアドレスはすでに登録されています"
+	        	final String message = "・ユーザー名またはメールアドレスはすでに登録されています"
 	    				+ "ユーザー名 : " + userName + " / メールアドレス : " + email;
 		    	setErrorMessage(message, errors);
 	            return true;
@@ -218,7 +218,7 @@ public class CSV {
 	 * @param String errorMessage
 	 * @param List<String> errors
 	 */
-	public void setErrorMessage(String errorMessage, List<String> errors) {
+	public void setErrorMessage(final String errorMessage, final List<String> errors) {
 		
 		if(!errors.contains(errorMessage)) {
 			errors.add(errorMessage);

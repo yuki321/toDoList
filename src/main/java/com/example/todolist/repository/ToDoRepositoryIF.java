@@ -14,21 +14,21 @@ import com.example.todolist.entity.ToDo;
 @Repository
 public interface ToDoRepositoryIF {
 
-    public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal UserDetails userDetails);
+    public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal final UserDetails userDetails);
     
-    public List<Map<String, Object>> findAllCompletedToDo(UserDetails userDetails);
+    public List<Map<String, Object>> findAllCompletedToDo(final UserDetails userDetails);
     
-    int completeTask(ToDo todo) throws DataAccessException;
+    int completeTask(final ToDo todo) throws DataAccessException;
 
-    int undoCompletedTask(ToDo todo) throws DataAccessException;
+    int undoCompletedTask(final ToDo todo) throws DataAccessException;
 
-    Map<String, Object> getUserInfo(UserDetails userDetails);
+    Map<String, Object> getUserInfo(final UserDetails userDetails);
     
-    public int insertRecord(ToDo todo) throws DataAccessException;
+    public int insertRecord(final ToDo todo) throws DataAccessException;
     
-    public int updateRecord(ToDo todo) throws DataAccessException;
+    public int updateRecord(final ToDo todo) throws DataAccessException;
     
-    public int deleteRecord(Long id) throws DataAccessException;
+    public int deleteRecord(final Long id) throws DataAccessException;
 
 
 }

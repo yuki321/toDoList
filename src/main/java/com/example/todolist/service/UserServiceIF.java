@@ -14,29 +14,29 @@ public interface UserServiceIF {
 
 	List<User> getAllUsers();
 	
-	Page<User> getAllUsers(Pageable pageable);
+	Page<User> getAllUsers(final Pageable pageable);
 
-	Page<User> searchUsers(User user, Pageable pageable);
+	Page<User> searchUsers(final User user, final Pageable pageable);
 
-	Optional<User> getUserById(Long id);
+	Optional<User> getUserById(final Long id);
 
-	List<User> findByEmail(String email);
+	List<User> findByEmail(final String email);
 
-	User createUser(User user);
+	User createUser(final User user);
 
-	User updateUser(Long id, User user);
+	User updateUser(final Long id, final User user);
 
-	void deleteUser(Long id);
+	void deleteUser(final Long id);
 
-	User savePassword(User user, String newPassword);
+	User savePassword(final User user, final String newPassword);
 
-	List<String> checkPassword(PasswordChange form, User user);
+	List<String> checkPassword(final PasswordChange form, final User user);
 
-	List<String> uploadCsvFile(MultipartFile file) throws Exception;
+	List<String> uploadCsvFile(final MultipartFile file) throws Exception;
 	
 	void downloadCsvFile() throws Exception;
 
-	void restoreUserDisplayFields(Long id, User user);
+	void restoreUserDisplayFields(final Long id, final User user);
 	
 	
 	

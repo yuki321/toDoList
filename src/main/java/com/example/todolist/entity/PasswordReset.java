@@ -79,14 +79,14 @@ public class PasswordReset {
 	 * @param PasswordResetTokenRepositoryIF passwordResetTokenRepository
 	 * @return boolean
 	 */
-	public boolean validatePasswordResetToken(String rawToken, 
-			PasswordEncoder passwordEncoder,
-			PasswordResetTokenRepositoryIF passwordResetTokenRepository
+	public boolean validatePasswordResetToken(final String rawToken, 
+			final PasswordEncoder passwordEncoder,
+			final PasswordResetTokenRepositoryIF passwordResetTokenRepository
 			) {
 		
 		// 1.トークンが存在するか確認する処理
 		// 全有効トークンを取得して、ハッシュ化されていない平文トークンと比較
-		List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
+		final List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
 
 		
 		boolean matchResult = false;
@@ -121,22 +121,21 @@ public class PasswordReset {
 		// 3.トークンの有効期限内か
 		expires_time = expires_time.replace("T", " ");
 		// "yyyy/MM/dd HH:mm:ss" => "yyyy-MM-dd HH:mm:ss"
-		LocalDateTime expired_at = toLocalDateTime(expires_time, "yyyy-MM-dd HH:mm:ss");
+		final LocalDateTime expired_at = toLocalDateTime(expires_time, "yyyy-MM-dd HH:mm:ss");
 			
 		// トークンの有効期限が切れている場合、false
-		LocalDateTime now = LocalDateTime.now();
+		final LocalDateTime now = LocalDateTime.now();
 		if(expired_at.isBefore(now)) {
 			return false;
 		}
-		
 		
 		return true; 
 	}
 	
 	
 	// String => LocalDateTimeへ変換
-	private static LocalDateTime toLocalDateTime(String date, String format) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+	private static LocalDateTime toLocalDateTime(final String date, final String format) {
+		final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
         return LocalDateTime.parse(date, dtf);
     }
 

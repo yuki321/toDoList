@@ -16,10 +16,10 @@ public class UserConfig implements WebMvcConfigurer {
 
 	// 設定を補完する情報のことをリゾルバ(resolver)と呼ぶ
 	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+	public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> argumentResolvers) {
 
 		// Pageableに対して設定を行うためのクラスであり、リゾルバ
-		PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+		final PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
 
 		// ページ単位に表示する件数を追加(第一引数：ページ番号、第二引数：1ページあたりの表示件数)
 		resolver.setFallbackPageable(PageRequest.of(0, 10));

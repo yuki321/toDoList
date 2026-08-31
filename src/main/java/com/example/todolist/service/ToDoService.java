@@ -29,7 +29,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<ToDo> findAllToDo(@AuthenticationPrincipal UserDetails userDetails){
+	public List<ToDo> findAllToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
 		List<ToDo> todolist = new ArrayList<>();
 		List<Map<String, Object>> getList = toDoRepository.findAllToDo(userDetails);
@@ -57,7 +57,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal UserDetails userDetails){
+	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
 		List<ToDo> todolist = new ArrayList<>();
 		List<Map<String, Object>> getList = toDoRepository.findAllCompletedToDo(userDetails);
@@ -86,7 +86,7 @@ public class ToDoService implements ToDoServiceIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public boolean completeTask(ToDo todo) throws DataAccessException {
+	public boolean completeTask(final ToDo todo) throws DataAccessException {
 
 		int num = toDoRepository.completeTask(todo);
 
@@ -106,7 +106,7 @@ public class ToDoService implements ToDoServiceIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public boolean undoCompletedTask(ToDo todo) throws DataAccessException {
+	public boolean undoCompletedTask(final ToDo todo) throws DataAccessException {
 
 		int num = toDoRepository.undoCompletedTask(todo);
 		
@@ -126,7 +126,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Map<String, Object> getUserInfo(@AuthenticationPrincipal UserDetails userDetails){
+	public Map<String, Object> getUserInfo(@AuthenticationPrincipal final UserDetails userDetails){
 		return toDoRepository.getUserInfo(userDetails);
 	}
 	
@@ -137,7 +137,7 @@ public class ToDoService implements ToDoServiceIF {
 	 * @return boolean result
 	 */
 	@Override
-	public boolean insertRecord(ToDo todo) {
+	public boolean insertRecord(final ToDo todo) {
 		int num = toDoRepository.insertRecord(todo);
 		
 		boolean result = false;
@@ -156,7 +156,7 @@ public class ToDoService implements ToDoServiceIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public boolean updateRecord(ToDo todo) throws DataAccessException {
+	public boolean updateRecord(final ToDo todo) throws DataAccessException {
 		
 		int num = toDoRepository.updateRecord(todo);
 		
@@ -175,7 +175,7 @@ public class ToDoService implements ToDoServiceIF {
 	 * @throws DataAccessException
 	 */
 	@Override
-	public boolean deleteRecord(Long id) throws DataAccessException {
+	public boolean deleteRecord(final Long id) throws DataAccessException {
 		int num = toDoRepository.deleteRecord(id);
 		
 		boolean result = false;
