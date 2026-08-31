@@ -3,6 +3,7 @@ package com.example.todolist.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +12,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
+import com.example.todolist.entity.PasswordChange;
 import com.example.todolist.entity.PasswordReset;
 import com.example.todolist.repository.PasswordResetTokenRepositoryIF;
+import com.example.todolist.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -37,6 +41,10 @@ public class MailService implements MailServiceIF {
 
 	@Autowired
 	private MailSender mailSender;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
 	
 
 	/**
@@ -95,6 +103,9 @@ public class MailService implements MailServiceIF {
 	 * @return String
 	 */
 	private String getEmail(List<Map<String, Object>> resultList, String rawToken) {
+		
+		if(resultList == null || resultList.isEmpty()) return null;
+		if(rawToken == null || rawToken.isEmpty()) return null;
 		
 		boolean matchResult = false;
 		String email = null;
@@ -167,6 +178,85 @@ public class MailService implements MailServiceIF {
 		message.setText(text);
 		mailSender.send(message);
 	}
+	
+	
+	/**
+	 * メール送信処理
+	 * @param PasswordChange mail
+	 * @param Model model
+	 * @return String
+	 */
+	@Override
+	public String sendMailProcess(PasswordChange mail, Model model) {
+		
+		// メール送信先のメールアドレス
+		String email = mail.getPasswordChange();
+		boolean isEmailExists = false;
+		// メールアドレスの存在チェック
+		try {
+			isEmailExists = userRepository.existsByEmail(email);
+			
+		}catch (Exception e) {
+			System.out.println("/reset-password/send sendMail()");
+			return "login";
+		}
+		
+		String kind = mail.getKind();
+		if((!isEmailExists) && kind.equals("PW_RESET")) {
+			// ユーザーが見つからない場合の処理
+			model.addAttribute("errorMessage", "メールアドレスが登録されていません。");
+			return "login";
+		}
+
+		
+		if(kind.equals("PW_RESET")) {
+			
+			// 過去に作成した、未使用トークンが存在する場合は削除する
+			int count = passwordResetTokenRepository.selectCountByEmail(email);
+			
+			if(count > 0) {
+				// 過去に作成した、未使用トークンが存在する場合は削除する
+				int num = passwordResetTokenRepository.deleteResetToken(email);
+				if(num < 0) {
+					// トークンの削除に失敗した場合の処理
+					model.addAttribute("errorMessage", "トークンの削除に失敗しました。");
+					return "login";
+				}
+			}
+		}
+		
+		
+		// ランダムなトークンを生成し、メールに設定する
+		String token = UUID.randomUUID().toString(); 
+		
+		// トークンをエンコード(BCryptPasswordEncoder) → DBに保存する
+		String encodedToken = passwordEncoder.encode(token);
+		
+
+		// エンコードされたトークンをDBに保存する処理
+		int num = passwordResetTokenRepository.insertRecord(email, encodedToken);
+		
+		if(num < 0) {
+			// トークンの保存に失敗した場合の処理
+			model.addAttribute("errorMessage", "トークンの保存に失敗しました。");
+			return "login";
+		}
+		
+		// パスワードリセットメールを送信する
+		if(kind.equals("PW_RESET")) {
+			sendPasswordResetEmail(email, token);
+		}
+		
+		// ユーザー登録のメールを送信する
+		if(kind.equals("USER_CREATE")) {
+			sendUserCreateEmail(email, token);
+		}
+
+		model.addAttribute("passwordChange", new PasswordChange());
+		
+		return "login";
+	}
+	
 	
 }
 
