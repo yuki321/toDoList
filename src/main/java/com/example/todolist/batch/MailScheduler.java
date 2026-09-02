@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +23,7 @@ public class MailScheduler {
 	
 	// 毎日6時間ごとに処理を実施
 	@Scheduled(cron = "${cron.task:0 0 */6 * * *}", zone = "Asia/Tokyo")
+//	@Scheduled(cron = "${cron.task:*/1 * * * * *}", zone = "Asia/Tokyo")  // テスト用
 //	@Scheduled(fixedDelay = 20000) // 20秒ごとに実行（テスト用）
 	public void sendTaskDeadlineEmail() {
 		
@@ -32,6 +32,11 @@ public class MailScheduler {
 		// 該当タスク（期限切れ前日）を取得
 		List<Map<String, Object>> taskList = toDoRepository.getTasksDueTomorrow();
 	
+		if(taskList.isEmpty()) {
+			System.out.println("期限切れ前日タスクはありません");
+			return;
+		}
+		
 		for(Map<String, Object> task : taskList) {
 			String email = (String)task.get("email");
 			String taskName = (String)task.get("content");

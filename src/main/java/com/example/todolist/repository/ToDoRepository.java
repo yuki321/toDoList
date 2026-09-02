@@ -186,6 +186,10 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		
 		// タスクの締め切り前日のタスクを抽出
 		final List<Map<String, Object>> taskList = jdbc.queryForList(sql);
+		if(taskList.isEmpty()) {
+			System.out.println("期限切れ前日タスクはありません");
+			return taskList;
+		}
 		
 		System.out.println("email：" + taskList.get(0).get("email") + " task_name：" + taskList.get(0).get("content") + " deadline：" + taskList.get(0).get("deadline"));
 		return taskList;
