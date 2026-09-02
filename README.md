@@ -31,10 +31,10 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 app.mail.from=xxxx@xxxx.com
 
 ## タスク実行
-# 毎日6時間ごとにタスク実施
+### 毎日6時間ごとにタスク実施
 cron.task=0 0 */6 * * *
 
-# テスト用
+### テスト用
 #cron.task=*/1 * * * * *
 
 
