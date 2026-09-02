@@ -16,5 +16,7 @@ public interface MailServiceIF {
 	public void sendUserCreateEmail(final String email, final String token);
 	
 	public String sendMailProcess(final PasswordChange mail, Model model);
+
+	public void sendTaskDeadlineEmail(String email, String taskName, String deadline);
 	
 }

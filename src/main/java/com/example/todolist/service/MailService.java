@@ -147,8 +147,8 @@ public class MailService implements MailServiceIF {
 	
 	/**
 	 * ユーザー登録のメールを送信する
-	 * @param token
-	 * @param email
+	 * @param String email
+	 * @param String token
 	 */
 	public void sendUserCreateEmail(final String email, final String token) {
 		
@@ -157,6 +157,25 @@ public class MailService implements MailServiceIF {
 		String text = "ユーザー登録のリクエストを受け付けました。下記リンクからリセットをしてください。\n"
 				+ resetLink
 				+ "\nメールに心当たりがない場合、このメールを削除してください。\n"
+				+ "\n"
+				+ "todolist";
+
+		sendEmail(email, subject, text);
+	}
+	
+	
+	/**
+	 * タスクの期限が近づいていることを通知するメールを送信する
+	 * @param String email
+	 * @param String taskName
+	 * @param String deadline
+	 */
+	public void sendTaskDeadlineEmail(final String email, final String taskName, final String deadline) {
+		
+		String subject = "[todolist]タスクの期限が近づいています";
+		String text = "以下のタスクの期限が近づいています。\n"
+				+ "タスク: " + taskName + "\n"
+				+ "期限: " + deadline + "\n"
 				+ "\n"
 				+ "todolist";
 
@@ -256,7 +275,7 @@ public class MailService implements MailServiceIF {
 		
 		return "login";
 	}
-	
+		
 	
 }
 

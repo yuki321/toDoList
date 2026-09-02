@@ -29,6 +29,8 @@ public interface ToDoRepositoryIF {
     public int updateRecord(final ToDo todo) throws DataAccessException;
     
     public int deleteRecord(final Long id) throws DataAccessException;
+    
+    public List<Map<String, Object>> getTasksDueTomorrow();
 
 
 }
