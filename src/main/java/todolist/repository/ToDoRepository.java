@@ -195,6 +195,31 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		return taskList;
 	}
 	
+	
+	/**
+	 * 期限切れ1週間前のタスクを取得
+	 * @return List<Map<String, Object>> taskList
+	 */
+	@Override
+	public List<Map<String, Object>> getTasksDueInOneWeek(){
+		
+		// 締め切り1週間前～締め切り翌日0時までのタスクを抽出
+		final String sql = "SELECT u.id, u.email, t.content, t.deadline FROM todo t "
+				+ "INNER JOIN users u ON t.user_id = u.id "
+				+ "WHERE status = 1 AND deadline >= CURDATE() + INTERVAL 7 DAY "
+				+ "AND deadline < CURDATE() + INTERVAL 8 DAY;";
+		
+		// タスクの締め切り前日のタスクを抽出
+		final List<Map<String, Object>> taskList = jdbc.queryForList(sql);
+		if(taskList.isEmpty()) {
+			System.out.println("期限切れ1週間前のタスクはありません");
+			return taskList;
+		}
+		
+		System.out.println("email：" + taskList.get(0).get("email") + " task_name：" + taskList.get(0).get("content") + " deadline：" + taskList.get(0).get("deadline"));
+		return taskList;
+	}
+	
 
 }
 

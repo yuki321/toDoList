@@ -2,6 +2,7 @@ package todolist.batch;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,17 +38,36 @@ public class MailScheduler {
 			return;
 		}
 		
-		for(Map<String, Object> task : taskList) {
-			String email = (String)task.get("email");
-			String taskName = (String)task.get("content");
-			String deadline = deadlineConvert(task.get("deadline").toString());
-			
-			System.out.println("タスク期限切れタスク" + email + " " + taskName + " " + deadline);			
-	
-			// タスクの期限が近づいていることを通知するメールを送信
-			mailService.sendTaskDeadlineEmail(email, taskName, deadline);
+		sendTaskDeadlineEmailProcess(taskList);
+		
+		System.out.println("タスク期限切れ1週間前メール送信処理開始");
+		List<Map<String, Object>> taskListWeek = toDoRepository.getTasksDueInOneWeek();
+		
+		if(taskListWeek.isEmpty()) {
+			System.out.println("期限切れ1週間前のタスクはありません");
+			return;
 		}
 		
+		sendTaskDeadlineEmailProcess(taskListWeek);
+		
+	}
+	
+	
+	/**
+	 * 期限切れメール送信処理(前日・1週間前)
+	 * @param List<Map<String, Object>> taskList
+	 */
+	private void sendTaskDeadlineEmailProcess(final List<Map<String, Object>> taskList) {
+	    taskList.forEach(task -> {
+	        if (task.get("email") instanceof String email &&
+	            task.get("content") instanceof String taskName) {
+
+	            String deadline = deadlineConvert(Objects.toString(task.get("deadline"), ""));
+
+	            System.out.println("タスク期限切れタスク %s %s %s".formatted(email, taskName, deadline));
+	            mailService.sendTaskDeadlineEmail(email, taskName, deadline);
+	        }
+	    });
 	}
 	
 	
@@ -56,7 +76,7 @@ public class MailScheduler {
 	 * @param String deadline
 	 * @return String
 	 */
-	String deadlineConvert(String deadline) {
+	private String deadlineConvert(String deadline) {
 		return deadline.split("T")[0];
 	}
 	

@@ -31,6 +31,8 @@ public interface ToDoRepositoryIF {
     public int deleteRecord(final Long id) throws DataAccessException;
     
     public List<Map<String, Object>> getTasksDueTomorrow();
+    
+    public List<Map<String, Object>> getTasksDueInOneWeek();
 
 
 }
