@@ -28,18 +28,6 @@ public class MailScheduler {
 //	@Scheduled(fixedDelay = 20000) // 20秒ごとに実行（テスト用）
 	public void sendTaskDeadlineEmail() {
 		
-		System.out.println("タスク期限切れ前日メール送信処理開始");
-		
-		// 該当タスク（期限切れ前日）を取得
-		List<Map<String, Object>> taskList = toDoRepository.getTasksDueTomorrow();
-	
-		if(taskList.isEmpty()) {
-			System.out.println("期限切れ前日タスクはありません");
-			return;
-		}
-		
-		sendTaskDeadlineEmailProcess(taskList);
-		
 		System.out.println("タスク期限切れ1週間前メール送信処理開始");
 		List<Map<String, Object>> taskListWeek = toDoRepository.getTasksDueInOneWeek();
 		
@@ -48,17 +36,7 @@ public class MailScheduler {
 			return;
 		}
 		
-		sendTaskDeadlineEmailProcess(taskListWeek);
-		
-	}
-	
-	
-	/**
-	 * 期限切れメール送信処理(前日・1週間前)
-	 * @param List<Map<String, Object>> taskList
-	 */
-	private void sendTaskDeadlineEmailProcess(final List<Map<String, Object>> taskList) {
-	    taskList.forEach(task -> {
+		taskListWeek.forEach(task -> {
 	        if (task.get("email") instanceof String email &&
 	            task.get("content") instanceof String taskName) {
 
@@ -68,11 +46,12 @@ public class MailScheduler {
 	            mailService.sendTaskDeadlineEmail(email, taskName, deadline);
 	        }
 	    });
+		
 	}
 	
 	
 	/**
-	 * 期限切れ前日メール送信のための期限日付変換
+	 * 期限切れメール送信のための期限日付変換
 	 * @param String deadline
 	 * @return String
 	 */
