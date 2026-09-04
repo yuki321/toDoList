@@ -156,7 +156,9 @@ public class ToDoController {
 	 * @return String
 	 */
 	@GetMapping("others/{id}")
-	public String getOthers(@AuthenticationPrincipal final UserDetails userDetails, @PathVariable final Long id, final Model model){
+	public String getOthers(@AuthenticationPrincipal final UserDetails userDetails, 
+			@PathVariable final Long id, 
+			final Model model){
 		// idがLong型でない場合
 		if(!(id instanceof Long)) {
 			return "redirect:/";
@@ -193,7 +195,10 @@ public class ToDoController {
 	 * @return String
 	 */
 	@GetMapping("others/{id}/change-password-todo")
-	public String changePasswordFromToDo(@PathVariable final Long id, final Model model, @ModelAttribute final User user) {
+	public String changePasswordFromToDo(@PathVariable final Long id, 
+			final Model model, 
+			@ModelAttribute final User user) {
+		
 		model.addAttribute("user", user);
 		
 		// changePasswordメソッドで利用

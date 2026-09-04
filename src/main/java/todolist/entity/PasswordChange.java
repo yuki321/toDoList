@@ -94,13 +94,4 @@ public class PasswordChange {
 		this.kind = kind;
 	}
 
-
-	
-
-
-
-
-
-
-
 }

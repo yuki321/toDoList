@@ -31,16 +31,14 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	/**
 	 * 2.password-reset-tokensテーブルのuserd_atにタイムスタンプを格納
 	 * @param String email
-	 * @return int num
+	 * @return int
 	 */
 	@Override
 	@Transactional
 	public int updateResetTokenUsedAt(final String email) {
 		
 		final String sql = "UPDATE password_reset_tokens SET used_at = ? WHERE email=?";
-		final int num = jdbc.update(sql, LocalDateTime.now(), email);
-			
-		return num;
+		return jdbc.update(sql, LocalDateTime.now(), email);
 	}
 	
 	
@@ -48,7 +46,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 * 3.Userテーブルのパスワードを更新
 	 * @param String email
 	 * @param String newPassword
-	 * @return int num
+	 * @return int
 	 */
 	@Override
 	@Transactional
@@ -56,9 +54,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 		final String sql = "UPDATE users SET password = ? WHERE email=?";
 
 		final String encodedPassword = passwordEncoder.encode(newPassword);
-		final int num = jdbc.update(sql, encodedPassword, email);
-		
-		return num;
+		return jdbc.update(sql, encodedPassword, email);
 	}
 	
 	
@@ -71,9 +67,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	@Transactional
 	public int deleteRecord(final String email) {
 		final String sql = "DELETE FROM password_reset_tokens WHERE email=?";
-		final int num = jdbc.update(sql, email);
-
-		return num;
+		return jdbc.update(sql, email);
 	}
 	
 	
@@ -81,25 +75,22 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	/**
 	 * メールアドレスに紐づくパスワードリセットトークンの件数を取得する
 	 * @param String email
-	 * @return int count
+	 * @return int
 	 */
 	@Override
 	public int selectCountByUserId(final String email) {
 		final String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
-		final int count = jdbc.queryForObject(sql, Integer.class, email);
-		return count;
+		return jdbc.queryForObject(sql, Integer.class, email);
 	}
 	
 	/**
-	 * すべてのパスワードリセットトークンを取得する
-	 * @return List<Map<String, Object>> list
+	 * すべてのパスワードリセットトークン（リスト）を取得する
+	 * @return List<Map<String, Object>> 
 	 */
 	@Override
 	public List<Map<String, Object>> findAllTokenHash() {
 		final String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
-		final List<Map<String, Object>> list = jdbc.queryForList(sql);
-		
-		return list;
+		return jdbc.queryForList(sql);
 	}
 	
 	
@@ -133,17 +124,14 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	/**
 	 * メールアドレスに紐づくパスワードリセットトークンのレコードを削除する
 	 * @param String email
-	 * @return int num 
+	 * @return int
 	 */	
 	@Override
 	public int deleteResetToken(final String email) {
 		
 		final String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
-		final int num = jdbc.update(sql, email);
-		
-		return num;
+		return jdbc.update(sql, email);
 	}
-	
 
 }
 

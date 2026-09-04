@@ -31,23 +31,10 @@ public class ToDoService implements ToDoServiceIF {
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
-		List<ToDo> todolist = new ArrayList<>();
-		List<Map<String, Object>> getList = toDoRepository.findAllToDo(userDetails);
-		
-		for(Map<String, Object> map: getList) {
-			ToDo todo = new ToDo();
-			todo.setId((Long)map.get("id"));
-			todo.setUserId((Long)map.get("user_id"));
-			todo.setContent((String)map.get("content"));
-			todo.setMemo((String)map.get("memo"));
-			todo.setStatus((Boolean)map.get("status"));
-			todo.setDeadline((LocalDateTime)map.get("deadline"));
-			todo.setPriority((String)map.get("priority"));
-				
-			todolist.add(todo);
-		}
-		
-		return todolist;
+		return toDoRepository.findAllToDo(userDetails)
+				.stream()
+				.map(this::mapToEntity)
+				.toList();
 	}
 	
 	/**
@@ -59,23 +46,10 @@ public class ToDoService implements ToDoServiceIF {
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
-		List<ToDo> todolist = new ArrayList<>();
-		List<Map<String, Object>> getList = toDoRepository.findAllCompletedToDo(userDetails);
-		
-		for(Map<String, Object> map: getList) {
-			ToDo todo = new ToDo();
-			todo.setId((Long)map.get("id"));
-			todo.setUserId((Long)map.get("user_id"));
-			todo.setContent((String)map.get("content"));
-			todo.setMemo((String)map.get("memo"));
-			todo.setStatus((Boolean)map.get("status"));
-			todo.setDeadline((LocalDateTime)map.get("deadline"));
-			todo.setPriority((String)map.get("priority"));
-				
-			todolist.add(todo);
-		}
-		
-		return todolist;
+		return toDoRepository.findAllCompletedToDo(userDetails)
+				.stream()
+				.map(this::mapToEntity)
+				.toList();
 	}
 	
 	
@@ -87,15 +61,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean completeTask(final ToDo todo) throws DataAccessException {
-
-		int num = toDoRepository.completeTask(todo);
-
-		boolean result = false;
-		if(num > 0) {
-			result = true;
-		}
-		
-		return result;
+		return toDoRepository.completeTask(todo) > 0;
 	}
 	
 
@@ -107,15 +73,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean undoCompletedTask(final ToDo todo) throws DataAccessException {
-
-		int num = toDoRepository.undoCompletedTask(todo);
-		
-		boolean result = false;
-		if(num > 0) {
-			result = true;
-		}
-		
-		return result;
+		return toDoRepository.undoCompletedTask(todo) > 0;
 	}
 	
 	
@@ -138,14 +96,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean insertRecord(final ToDo todo) {
-		int num = toDoRepository.insertRecord(todo);
-		
-		boolean result = false;
-		if(num > 0) {
-			// insert成功の場合
-			result = true;
-		}
-		return result;
+		return toDoRepository.insertRecord(todo) > 0;
 	}
 	
 
@@ -157,15 +108,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean updateRecord(final ToDo todo) throws DataAccessException {
-		
-		int num = toDoRepository.updateRecord(todo);
-		
-		boolean result = false;
-		if(num > 0) {
-			result = true;
-		}
-		
-		return result;
+		return toDoRepository.updateRecord(todo) > 0;
 	}
 	
 	/**
@@ -176,14 +119,26 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean deleteRecord(final Long id) throws DataAccessException {
-		int num = toDoRepository.deleteRecord(id);
+		return toDoRepository.deleteRecord(id) > 0;
+	}
+	
+	
+	/**
+	 * Map<String, Object>をToDoエンティティに変換
+	 * @param Map<String, Object> map
+	 * @return ToDo todo
+	 */
+	private ToDo mapToEntity(Map<String, Object> map) {
+		ToDo todo = new ToDo();
+		todo.setId((Long)map.get("id"));
+		todo.setUserId((Long)map.get("user_id"));
+		todo.setContent((String)map.get("content"));
+		todo.setMemo((String)map.get("memo"));
+		todo.setStatus((Boolean)map.get("status"));
+		todo.setDeadline((LocalDateTime)map.get("deadline"));
+		todo.setPriority((String)map.get("priority"));
 		
-		boolean result = false;
-		if(num > 0) {
-			result = true;
-		}
-		
-		return result;
+		return todo;
 	}
 	
 	

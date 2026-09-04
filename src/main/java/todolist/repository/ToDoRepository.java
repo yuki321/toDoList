@@ -35,9 +35,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.priority ASC";
 		
 		// ToDoテーブルのデータを全件取得
-		final List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
-		
-		return getList;
+		return jdbc.queryForList(sql, userName);
 	};
 	
 	
@@ -54,57 +52,49 @@ public class ToDoRepository implements ToDoRepositoryIF {
 				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.priority ASC";
 		
 		// ToDoテーブルのデータを全件取得
-		final List<Map<String, Object>> getList = jdbc.queryForList(sql, userName);
-		
-		return getList;
+		return jdbc.queryForList(sql, userName);
 	};
 	
 
 	/**
 	 * タスク完了
 	 * @param ToDo todo
-	 * @return int num
+	 * @return int
 	 * @throws DataAccessException
 	 */
 	@Override
 	public int completeTask(final ToDo todo) throws DataAccessException {
 		
 		final String sql = "UPDATE todo SET status = 2 WHERE id=? and status = 1";
-		final int num = jdbc.update(sql, todo.getId());
-		
-		return num;
+		return jdbc.update(sql, todo.getId());
 	}
 	
 	
 	/**
 	 * タスク完了を取り消す
 	 * @param ToDo todo
-	 * @return int num
+	 * @return int
 	 * @throws DataAccessException
 	 */
 	@Override
 	public int undoCompletedTask(final ToDo todo) throws DataAccessException {
 	
 		final String sql = "UPDATE todo SET status = 1 WHERE id=? and status = 2";
-		final int num = jdbc.update(sql, todo.getId());
-		
-		return num;
+		return jdbc.update(sql, todo.getId());
 	}
 	
 
 	/**
 	 * ログイン中のユーザー情報の取得
 	 * @param userDetails userDetails
-	 * @return Map<String, Object> userInfo
+	 * @return Map<String, Object> 
 	 */
 	@Override
 	public Map<String, Object> getUserInfo(@AuthenticationPrincipal final UserDetails userDetails){
 	
 		final String userName = userDetails.getUsername();
 		final String sql = "SELECT * FROM users WHERE user_name=?";
-		final Map<String, Object> userInfo = jdbc.queryForMap(sql, userName);
-
-		return userInfo;
+		return jdbc.queryForMap(sql, userName);
 	}
 	
 	
@@ -158,16 +148,14 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	/**
 	 * タスク削除
 	 * @param Long id
-	 * @return int num
+	 * @return int
 	 * @throws DataAccessException
 	 */
 	@Override
 	public int deleteRecord(Long id) throws DataAccessException {
 		
 		String sql = "DELETE FROM todo WHERE id=?";
-		int num = jdbc.update(sql, id);
-		
-		return num;
+		return jdbc.update(sql, id);
 	}
 	
 	

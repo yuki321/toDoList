@@ -19,27 +19,24 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	/**
 	 * メールアドレスに紐づくパスワードリセットトークンの件数を取得する
 	 * @param String email
-	 * @return int count
+	 * @return int
 	 * @throws 
 	 */
 	@Override
 	public int selectCountByEmail(final String email) throws DataAccessException {
 		final String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
-		final int count = jdbc.queryForObject(sql, Integer.class, email);
-		return count;
+		return jdbc.queryForObject(sql, Integer.class, email);
 	}
 	
 	/**
 	 * すべてのパスワードリセットトークンを取得する
-	 * @return List<Map<String, Object>> list
+	 * @return List<Map<String, Object>> 
 	 * @throws DataAccessException
 	 */
 	@Override
 	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
 		final String sql = "SELECT * FROM password_reset_tokens";
-		final List<Map<String, Object>> list = jdbc.queryForList(sql);
-	
-		return list;
+		return jdbc.queryForList(sql);
 	}
 	
 	
@@ -74,18 +71,15 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	/**
 	 * メールアドレスに紐づくパスワードリセットトークンのレコードを削除する
 	 * @param String email
-	 * @return int num 
+	 * @return int
 	 * @throws 
 	 */	
 	@Override
 	public int deleteResetToken(final String email) throws DataAccessException {
 		
 		final String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
-		final int num = jdbc.update(sql, email);
-		
-		return num;
+		return jdbc.update(sql, email);
 	}
-	
 	
 
 }
