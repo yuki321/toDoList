@@ -2,6 +2,8 @@
 body {
   font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
   margin-bottom: 150px;
+  background-color: #081d35;
+  color: #ecf5ff;
 }
 main {
   width: 80%;
@@ -98,7 +100,7 @@ th button {
 	height: 36px;
 	border: 1.5px solid #ddd;       /* 枠線と丸み */
 	border-radius: 4px;
-	color: #333;
+	color: #ecf5ff;
 	text-decoration: none;
 	transition: background-color 0.2s
 }
@@ -244,19 +246,9 @@ input::file-selector-button {
   border: none;
 }
 
-
-
-
-#content thead th {
-	background-color: #b2cbe4;	
-}
-
 #detail, #create {
 	width: 50%;	
 	margin-top: 50px;
-}
-#detail tr th:nth-child(odd), #create tr th:nth-child(odd) {
-	background-color: #b2cbe4;
 }
 
 .delete {
