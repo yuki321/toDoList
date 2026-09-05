@@ -56,7 +56,9 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 		final String sql = "INSERT INTO password_reset_tokens "
 				+ "(email, token_hash, created_at, expires_at, used_at) "
 				+ "VALUES(?, ?, ?, ?, ?)";
-		final int num = jdbc.update(sql,
+		
+		return jdbc.update(
+				sql,
 				email,
 				tokenHash,
 				LocalDateTime.now(),
@@ -64,8 +66,6 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 				LocalDateTime.now().plusHours(EXPIRATION_HOUR_UNIT), 
 				// used_atはnullで初期化(トークンを利用した時間)
 				null );
-		
-		return num;
 	}
 	
 	/**

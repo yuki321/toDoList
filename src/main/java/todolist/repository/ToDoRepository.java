@@ -107,7 +107,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	@Override
 	public int insertRecord(final ToDo todo) throws DataAccessException {
 		
-		final int num = jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
+		return jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),
 				todo.getContent(),
@@ -115,8 +115,6 @@ public class ToDoRepository implements ToDoRepositoryIF {
 				todo.getStatus(),
 				todo.getDeadline(),
 				todo.getPriority());
-		
-		return num;
 	}
 
 	
@@ -132,7 +130,8 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		String sql = "UPDATE todo SET user_id = ?, content = ?, "
 				+ "memo = ?, status = ?, deadline = ? ,"
 				+ "priority = ? WHERE id=?";
-		int num = jdbc.update(sql,
+		
+		return jdbc.update(sql,
 				todo.getUserId(),
 				todo.getContent(),
 				todo.getMemo(),
@@ -140,8 +139,6 @@ public class ToDoRepository implements ToDoRepositoryIF {
 				todo.getDeadline(),
 				todo.getPriority(),
 				todo.getId());
-		
-		return num;
 	}
 	
 	
