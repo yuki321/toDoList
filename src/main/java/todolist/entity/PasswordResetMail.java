@@ -6,7 +6,7 @@ public class PasswordResetMail implements MailSend {
 
     private final MailService mailService;
 
-    PasswordResetMail(MailService mailService) {
+    public PasswordResetMail(MailService mailService) {
     	this.mailService = mailService;
     }
 

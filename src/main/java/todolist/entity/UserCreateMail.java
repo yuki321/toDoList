@@ -6,7 +6,7 @@ public class UserCreateMail implements MailSend {
 
     private final MailService mailService;
 
-    UserCreateMail(MailService mailService) {
+    public UserCreateMail(MailService mailService) {
     	this.mailService = mailService;
     }
 
