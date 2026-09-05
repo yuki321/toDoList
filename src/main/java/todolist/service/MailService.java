@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import todolist.entity.MailSendFactory;
 import todolist.entity.PasswordChange;
 import todolist.entity.PasswordReset;
 import todolist.repository.PasswordResetTokenRepositoryIF;
@@ -127,44 +128,6 @@ public class MailService implements MailServiceIF {
 	
 	
 	/**
-	 * パスワードリセットメールを送信する
-	 * @param token
-	 * @param email
-	 */
-	public void sendPasswordResetEmail(final String email, final String token) {
-		
-		String subject = "[todolist]パスワードリセットのご案内";
-		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=reset";
-		String text = "パスワードリセットのリクエストを受け付けました。下記リンクからリセットをしてください。\n"
-				+ resetLink
-				+ "\nメールに心当たりがない場合、このメールを削除してください。\n"
-				+ "\n"
-				+ "todolist";
-
-		sendEmail(email, subject, text);
-	}
-	
-	
-	/**
-	 * ユーザー登録のメールを送信する
-	 * @param String email
-	 * @param String token
-	 */
-	public void sendUserCreateEmail(final String email, final String token) {
-		
-		String subject = "[todolist]ユーザー登録のご案内";
-		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=registration";
-		String text = "ユーザー登録のリクエストを受け付けました。下記リンクからリセットをしてください。\n"
-				+ resetLink
-				+ "\nメールに心当たりがない場合、このメールを削除してください。\n"
-				+ "\n"
-				+ "todolist";
-
-		sendEmail(email, subject, text);
-	}
-	
-	
-	/**
 	 * タスクの期限が近づいていることを通知するメールを送信する
 	 * @param String email
 	 * @param String taskName
@@ -189,7 +152,7 @@ public class MailService implements MailServiceIF {
 	 * @param String subject
 	 * @param String text
 	 */
-	private void sendEmail(final String to, final String subject, final String text) {
+	public void sendEmail(final String to, final String subject, final String text) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(to);
 		message.setFrom(mailFrom);
@@ -261,15 +224,11 @@ public class MailService implements MailServiceIF {
 			return "login";
 		}
 		
-		// パスワードリセットメールを送信する
-		if(kind.equals("PW_RESET")) {
-			sendPasswordResetEmail(email, token);
-		}
 		
-		// ユーザー登録のメールを送信する
-		if(kind.equals("USER_CREATE")) {
-			sendUserCreateEmail(email, token);
-		}
+		/**
+		 * MailSendFactoryを使って、メール送信の種類に応じてメール送信処理を呼び出す
+		 */
+		MailSendFactory.getMailSendKind(kind, this).sendMail(email, token);
 
 		model.addAttribute("passwordChange", new PasswordChange());
 		
