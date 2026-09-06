@@ -1,6 +1,7 @@
 package todolist.entity;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.data.relational.core.mapping.Table;
@@ -150,6 +151,26 @@ public class ToDo {
 		ToDo other = (ToDo) obj;
 		return Objects.equals(id, other.id);
 	}
+	
+	
+	/**
+	 * Map<String, Object>をToDoエンティティに変換
+	 * @param Map<String, Object> map
+	 * @return ToDo todo
+	 */
+	public ToDo mapToEntity(final Map<String, Object> map) {
+		ToDo todo = new ToDo();
+		todo.setId((Long)map.get("id"));
+		todo.setUserId((Long)map.get("user_id"));
+		todo.setContent((String)map.get("content"));
+		todo.setMemo((String)map.get("memo"));
+		todo.setStatus((Boolean)map.get("status"));
+		todo.setDeadline((LocalDateTime)map.get("deadline"));
+		todo.setPriority((String)map.get("priority"));
+		
+		return todo;
+	}
+	
 	
 
 }

@@ -1,7 +1,5 @@
 package todolist.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +19,9 @@ public class ToDoService implements ToDoServiceIF {
 	
 	@Autowired
 	private ToDoRepositoryIF toDoRepository;
+		
+
+	ToDo toDo = new ToDo();
 	
 	/**
 	 * 全件取得
@@ -33,7 +34,7 @@ public class ToDoService implements ToDoServiceIF {
 		
 		return toDoRepository.findAllToDo(userDetails)
 				.stream()
-				.map(this::mapToEntity)
+				.map(m -> toDo.mapToEntity(m))
 				.toList();
 	}
 	
@@ -48,7 +49,7 @@ public class ToDoService implements ToDoServiceIF {
 		
 		return toDoRepository.findAllCompletedToDo(userDetails)
 				.stream()
-				.map(this::mapToEntity)
+				.map(m -> toDo.mapToEntity(m))
 				.toList();
 	}
 	
@@ -121,25 +122,6 @@ public class ToDoService implements ToDoServiceIF {
 	public boolean deleteRecord(final Long id) throws DataAccessException {
 		return toDoRepository.deleteRecord(id) > 0;
 	}
-	
-	
-	/**
-	 * Map<String, Object>をToDoエンティティに変換
-	 * @param Map<String, Object> map
-	 * @return ToDo todo
-	 */
-	private ToDo mapToEntity(Map<String, Object> map) {
-		ToDo todo = new ToDo();
-		todo.setId((Long)map.get("id"));
-		todo.setUserId((Long)map.get("user_id"));
-		todo.setContent((String)map.get("content"));
-		todo.setMemo((String)map.get("memo"));
-		todo.setStatus((Boolean)map.get("status"));
-		todo.setDeadline((LocalDateTime)map.get("deadline"));
-		todo.setPriority((String)map.get("priority"));
 		
-		return todo;
-	}
-	
 	
 }
