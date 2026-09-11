@@ -47,7 +47,7 @@ public class ValidateTokenController {
 		final boolean result = passwordReset.validatePasswordResetToken(token, passwordEncoder, passwordResetTokenRepository);
 		if(!result) {
 			model.addAttribute("errorMessage", "トークンが不正です");
-			Logger.log(CLASS_NAME, "validateToken: トークンが不正です");
+			Logger.log(CLASS_NAME, "[Error] validateToken: トークンが不正です");
 			return "redirect:/login";  
 		}
 		

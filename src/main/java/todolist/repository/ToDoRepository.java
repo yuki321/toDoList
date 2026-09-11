@@ -176,7 +176,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		// 締め切り1週間前のタスクを抽出
 		final List<Map<String, Object>> taskList = jdbc.queryForList(sql);
 		if(taskList.isEmpty()) {
-			Logger.log(this.getClass().getSimpleName(), "getTasksDueInOneWeek: 期限切れ1週間前のタスクはありません");
+			Logger.log(this.getClass().getSimpleName(), "[Error] getTasksDueInOneWeek: 期限切れ1週間前のタスクはありません");
 			return taskList;
 		}
 		

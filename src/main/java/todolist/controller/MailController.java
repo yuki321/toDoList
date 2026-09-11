@@ -60,7 +60,7 @@ public class MailController {
 
 		Logger.log(CLASS_NAME, "sendMail: メール送信処理開始");
 		if (bindingResult.hasErrors()) {
-			Logger.log(CLASS_NAME, "sendMail: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
+			Logger.log(CLASS_NAME, "[Error] sendMail: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 	        return "index"; 
 	    }
 		
@@ -85,7 +85,7 @@ public class MailController {
 		
 		Logger.log(CLASS_NAME, "resetPassword: パスワード再設定処理開始");
 		if(bindingResult.hasErrors()) {
-			Logger.log(CLASS_NAME, "resetPassword: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
+			Logger.log(CLASS_NAME, "[Error] resetPassword: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			return "resetPassword";
 		}
 		
@@ -109,7 +109,7 @@ public class MailController {
 		final boolean result = passwordResetService.passwordResetTransaction(rawToken, passwordReset.getNewPassword(), model);
 
 		if(!result) {
-			Logger.log(CLASS_NAME, "resetPassword: パスワードの再設定に失敗しました。");
+			Logger.log(CLASS_NAME, "[Error] resetPassword: パスワードの再設定に失敗しました。");
 			model.addAttribute("error-reset-pw", "パスワードの再設定に失敗しました。");
 			return "error";  
 		}

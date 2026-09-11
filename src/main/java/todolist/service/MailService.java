@@ -74,12 +74,12 @@ public class MailService implements MailServiceIF {
 		// 新パスワードと新パスワード（確認用）が一致しない
 		if(!newPassword.equals(confirmedPassword)) {
 			errors.add("入力したパスワードが一致しません");
-			Logger.log(this.getClass().getSimpleName(), "checkPassword: 入力したパスワードが一致しません");
+			Logger.log(this.getClass().getSimpleName(), "[Error] checkPassword: 入力したパスワードが一致しません");
 		}
 		// DBの現在のパスワードと入力したパスワードが一致する
 		if(passwordEncoder.matches(newPassword, DBPassword)) {
 			errors.add("登録されているパスワードと入力したパスワードが同じです");
-			Logger.log(this.getClass().getSimpleName(), "checkPassword: 登録されているパスワードと入力したパスワードが同じです");
+			Logger.log(this.getClass().getSimpleName(), "[Error] checkPassword: 登録されているパスワードと入力したパスワードが同じです");
 		}
 		
 		return errors;
@@ -92,7 +92,7 @@ public class MailService implements MailServiceIF {
 	 * @return String password
 	 */
 	private String getDBPassword(final String email) {
-		Logger.log(this.getClass().getSimpleName(), "getDBPassword: 登録されているパスワードと入力したパスワードが同じです");
+		Logger.log(this.getClass().getSimpleName(), "[Error] getDBPassword: 登録されているパスワードと入力したパスワードが同じです");
 		
 		String sql = "SELECT password FROM users WHERE email=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, email);
@@ -189,7 +189,7 @@ public class MailService implements MailServiceIF {
 			
 		}catch (Exception e) {
 			System.out.println("/reset-password/send sendMail()");
-			Logger.log(this.getClass().getSimpleName(), e + "sendMailProcess: メール送信失敗");
+			Logger.log(this.getClass().getSimpleName(), e + " [Error] sendMailProcess: メール送信失敗");
 			return "login";
 		}
 		
@@ -197,7 +197,7 @@ public class MailService implements MailServiceIF {
 		if((!isEmailExists) && kind.equals("PW_RESET")) {
 			// ユーザーが見つからない場合の処理
 			model.addAttribute("errorMessage", "メールアドレスが登録されていません。");
-			Logger.log(this.getClass().getSimpleName(), "sendMailProcess: メールアドレスが登録されていません");
+			Logger.log(this.getClass().getSimpleName(), "[Error] sendMailProcess: メールアドレスが登録されていません");
 			return "login";
 		}
 
@@ -213,7 +213,7 @@ public class MailService implements MailServiceIF {
 				if(num < 0) {
 					// トークンの削除に失敗した場合の処理
 					model.addAttribute("errorMessage", "トークンの削除に失敗しました。");
-					Logger.log(this.getClass().getSimpleName(), "sendMailProcess: トークンの削除に失敗しました。");
+					Logger.log(this.getClass().getSimpleName(), "[Error] sendMailProcess: トークンの削除に失敗しました。");
 					return "login";
 				}
 			}
@@ -232,7 +232,7 @@ public class MailService implements MailServiceIF {
 		if(num < 0) {
 			// トークンの保存に失敗した場合の処理
 			model.addAttribute("errorMessage", "トークンの保存に失敗しました。");
-			Logger.log(this.getClass().getSimpleName(), "sendMailProcess: トークンの保存に失敗しました。");
+			Logger.log(this.getClass().getSimpleName(), "[Error] sendMailProcess: トークンの保存に失敗しました。");
 			return "login";
 		}
 		

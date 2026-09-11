@@ -58,7 +58,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			int num = passwordResetRepository.updateResetTokenUsedAt(email);
 
 			if(num < 0) {
-				Logger.log(this.getClass().getSimpleName(), "passwordResetTransaction: password-reset-tokensテーブルに該当レコードがありません");
+				Logger.log(this.getClass().getSimpleName(), "[Error] passwordResetTransaction: password-reset-tokensテーブルに該当レコードがありません");
 				return false;
 			}
 
@@ -69,7 +69,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			 */
 			System.out.println("Error Message: " + e);
 			model.addAttribute("error-reset-pw", "データ変更に失敗しました。");
-			Logger.log(this.getClass().getSimpleName(), e + "\npasswordResetTransaction: データ変更に失敗しました。");
+			Logger.log(this.getClass().getSimpleName(), e + "\n[Error] passwordResetTransaction: データ変更に失敗しました。");
 			return false;
 		}
 		
@@ -78,7 +78,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		try {
 			int num = passwordResetRepository.resetPassword(email, newPassword);
 			if(num < 0) {
-				Logger.log(this.getClass().getSimpleName(), "Userテーブルに該当レコードが存在しません");
+				Logger.log(this.getClass().getSimpleName(), "[Error] Userテーブルに該当レコードが存在しません");
 				return false;
 			}
 
@@ -88,7 +88,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			 * ここではfalseで返す
 			 */
 			model.addAttribute("error-reset-pw", "データ変更に失敗しました。");
-			Logger.log(this.getClass().getSimpleName(), e + " \nデータ変更に失敗しました");
+			Logger.log(this.getClass().getSimpleName(), e + " \n[Error] データ変更に失敗しました");
 			return false;
 			
 		}
@@ -97,7 +97,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		try {
 			int num = passwordResetRepository.deleteRecord(email);
 			if(num < 0) {
-				Logger.log(this.getClass().getSimpleName(), "passwordResetTransaction: password-reset-tokensテーブルに該当レコードがありません");
+				Logger.log(this.getClass().getSimpleName(), "[Error] passwordResetTransaction: password-reset-tokensテーブルに該当レコードがありません");
 				return false;
 			}
 
@@ -107,7 +107,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			 * ここではfalseで返す
 			 */
 			model.addAttribute("error-reset-pw", "データ変更に失敗しました。");
-			Logger.log(this.getClass().getSimpleName(), e + " \nデータ変更に失敗しました");
+			Logger.log(this.getClass().getSimpleName(), e + " \n[Error] データ変更に失敗しました");
 			return false;
 		}
 
