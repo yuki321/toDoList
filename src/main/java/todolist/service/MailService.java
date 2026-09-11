@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import common.Logger;
 import todolist.entity.MailSendFactory;
 import todolist.entity.PasswordChange;
 import todolist.entity.PasswordReset;
@@ -56,8 +57,9 @@ public class MailService implements MailServiceIF {
 	 */
 	public List<String> checkPassword(final PasswordReset passwordReset, final String rawToken){
 		
-		List<String> errors = new ArrayList<>();
+		Logger.log(this.getClass().getSimpleName(), "checkPassword: パスワードチェック処理開始");
 		
+		List<String> errors = new ArrayList<>();
 		List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
 
 		String email = getEmail(resultList, rawToken);
@@ -72,10 +74,12 @@ public class MailService implements MailServiceIF {
 		// 新パスワードと新パスワード（確認用）が一致しない
 		if(!newPassword.equals(confirmedPassword)) {
 			errors.add("入力したパスワードが一致しません");
+			Logger.log(this.getClass().getSimpleName(), "checkPassword: 入力したパスワードが一致しません");
 		}
 		// DBの現在のパスワードと入力したパスワードが一致する
 		if(passwordEncoder.matches(newPassword, DBPassword)) {
 			errors.add("登録されているパスワードと入力したパスワードが同じです");
+			Logger.log(this.getClass().getSimpleName(), "checkPassword: 登録されているパスワードと入力したパスワードが同じです");
 		}
 		
 		return errors;
@@ -88,6 +92,7 @@ public class MailService implements MailServiceIF {
 	 * @return String password
 	 */
 	private String getDBPassword(final String email) {
+		Logger.log(this.getClass().getSimpleName(), "getDBPassword: 登録されているパスワードと入力したパスワードが同じです");
 		
 		String sql = "SELECT password FROM users WHERE email=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, email);
@@ -104,6 +109,7 @@ public class MailService implements MailServiceIF {
 	 * @return String
 	 */
 	private String getEmail(final List<Map<String, Object>> resultList, final String rawToken) {
+		Logger.log(this.getClass().getSimpleName(), "getEmail: メールアドレス取得処理");
 		
 		if(resultList == null || resultList.isEmpty()) return null;
 		if(rawToken == null || rawToken.isEmpty()) return null;
@@ -135,6 +141,7 @@ public class MailService implements MailServiceIF {
 	 */
 	public void sendTaskDeadlineEmail(final String email, final String taskName, final String deadline) {
 		
+		Logger.log(this.getClass().getSimpleName(), "sendTaskDeadlineEmail: タスク期限通知メールの送信処理開始");
 		String subject = "[todolist]タスクの期限が近づいています";
 		String text = "以下のタスクの期限が近づいています。\n"
 				+ "タスク: " + taskName + "\n"
@@ -153,6 +160,7 @@ public class MailService implements MailServiceIF {
 	 * @param String text
 	 */
 	public void sendEmail(final String to, final String subject, final String text) {
+		Logger.log(this.getClass().getSimpleName(), "sendEmail: メール送信処理開始");
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(to);
 		message.setFrom(mailFrom);
@@ -171,6 +179,7 @@ public class MailService implements MailServiceIF {
 	@Override
 	public String sendMailProcess(final PasswordChange mail, Model model) {
 		
+		Logger.log(this.getClass().getSimpleName(), "sendMailProcess: メール送信処理開始");
 		// メール送信先のメールアドレス
 		String email = mail.getPasswordChange();
 		boolean isEmailExists = false;
@@ -180,6 +189,7 @@ public class MailService implements MailServiceIF {
 			
 		}catch (Exception e) {
 			System.out.println("/reset-password/send sendMail()");
+			Logger.log(this.getClass().getSimpleName(), e + "sendMailProcess: メール送信失敗");
 			return "login";
 		}
 		
@@ -187,6 +197,7 @@ public class MailService implements MailServiceIF {
 		if((!isEmailExists) && kind.equals("PW_RESET")) {
 			// ユーザーが見つからない場合の処理
 			model.addAttribute("errorMessage", "メールアドレスが登録されていません。");
+			Logger.log(this.getClass().getSimpleName(), "sendMailProcess: メールアドレスが登録されていません");
 			return "login";
 		}
 
@@ -202,6 +213,7 @@ public class MailService implements MailServiceIF {
 				if(num < 0) {
 					// トークンの削除に失敗した場合の処理
 					model.addAttribute("errorMessage", "トークンの削除に失敗しました。");
+					Logger.log(this.getClass().getSimpleName(), "sendMailProcess: トークンの削除に失敗しました。");
 					return "login";
 				}
 			}
@@ -213,7 +225,6 @@ public class MailService implements MailServiceIF {
 		
 		// トークンをエンコード(BCryptPasswordEncoder) → DBに保存する
 		String encodedToken = passwordEncoder.encode(token);
-		
 
 		// エンコードされたトークンをDBに保存する処理
 		int num = passwordResetTokenRepository.insertRecord(email, encodedToken);
@@ -221,6 +232,7 @@ public class MailService implements MailServiceIF {
 		if(num < 0) {
 			// トークンの保存に失敗した場合の処理
 			model.addAttribute("errorMessage", "トークンの保存に失敗しました。");
+			Logger.log(this.getClass().getSimpleName(), "sendMailProcess: トークンの保存に失敗しました。");
 			return "login";
 		}
 		

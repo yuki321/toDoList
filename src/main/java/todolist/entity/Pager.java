@@ -1,7 +1,10 @@
 package todolist.entity;
 
+import common.Logger;
 
 public class Pager {
+	
+	private final String CLASS_NAME = this.getClass().getSimpleName(); 
 
 	public Pager() {
 	
@@ -15,6 +18,9 @@ public class Pager {
 	 * @return int
 	 */
 	public int getTopIndex(final int currentPage, final int dataCountPerPage) {
+		
+		Logger.log(CLASS_NAME, "getTopIndex: ページに表示する先頭データのインデックスを取得");
+		Logger.log(CLASS_NAME, "getTopIndex: currentPage=%d, dataCountPerPage=%d".formatted(currentPage, dataCountPerPage));
 		// Pathvariableのpageは 0 から始まるため、currentPage + 1とする
 		if((currentPage + 1) <= 1) return 1;
 		
@@ -33,6 +39,8 @@ public class Pager {
 	 * @return int
 	 */
 	public int getLastIndex(final int currentPage, final int dataCountPerPage) {
+		
+		Logger.log(CLASS_NAME, "getLastIndex: ページに表示する末尾データのインデックスを取得");
 		// Pathvariableのpageは 0 から始まるため、currentPage + 1とする
 		if((currentPage + 1) <= 1) return dataCountPerPage;
 		

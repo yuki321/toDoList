@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import common.Logger;
 import jakarta.validation.Valid;
 import todolist.entity.PasswordChange;
 import todolist.entity.ToDo;
@@ -35,6 +36,8 @@ public class ToDoController {
 	@Autowired
 	private UserServiceIF userService;
 	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
+	
 	
 	/**
 	 * 全件取得
@@ -47,6 +50,8 @@ public class ToDoController {
 	public String getAllToDo(@AuthenticationPrincipal final UserDetails userDetails, 
 			@ModelAttribute final User user,
 			final Model model){
+		
+		Logger.log(CLASS_NAME, "getAllToDo: タスク全件取得");
 
 		// ログイン情報を基にタスク一覧を表示
 		final List<ToDo> todos = toDoService.findAllToDo(userDetails);
@@ -91,6 +96,8 @@ public class ToDoController {
 			final Model model
 			) {
 		
+		Logger.log(CLASS_NAME, "getTaskCompleted: タスク完了処理開始");
+		
 		// userIdを取得
 		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		todo.setUserId((Long) userInfo.get("id"));		
@@ -99,13 +106,14 @@ public class ToDoController {
 		try {
 			final boolean result = toDoService.completeTask(todo);
 			if (result) {
-				System.out.println("編集成功！");
+				Logger.log(CLASS_NAME, "getTaskCompleted: タスク完了処理成功");
 			} else {
-				System.out.println("編集失敗");
+				Logger.log(CLASS_NAME, "getTaskCompleted: タスク完了処理失敗");
 			}
 			
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, e + " getTaskCompleted: タスク完了処理失敗");
 			return "redirect:/";
 		}
 		
@@ -128,6 +136,8 @@ public class ToDoController {
 			final Model model
 			) {
 		
+		Logger.log(CLASS_NAME, "undoCompletedTask: タスク完了の取り消し処理開始");
+		
 		// userIdを取得
 		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
 		todo.setUserId((Long) userInfo.get("id"));		
@@ -136,13 +146,14 @@ public class ToDoController {
 		try {
 			final boolean result = toDoService.undoCompletedTask(todo);
 			if (result) {
-				System.out.println("編集成功！");
+				Logger.log(CLASS_NAME, "undoCompletedTask: タスク完了の取り消し処理成功");
 			} else {
-				System.out.println("編集失敗");
+				Logger.log(CLASS_NAME, "undoCompletedTask: タスク完了の取り消し処理失敗");
 			}
 			
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, e + " undoCompletedTask: タスク完了の取り消し処理失敗");
 			return "redirect:/";
 		}
 		
@@ -163,6 +174,8 @@ public class ToDoController {
 		if(!(id instanceof Long)) {
 			return "redirect:/";
 		}
+		
+		Logger.log(CLASS_NAME, "getOthers: ユーザー編集画面へ遷移");
 
 		try {
 			final Optional<User> user = userService.getUserById(id);
@@ -177,10 +190,12 @@ public class ToDoController {
 
 				return "userOthers";
 			}else {
+				Logger.log(CLASS_NAME, "getOthers: 該当ユーザーが存在しません");
 				return "redirect:/";
 			}
 			
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, e + " getOthers: ユーザー編集画面へ遷移失敗");
 			return "redirect:/";
 		}
 		
@@ -198,6 +213,8 @@ public class ToDoController {
 	public String changePasswordFromToDo(@PathVariable final Long id, 
 			final Model model, 
 			@ModelAttribute final User user) {
+		
+		Logger.log(CLASS_NAME, "changePasswordFromToDo: パスワード変更画面へ遷移");
 		
 		model.addAttribute("user", user);
 		
@@ -228,7 +245,10 @@ public class ToDoController {
 			final Model model
 			) {
 		
+		Logger.log(CLASS_NAME, "changePasswordFromToDo: パスワード変更処理開始");
+		
 		if(bindingResult.hasErrors()) {
+			Logger.log(CLASS_NAME, "changePasswordFromToDo: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			return "changePasswordFromToDo";
 		}
 		
@@ -239,6 +259,7 @@ public class ToDoController {
 			
 			if(!errors.isEmpty()) {
 				for(String error: errors) {
+					Logger.log(CLASS_NAME, "changePasswordFromToDo: パスワード変更処理失敗。" + error);
 					bindingResult.reject("error.passwordChange", error);
 				}
 				return "changePasswordFromToDo";
@@ -249,6 +270,7 @@ public class ToDoController {
 			
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, e + " changePasswordFromToDo: パスワード変更処理失敗");
 			return "redirect:/";
 		}
 		
@@ -264,11 +286,13 @@ public class ToDoController {
 	 */
 	@PostMapping("/others/{id}/deleteAccount")
     public String deleteUserAccount(@PathVariable("id") final Long id) {
-        try {
-        	
+
+		Logger.log(CLASS_NAME, "deleteUserAccount: ユーザーアカウント削除処理開始");
+		try {
             userService.deleteUser(id);
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
+        	Logger.log(CLASS_NAME, e + " deleteUserAccount: ユーザーアカウント削除処理失敗");
         	return "redirect:/api/users/user?page=0";
         }
     }
@@ -287,10 +311,11 @@ public class ToDoController {
 			final BindingResult bindingResult,
 			@AuthenticationPrincipal final UserDetails userDetails,
 			final Model model) {
+		
+		Logger.log(CLASS_NAME, "createToDo: タスク作成処理開始");
 
 		if (bindingResult.hasErrors()) {
-			
-			System.out.println(bindingResult);
+			Logger.log(CLASS_NAME, "createToDo: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			addIndexModelAttributes(userDetails, model);
 			
 			/**
@@ -309,15 +334,16 @@ public class ToDoController {
 			final boolean result = toDoService.insertRecord(todo);
 
 			if (result) {
-				System.out.println("作成成功！");
+				Logger.log(CLASS_NAME, "createToDo: タスク作成処理成功");
 			} else {
-				System.out.println("作成失敗");
+				Logger.log(CLASS_NAME, "createToDo: タスク作成処理失敗");
 			}
 
 			return "redirect:/";
 		} catch (IllegalArgumentException e) {
 			bindingResult.reject("error.create", e.getMessage());
 			addIndexModelAttributes(userDetails, model);
+			Logger.log(CLASS_NAME, e + " createToDo: タスク作成処理失敗");
 			return "index";
 		}
 
@@ -344,7 +370,7 @@ public class ToDoController {
 			@AuthenticationPrincipal final UserDetails userDetails,
 			final Model model
 			) {
-		
+		Logger.log(CLASS_NAME, "editToDo: タスク編集処理開始");
 		
 		// userIdを取得
 		final Map<String, Object> userInfo = toDoService.getUserInfo(userDetails);
@@ -354,13 +380,14 @@ public class ToDoController {
 		try {
 			final boolean result = toDoService.updateRecord(todo);
 			if (result) {
-				System.out.println("編集成功！");
+				Logger.log(CLASS_NAME, "editToDo: タスク編集処理成功");
 			} else {
-				System.out.println("編集失敗");
+				Logger.log(CLASS_NAME, "editToDo: タスク編集処理失敗");
 			}
 			
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, e + " editToDo: タスク編集処理失敗");
 			return "redirect:/";
 		}
 		
@@ -376,10 +403,12 @@ public class ToDoController {
 	@PostMapping("/delete")
 	public String deleteToDo(@RequestParam final String id) {
 		
+		Logger.log(CLASS_NAME, "deleteToDo: タスク削除処理開始");
 		try {
 			toDoService.deleteRecord(Long.parseLong(id));
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, e + " deleteToDo: タスク削除処理失敗");
 			return "redirect:/";
 		}
 		

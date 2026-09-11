@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import common.Logger;
 import todolist.repository.PasswordResetRepositoryIF;
 import todolist.repository.PasswordResetTokenRepositoryIF;
 
@@ -27,6 +28,8 @@ public class PasswordResetService implements PasswordResetServiceIF {
 	@Override
 	public boolean passwordResetTransaction(final String rawToken, final String newPassword, final Model model) {
 
+		Logger.log(this.getClass().getSimpleName(), "passwordResetTransaction: パスワードリセット処理開始");
+		
 		// 1.password-reset-tokensテーブルからメールアドレスを取得
 		// 全有効トーケンを取得して、ハッシュ化されていない平文トークンと比較
 		List<Map<String, Object>> resultList = passwordResetTokenRepository.findAllTokenHash();
@@ -55,6 +58,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			int num = passwordResetRepository.updateResetTokenUsedAt(email);
 
 			if(num < 0) {
+				Logger.log(this.getClass().getSimpleName(), "passwordResetTransaction: password-reset-tokensテーブルに該当レコードがありません");
 				return false;
 			}
 
@@ -65,6 +69,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			 */
 			System.out.println("Error Message: " + e);
 			model.addAttribute("error-reset-pw", "データ変更に失敗しました。");
+			Logger.log(this.getClass().getSimpleName(), e + "\npasswordResetTransaction: データ変更に失敗しました。");
 			return false;
 		}
 		
@@ -73,6 +78,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		try {
 			int num = passwordResetRepository.resetPassword(email, newPassword);
 			if(num < 0) {
+				Logger.log(this.getClass().getSimpleName(), "Userテーブルに該当レコードが存在しません");
 				return false;
 			}
 
@@ -81,8 +87,8 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			 * 例外処理
 			 * ここではfalseで返す
 			 */
-			System.out.println("Error Message: " + e);
 			model.addAttribute("error-reset-pw", "データ変更に失敗しました。");
+			Logger.log(this.getClass().getSimpleName(), e + " \nデータ変更に失敗しました");
 			return false;
 			
 		}
@@ -91,6 +97,7 @@ public class PasswordResetService implements PasswordResetServiceIF {
 		try {
 			int num = passwordResetRepository.deleteRecord(email);
 			if(num < 0) {
+				Logger.log(this.getClass().getSimpleName(), "passwordResetTransaction: password-reset-tokensテーブルに該当レコードがありません");
 				return false;
 			}
 
@@ -99,8 +106,8 @@ public class PasswordResetService implements PasswordResetServiceIF {
 			 * 例外処理
 			 * ここではfalseで返す
 			 */
-			System.out.println("Error Message: " + e);
 			model.addAttribute("error-reset-pw", "データ変更に失敗しました。");
+			Logger.log(this.getClass().getSimpleName(), e + " \nデータ変更に失敗しました");
 			return false;
 		}
 

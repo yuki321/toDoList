@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import common.Logger;
+
 public class CSV {
 
 	public CSV() {
@@ -23,13 +25,15 @@ public class CSV {
 	 * @return boolean
 	 */
 	public boolean inputCheck(final String[] record, final List<User> users, final List<String> errors) {
-	    // 1. 配列チェック
+	    
+		Logger.log(this.getClass().getSimpleName(), "CSV inputCheck: CSVファイルのチェックを開始します");
+		// 1. 配列チェック
 	    if (!isValidRecordStructure(record)) {
 	    	
 	    	final String message = "レコードの項目が不足しています（空白が存在します）";
 	    	setErrorMessage(message, errors);
 	    	
-			System.out.println("CSVレコードの項目数チェック: エラー発生!!");
+			Logger.log(this.getClass().getSimpleName(), "CSV inputCheck: CSVレコードの項目数チェック: エラー発生!!");
 	        return false;
 	    }
 
@@ -40,13 +44,13 @@ public class CSV {
 	    // 2. 各項目チェック
 	    if (!isValidUserName(userName, errors) || !isValidEmail(email, errors) 
 	    		|| !isValidRole(role, errors)) {
-			System.out.println("CSV各項目チェック: エラー発生!!");
+			Logger.log(this.getClass().getSimpleName(), "CSV inputCheck: CSV各項目チェック: エラー発生!!");
 	        return false;
 	    }
 
 	    // 3. DBとCSVファイルの相関チェック（重複チェック）
 	    if (isDuplicateUser(userName, email, users, errors)) {
-			System.out.println("CSV項目重複チェック: エラー発生!!");
+			Logger.log(this.getClass().getSimpleName(), "CSV inputCheck: CSV項目重複チェック: エラー発生!!");
 	        return false;
 	    }
 
@@ -62,10 +66,12 @@ public class CSV {
 	 */
 	public boolean isCsvFile(final MultipartFile file, final List<String> errors) {
 
+		Logger.log(this.getClass().getSimpleName(), "CSV isCsvFile: CSVファイルのチェックを開始");
 		if (file == null || file.isEmpty()) {
 			
 			final String message = "・ファイルが存在していない。またはファイルサイズが0です";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isCsvFile: " + message);
             return false;
         }
 
@@ -77,6 +83,7 @@ public class CSV {
         	
         	final String message = "・ファイルが選択されていない可能性があります";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isCsvFile: " + message);
             return false;
         }
 
@@ -85,6 +92,7 @@ public class CSV {
         	
         	final String message = "・CSVファイルではないファイルがインポートされました";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isCsvFile: " + message);
         	return false;
         }
         
@@ -100,9 +108,11 @@ public class CSV {
 	 */
 	private boolean isValidRecordStructure(final String[] record) {
 	    if (record == null || record.length != 4) {
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidRecordStructure: CSVレコードの項目数が4ではありません");
 	        return false;
 	    }
 	    for (String r : record) {
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidRecordStructure: CSVレコードの項目値: " + r);
 	        if (r == null || r.isBlank()) return false;
 	    }
 	    
@@ -121,6 +131,7 @@ public class CSV {
 	    	
 	    	final String message = "・ユーザー名の文字数は1~50にしてください";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidUserName: " + message);
 	    	return false;
 	    }
 	    
@@ -131,6 +142,7 @@ public class CSV {
 	    	
 			final String message = "・ユーザー名の文字種は「日本語（ひらがな・カタカナ・漢字）、英小文字、数字のみ」使用可能です";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidUserName: " + message);
 			return false;
 		}
 		
@@ -149,6 +161,7 @@ public class CSV {
 	    	
 	    	final String message = "・メールアドレスの文字数は8~100にしてください";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidEmail: " + message);
 	    	
 	        return false;
 	    }
@@ -156,6 +169,7 @@ public class CSV {
 
 	    	final String message = "・メールアドレスには'@', '.'を必ず含めてください";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidEmail: " + message);
 	    	return false;
 	    }
 	    
@@ -166,6 +180,7 @@ public class CSV {
 
 	    	final String message = "・メールアドレスには'英小文字、数字、@,-'のみ使用可能です";
 	    	setErrorMessage(message, errors);
+	    	Logger.log(this.getClass().getSimpleName(), "CSV isValidEmail: " + message);
 	    	return false;
 	    }
 	    
@@ -183,6 +198,7 @@ public class CSV {
 		
 		final String message = "・roleには'1'または'2'のみ設定してください";
     	setErrorMessage(message, errors);
+    	Logger.log(this.getClass().getSimpleName(), "CSV isValidRole: " + message);
 	    return "1".equals(role) || "2".equals(role);
 	}
 
@@ -205,6 +221,7 @@ public class CSV {
 	        	final String message = "・ユーザー名またはメールアドレスはすでに登録されています"
 	    				+ "ユーザー名 : " + userName + " / メールアドレス : " + email;
 		    	setErrorMessage(message, errors);
+		    	Logger.log(this.getClass().getSimpleName(), "CSV isDuplicateUser: " + message);
 	            return true;
 	        }
 	    }

@@ -9,14 +9,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import common.Logger;
+
 
 @Configuration
 @EnableWebSecurity
 public class UserConfig implements WebMvcConfigurer {
+	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
 
 	// 設定を補完する情報のことをリゾルバ(resolver)と呼ぶ
 	@Override
 	public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> argumentResolvers) {
+		
+		Logger.log(CLASS_NAME, "addArgumentResolvers: addArgumentResolversメソッド起動");
 
 		// Pageableに対して設定を行うためのクラスであり、リゾルバ
 		final PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();

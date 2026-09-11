@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
+import common.Logger;
 import todolist.entity.ToDo;
 import todolist.service.UserService;
 
@@ -30,6 +31,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	@Override
 	public List<Map<String, Object>> findAllToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
+		Logger.log(this.getClass().getSimpleName(), "findAllToDo: ToDoのデータ全件取得処理");
 		final String userName = userDetails.getUsername();
 		final String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
 				+ "WHERE u.user_name=? and t.status = 1 ORDER BY t.priority ASC";
@@ -47,6 +49,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	@Override
 	public List<Map<String, Object>> findAllCompletedToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
+		Logger.log(this.getClass().getSimpleName(), "findAllCompletedToDo: 完了済みToDoデータの取得処理");
 		final String userName = userDetails.getUsername();
 		final String sql = "SELECT * FROM todo t INNER JOIN users u ON t.user_id = u.id "
 				+ "WHERE u.user_name=? and t.status = 2 ORDER BY t.priority ASC";
@@ -64,7 +67,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 */
 	@Override
 	public int completeTask(final ToDo todo) throws DataAccessException {
-		
+		Logger.log(this.getClass().getSimpleName(), "completeTask: タスク完了処理");
 		final String sql = "UPDATE todo SET status = 2 WHERE id=? and status = 1";
 		return jdbc.update(sql, todo.getId());
 	}
@@ -78,7 +81,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 */
 	@Override
 	public int undoCompletedTask(final ToDo todo) throws DataAccessException {
-	
+		Logger.log(this.getClass().getSimpleName(), "undoCompletedTask: タスク完了を取り消す処理");
 		final String sql = "UPDATE todo SET status = 1 WHERE id=? and status = 2";
 		return jdbc.update(sql, todo.getId());
 	}
@@ -91,7 +94,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 */
 	@Override
 	public Map<String, Object> getUserInfo(@AuthenticationPrincipal final UserDetails userDetails){
-	
+		Logger.log(this.getClass().getSimpleName(), "getUserInfo: ログイン中のユーザー情報の取得処理");
 		final String userName = userDetails.getUsername();
 		final String sql = "SELECT * FROM users WHERE user_name=?";
 		return jdbc.queryForMap(sql, userName);
@@ -106,7 +109,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 */
 	@Override
 	public int insertRecord(final ToDo todo) throws DataAccessException {
-		
+		Logger.log(this.getClass().getSimpleName(), "insertRecord: ToDo作成処理");
 		return jdbc.update("INSERT INTO todo VALUES(?, ?, ?, ?, ?, ?, ?)",
 				todo.getId(),
 				todo.getUserId(),
@@ -126,7 +129,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 */
 	@Override
 	public int updateRecord(ToDo todo) throws DataAccessException {
-		
+		Logger.log(this.getClass().getSimpleName(), "updateRecord: タスク編集処理");
 		String sql = "UPDATE todo SET user_id = ?, content = ?, "
 				+ "memo = ?, status = ?, deadline = ? ,"
 				+ "priority = ? WHERE id=?";
@@ -150,7 +153,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	 */
 	@Override
 	public int deleteRecord(Long id) throws DataAccessException {
-		
+		Logger.log(this.getClass().getSimpleName(), "deleteRecord: タスク削除処理");
 		String sql = "DELETE FROM todo WHERE id=?";
 		return jdbc.update(sql, id);
 	}
@@ -163,6 +166,7 @@ public class ToDoRepository implements ToDoRepositoryIF {
 	@Override
 	public List<Map<String, Object>> getTasksDueInOneWeek(){
 		
+		Logger.log(this.getClass().getSimpleName(), "getTasksDueInOneWeek: 期限切れ1週間前のタスクを取得");
 		// 締め切り1週間前～締め切り翌日0時までのタスクを抽出
 		final String sql = "SELECT u.id, u.email, t.content, t.deadline FROM todo t "
 		        + "INNER JOIN users u ON t.user_id = u.id "
@@ -172,11 +176,11 @@ public class ToDoRepository implements ToDoRepositoryIF {
 		// 締め切り1週間前のタスクを抽出
 		final List<Map<String, Object>> taskList = jdbc.queryForList(sql);
 		if(taskList.isEmpty()) {
-			System.out.println("期限切れ1週間前のタスクはありません");
+			Logger.log(this.getClass().getSimpleName(), "getTasksDueInOneWeek: 期限切れ1週間前のタスクはありません");
 			return taskList;
 		}
 		
-		System.out.println("email：" + taskList.get(0).get("email") + " task_name：" + taskList.get(0).get("content") + " deadline：" + taskList.get(0).get("deadline"));
+		Logger.log(this.getClass().getSimpleName(), "getTasksDueInOneWeek: email：" + taskList.get(0).get("email") + " task_name：" + taskList.get(0).get("content") + " deadline：" + taskList.get(0).get("deadline"));
 		return taskList;
 	}
 	

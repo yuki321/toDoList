@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import common.Logger;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +25,8 @@ public class PasswordReset {
 	
 	// トークンの有効期限（時間単位）
 	int EXPIRATION_HOUR_UNIT = 1; 
+	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
 
 	/** パスワード変更時のバリデーショングループ */
 	public interface PasswordUpdate extends Default {}
@@ -82,6 +85,8 @@ public class PasswordReset {
 			final PasswordEncoder passwordEncoder,
 			final PasswordResetTokenRepositoryIF passwordResetTokenRepository
 			) {
+		
+		Logger.log(CLASS_NAME, "validatePasswordResetToken: トークンの検証を開始。");
 		
 		// 1.トークンが存在するか確認する処理
 		// 全有効トークンを取得して、ハッシュ化されていない平文トークンと比較

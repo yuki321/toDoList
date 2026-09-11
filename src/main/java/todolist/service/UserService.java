@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import common.Logger;
 import todolist.entity.CSV;
 import todolist.entity.PasswordChange;
 import todolist.entity.User;
@@ -55,6 +56,7 @@ public class UserService implements UserServiceIF {
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> getAllUsers(){
+		Logger.log(this.getClass().getSimpleName(), "getAllUsers: ユーザーデータ全件取得処理");
 		return userRepository.findAll();
 	}
 	
@@ -67,6 +69,7 @@ public class UserService implements UserServiceIF {
 	@Override
 	@Transactional(readOnly = true)
 	public Page<User> getAllUsers(final Pageable pageable){
+		Logger.log(this.getClass().getSimpleName(), "getAllUsers: ユーザーデータ全件取得処理(Pager)");
 		return userRepository.findAll(pageable);
 	}
 	
@@ -81,6 +84,7 @@ public class UserService implements UserServiceIF {
 	@Transactional(readOnly = true)
 	public Page<User> searchUsers(final User _user, final Pageable pageable){
     	
+		Logger.log(this.getClass().getSimpleName(), "searchUsers: ユーザー検索処理");
 		// 検索条件を取得
 		String userName = _user.getUserName();
 		String email = _user.getEmail();
@@ -142,6 +146,7 @@ public class UserService implements UserServiceIF {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<User> getUserById(final Long id){
+		Logger.log(this.getClass().getSimpleName(), "getUserById: ユーザーをIDで指定して取得");
 		return userRepository.findById(id);
 	}
 	
@@ -152,6 +157,7 @@ public class UserService implements UserServiceIF {
 	 */
 	@Override
 	public List<User> findByEmail(final String email){
+		Logger.log(this.getClass().getSimpleName(), "findByEmail: ユーザーをメールアドレスで指定して取得");
 		return userRepository.findByEmail(email);
 	}
 	
@@ -163,6 +169,7 @@ public class UserService implements UserServiceIF {
 	 */
 	@Override
 	public User createUser(final User user) {
+		Logger.log(this.getClass().getSimpleName(), "createUser: ユーザー作成処理開始");
 		
 		if(userRepository.existsByUserName(user.getUserName())) {
 			throw new IllegalArgumentException("すでにそのユーザー名は存在しています");			
@@ -195,6 +202,7 @@ public class UserService implements UserServiceIF {
 	 */
 	public User createUserFromCsv(final User user) {
 		
+		Logger.log(this.getClass().getSimpleName(), "createUserFromCsv: ユーザー作成処理開始(CSVファイルインポート)");
 		user.setId(user.getId());
 		user.setUserName(user.getUserName());
 		user.setEmail(user.getEmail());
@@ -220,6 +228,7 @@ public class UserService implements UserServiceIF {
 	@Override
 	public User updateUser(final Long id, final User user) {
 		
+		Logger.log(this.getClass().getSimpleName(), "updateUser: ユーザー更新処理開始");
 		User updatingUser = userRepository.findById(id)
 		        .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 		
@@ -255,7 +264,9 @@ public class UserService implements UserServiceIF {
 	@Transactional
 	public void deleteUser(final Long id) {
 		
+		Logger.log(this.getClass().getSimpleName(), "deleteUser: ユーザー削除処理開始");
 		if(!userRepository.existsById(id)) {
+			Logger.log(this.getClass().getSimpleName(), "deleteUser: ユーザーが存在しません");
 			throw new IllegalArgumentException("ユーザーが存在しません");
 		}
 		
@@ -272,6 +283,7 @@ public class UserService implements UserServiceIF {
 	@Transactional
 	public User savePassword(final User user, final String newPassword) {
 		
+		Logger.log(this.getClass().getSimpleName(), "savePassword: パスワード変更処理開始");
 		String sql = "SELECT * FROM users WHERE id=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
 
@@ -294,6 +306,7 @@ public class UserService implements UserServiceIF {
 	@Override
 	public List<String> checkPassword(final PasswordChange form, final User user) {
 		
+		Logger.log(this.getClass().getSimpleName(), "checkPassword: パスワードチェック");
 		List<String> errors = new ArrayList<>();
 		
 		String dbPassword = getDbPassword(user);
@@ -329,6 +342,7 @@ public class UserService implements UserServiceIF {
 	 */
 	private String getDbPassword(@PathVariable final User user) {
 		
+		Logger.log(this.getClass().getSimpleName(), "getDbPassword: ログインユーザーのパスワードをDBから取得");
 		String sql = "SELECT password FROM users WHERE id=?";
 		Map<String, Object> getMap = jdbc.queryForMap(sql, user.getId());
 		String password = (String)getMap.get("password");
@@ -345,6 +359,8 @@ public class UserService implements UserServiceIF {
 	@Override
 	@Transactional
 	public List<String> uploadCsvFile(final MultipartFile file) throws Exception {
+		
+		Logger.log(this.getClass().getSimpleName(), "uploadCsvFile: CSVファイルアップロード処理開始");
 		// CSVファイルを読み込む
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 			
@@ -354,10 +370,10 @@ public class UserService implements UserServiceIF {
 			// CSVファイルチェック
 			boolean csvFileCheckResult = csv.isCsvFile(file, errors);
 			if(!csvFileCheckResult) {
-				System.out.println("CSVファイルに問題が発生しています");
 				
 				String message = "・CSVファイルに問題が発生しています";
 				csv.setErrorMessage(message, errors);
+				Logger.log(this.getClass().getSimpleName(), "uploadCsvFile: " + message);
 			}
 			
 			
@@ -383,7 +399,7 @@ public class UserService implements UserServiceIF {
 					 */
 					boolean inputCheckResult = csv.inputCheck(values, users, errors);
 					if(!inputCheckResult) {
-						System.out.println("inputCheckResult: エラー発生!!");
+						Logger.log(this.getClass().getSimpleName(), "uploadCsvFile: エラー発生!!");
 						continue;
 					}
 
@@ -430,6 +446,7 @@ public class UserService implements UserServiceIF {
 	@Transactional
 	public void downloadCsvFile() throws Exception {
 
+		Logger.log(this.getClass().getSimpleName(), "downloadCsvFile: CSVファイルダウンロード処理開始");
 		// Header
 		CsvSchema.Builder builder = CsvSchema.builder()
 				.addColumn("ユーザー名")
@@ -486,6 +503,8 @@ public class UserService implements UserServiceIF {
 	 * @param User user
 	 */
 	public void restoreUserDisplayFields(final Long id, final User user) {
+		
+		Logger.log(this.getClass().getSimpleName(), "restoreUserDisplayFields: バリデーションエラー時に表示用の項目を補完");
 		getUserById(id).ifPresent(existing -> {
 			user.setId(existing.getId());
 			user.setRole(existing.getRole());

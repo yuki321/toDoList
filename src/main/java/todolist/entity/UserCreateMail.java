@@ -1,10 +1,13 @@
 package todolist.entity;
 
+import common.Logger;
 import todolist.service.MailService;
 
 public class UserCreateMail implements MailSend {
 
     private final MailService mailService;
+    
+	private final String CLASS_NAME = this.getClass().getSimpleName();
 
     public UserCreateMail(MailService mailService) {
     	this.mailService = mailService;
@@ -18,6 +21,7 @@ public class UserCreateMail implements MailSend {
 	@Override
 	public void sendMail(final String email, final String token) {
 		
+		Logger.log(CLASS_NAME, "sendMail: ユーザー登録メール送信");
 		String subject = "[todolist]ユーザー登録のご案内";
 		String resetLink = "http://localhost:8080/validate_token?token=" + token + "&kind=registration";
 		String text = "ユーザー登録のリクエストを受け付けました。下記リンクからリセットをしてください。\n"

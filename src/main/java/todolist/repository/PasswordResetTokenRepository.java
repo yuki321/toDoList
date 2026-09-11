@@ -9,6 +9,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import common.Logger;
+
 
 @Repository
 public class PasswordResetTokenRepository implements PasswordResetTokenRepositoryIF {
@@ -24,6 +26,7 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 */
 	@Override
 	public int selectCountByEmail(final String email) throws DataAccessException {
+		Logger.log(this.getClass().getSimpleName(), "selectCountByEmail: メールアドレスに紐づくパスワードリセットトークンの件数を取得 email=" + email);
 		final String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
 		return jdbc.queryForObject(sql, Integer.class, email);
 	}
@@ -35,6 +38,7 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 */
 	@Override
 	public List<Map<String, Object>> findAllTokenHash() throws DataAccessException {
+		Logger.log(this.getClass().getSimpleName(), "findAllTokenHash: すべてのパスワードリセットトークンを取得。");
 		final String sql = "SELECT * FROM password_reset_tokens";
 		return jdbc.queryForList(sql);
 	}
@@ -50,6 +54,7 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	@Override
 	public int insertRecord(final String email, final String tokenHash) throws DataAccessException {
 		
+		Logger.log(this.getClass().getSimpleName(), "insertRecord: パスワードリセットトークンのレコードを挿入 email=" + email);
 		// トークンの有効期限（時間単位）
 		final int EXPIRATION_HOUR_UNIT = 1; 
 		
@@ -76,7 +81,7 @@ public class PasswordResetTokenRepository implements PasswordResetTokenRepositor
 	 */	
 	@Override
 	public int deleteResetToken(final String email) throws DataAccessException {
-		
+		Logger.log(this.getClass().getSimpleName(), "deleteResetToken: メールアドレスに紐づくパスワードリセットトークンのレコードを削除 email=" + email);
 		final String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
 		return jdbc.update(sql, email);
 	}

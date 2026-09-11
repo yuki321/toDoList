@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import common.Logger;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -39,7 +42,7 @@ public class UserController {
 	@Autowired
 	private ToDoServiceIF toDoService;
 	
-
+	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
 	/**
 	 * 全件取得
@@ -53,6 +56,8 @@ public class UserController {
 	public String getAllUsers(@AuthenticationPrincipal final UserDetails userDetails, final Model model, 
 			@PageableDefault(page = 0, size = 10) final Pageable pageable, 
 			@RequestParam(name = "page") final int page){
+		
+		Logger.log(CLASS_NAME, "getAllUsers: ユーザー一覧表示");
 		
 		final Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
 		final String role = (String) userIfo.get("role");
@@ -95,6 +100,8 @@ public class UserController {
 	public String searchUsers(@ModelAttribute("user") final User user, final Model model
 			, @PageableDefault(page = 0, size = 10) final Pageable pageable){
 
+		Logger.log(CLASS_NAME, "searchUsers: ユーザー検索");
+		
 		final Page<User> users = userService.searchUsers(user, pageable);
 		final int userCount = users.getContent().size();
 
@@ -132,8 +139,10 @@ public class UserController {
 	@GetMapping("user/{id}")
 	public String getUserById(@PathVariable final Long id, final Model model){
 		
+		Logger.log(CLASS_NAME, "getUserById: ユーザー詳細表示");
 		// idがLong型でない場合
 		if(!(id instanceof Long)) {
+			Logger.log(CLASS_NAME, "getUserById: idがLong型ではありません。");
 			return "redirect:/api/users/user?page=0";
 		}
 
@@ -142,12 +151,15 @@ public class UserController {
 			
 			if(user.isPresent()) {
 				model.addAttribute("user", user.orElse(null));
-	            return "userDetail";
+	            Logger.log(CLASS_NAME, "getUserById: 指定したIDのユーザーを取得しました。");
+				return "userDetail";
 			}else {
+				Logger.log(CLASS_NAME, "getUserById: 指定したIDのユーザーが存在しません。");
 				return "redirect:/api/users/user?page=0";
 			}
 			
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, "getUserById: 指定したIDのユーザーが存在しません。");
 			return "redirect:/api/users/user?page=0";
 		}
 		
@@ -162,6 +174,7 @@ public class UserController {
 	 */
 	@GetMapping("create")
 	public String userCreate(@RequestParam(defaultValue = "false") final String login , final Model model) {
+		Logger.log(CLASS_NAME, "userCreate: ユーザー作成画面へ遷移");
 		model.addAttribute("user", new User());
 		model.addAttribute("login", login);
 		return "userCreate";
@@ -177,6 +190,7 @@ public class UserController {
 	 */
 	@GetMapping("user/{id}/change-password")
 	public String changePassword(@PathVariable final Long id, final Model model, @ModelAttribute final User user) {
+		Logger.log(CLASS_NAME, "changePassword: パスワード変更画面へ遷移");
 		model.addAttribute("user", user);
 		
 		// changePasswordメソッドで利用
@@ -195,7 +209,9 @@ public class UserController {
 	public String createUser(@Validated(User.Create.class) @ModelAttribute final User user,
 			BindingResult bindingResult, Model model){
 
+		Logger.log(CLASS_NAME, "createUser: ユーザー作成処理開始");
 		if (bindingResult.hasErrors()) {
+			Logger.log(CLASS_NAME, "createUser: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			return "userCreate";
 		}
 
@@ -203,9 +219,11 @@ public class UserController {
 			final User createdUser = userService.createUser(user);
 			
 			model.addAttribute(createdUser);
+			Logger.log(CLASS_NAME, "createUser: ユーザー作成処理が完了しました。");
 			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.create", e.getMessage());
+			Logger.log(CLASS_NAME, "createUser: ユーザー作成処理中にエラーが発生しました。" + e.getMessage());
 			return "userCreate";
 		}
 		
@@ -225,8 +243,10 @@ public class UserController {
 			@Validated(User.Update.class) @ModelAttribute final User user,
 			final BindingResult bindingResult, final Model model){
 
+		Logger.log(CLASS_NAME, "updateUser: ユーザー更新処理開始");
 		if (bindingResult.hasErrors()) {
 			userService.restoreUserDisplayFields(id, user);
+			Logger.log(CLASS_NAME, "updateUser: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			return "userDetail";
 		}
 
@@ -234,10 +254,12 @@ public class UserController {
 			final User updatedUser = userService.updateUser(id, user);
 			model.addAttribute("user", updatedUser);
 			
+			Logger.log(CLASS_NAME, "updateUser: ユーザー更新処理が完了しました。");
 			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.update", e.getMessage());
 			userService.restoreUserDisplayFields(id, user);
+			Logger.log(CLASS_NAME, "updateUser: ユーザー更新処理中にエラーが発生しました。" + e.getMessage());
 			return "userDetail";
 		}
 		
@@ -251,10 +273,13 @@ public class UserController {
 	 */
 	@PostMapping("user/{id}/delete")
     public String deleteUser(@PathVariable final Long id) {
+		Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理開始");
         try {
             userService.deleteUser(id);
+            Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理が完了しました。");
             return "redirect:/api/users/user?page=0";
         } catch (IllegalArgumentException e) {
+        	Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理中にエラーが発生しました。" + e.getMessage());
         	return "redirect:/api/users/user?page=0";
         }
     }
@@ -280,7 +305,9 @@ public class UserController {
 			final Model model
 			) {
 		
+		Logger.log(CLASS_NAME, "changePassword: パスワード変更処理開始");
 		if(bindingResult.hasErrors()) {
+			Logger.log(CLASS_NAME, "changePassword: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			return "changePassword";
 		}
 		
@@ -292,6 +319,7 @@ public class UserController {
 			if(!errors.isEmpty()) {
 				for(String error: errors) {
 					bindingResult.reject("error.passwordChange", error);
+					Logger.log(CLASS_NAME, "changePassword: パスワード変更処理中にエラーが発生しました。" + error);
 				}
 				return "changePassword";
 			}
@@ -299,8 +327,10 @@ public class UserController {
 			final String newPassword = passwordChange.getNewPassword();
 			userService.savePassword(user, newPassword);
 			
+			Logger.log(CLASS_NAME, "changePassword: パスワード変更処理が完了しました。");
 			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, "changePassword: パスワード変更処理中にエラーが発生しました。" + e.getMessage());
 			return "redirect:/api/users/user?page=0";
 		}
 		
@@ -315,17 +345,21 @@ public class UserController {
 	 */
 	@PostMapping("/upload")
 	public String uploadCsvFile(@RequestParam("file") final MultipartFile file, final RedirectAttributes redirectAttributes) {
+		Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード処理開始");
 	    try {
 	    	final List<String> errors = userService.uploadCsvFile(file);
 	        
 	        if(!errors.isEmpty()) {
+	        	Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード処理中にエラーが発生しました。" + errors);
 	        	redirectAttributes.addFlashAttribute("CSV_errors", errors);	        	
 	        }
 	        
 	    } catch (Exception e) {
+	    	Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード中にエラーが発生しました。" + e.getMessage());
 	    	redirectAttributes.addFlashAttribute("errorMessage", "CSVファイルのインポート中にエラーが発生しました: " + e.getMessage());
 	    }
 	    
+	    Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード処理が完了しました。");
         return "redirect:/api/users/user?page=0";
 	}
 	
@@ -337,8 +371,10 @@ public class UserController {
 	 */
 	@PostMapping("/download")
 	public String downloadCsvFile(final Model model) {
+		Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード処理開始");
 		try {
 			userService.downloadCsvFile();
+			Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード処理が完了しました。");
 			return "redirect:/api/users/user?page=0";
 	    } catch (Exception e) {
 	        model.addAttribute("errorMessage", "CSVファイルのダウンロード中にエラーが発生しました: " + e.getMessage());
@@ -349,6 +385,7 @@ public class UserController {
 	        model.addAttribute("users", users); 
 	        model.addAttribute("userCount", userCount); 
 	        
+	        Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード中にエラーが発生しました。" + e.getMessage());
 	        return "user";
 	    }
 		

@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.data.relational.core.mapping.Table;
+
+import common.Logger;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -159,6 +161,9 @@ public class ToDo {
 	 * @return ToDo todo
 	 */
 	public ToDo mapToEntity(final Map<String, Object> map) {
+		
+		// テスト用
+//		Logger.log(this.getClass().getSimpleName(), "mapToEntity: map = " + map);
 		ToDo todo = new ToDo();
 		todo.setId((Long)map.get("id"));
 		todo.setUserId((Long)map.get("user_id"));

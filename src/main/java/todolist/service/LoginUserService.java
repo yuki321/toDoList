@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import common.Logger;
 import todolist.entity.User;
 import todolist.repository.UserRepository;
 
@@ -19,6 +20,7 @@ public class LoginUserService implements UserDetailsService  {
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		
+		Logger.log(this.getClass().getSimpleName(), "loadUserByUsername");
 		User user = userRepository.findByUserName(username)
 				.orElseThrow(() -> new UsernameNotFoundException("ユーザーは存在しません"));
 		String AUTHORITY = "ROLE_USER";

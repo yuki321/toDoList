@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import common.Logger;
+
 
 @Repository
 public class PasswordResetRepository implements PasswordResetRepositoryIF {
@@ -36,6 +38,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	@Override
 	@Transactional
 	public int updateResetTokenUsedAt(final String email) {
+		Logger.log(this.getClass().getSimpleName(), "updateResetTokenUsedAt: パスワードリセットトークンのused_atを更新します");
 		
 		final String sql = "UPDATE password_reset_tokens SET used_at = ? WHERE email=?";
 		return jdbc.update(sql, LocalDateTime.now(), email);
@@ -51,8 +54,9 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	@Override
 	@Transactional
 	public int resetPassword(final String email, final String newPassword) {
+		
+		Logger.log(this.getClass().getSimpleName(), "resetPassword: ユーザのパスワードを更新");
 		final String sql = "UPDATE users SET password = ? WHERE email=?";
-
 		final String encodedPassword = passwordEncoder.encode(newPassword);
 		return jdbc.update(sql, encodedPassword, email);
 	}
@@ -66,6 +70,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	@Override
 	@Transactional
 	public int deleteRecord(final String email) {
+		Logger.log(this.getClass().getSimpleName(), "deleteRecord: パスワードリセットトークンのレコードを削除");
 		final String sql = "DELETE FROM password_reset_tokens WHERE email=?";
 		return jdbc.update(sql, email);
 	}
@@ -79,6 +84,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */
 	@Override
 	public int selectCountByUserId(final String email) {
+		Logger.log(this.getClass().getSimpleName(), "selectCountByUserId: メールアドレスに紐づくパスワードリセットトークンの件数を取得");
 		final String sql = "SELECT COUNT(*) FROM password_reset_tokens WHERE email = ?";
 		return jdbc.queryForObject(sql, Integer.class, email);
 	}
@@ -89,6 +95,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */
 	@Override
 	public List<Map<String, Object>> findAllTokenHash() {
+		Logger.log(this.getClass().getSimpleName(), "findAllTokenHash: すべてのパスワードリセットトークンを取得");
 		final String sql = "SELECT token_hash, expires_at FROM password_reset_tokens";
 		return jdbc.queryForList(sql);
 	}
@@ -103,6 +110,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	@Override
 	public int insertRecord(final String email, final String tokenHash) {
 		
+		Logger.log(this.getClass().getSimpleName(), "insertRecord: パスワードリセットトークンのレコードを挿入");
 		// トークンの有効期限（時間単位）
 		final int EXPIRATION_HOUR_UNIT = 1; 
 		
@@ -128,7 +136,7 @@ public class PasswordResetRepository implements PasswordResetRepositoryIF {
 	 */	
 	@Override
 	public int deleteResetToken(final String email) {
-		
+		Logger.log(this.getClass().getSimpleName(), "deleteResetToken: メールアドレスに紐づくパスワードリセットトークンのレコードを削除");
 		final String sql = "DELETE FROM password_reset_tokens WHERE email = ?";
 		return jdbc.update(sql, email);
 	}

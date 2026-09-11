@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import common.Logger;
 import todolist.entity.PasswordReset;
 import todolist.entity.User;
 import todolist.repository.PasswordResetTokenRepositoryIF;
@@ -27,7 +28,7 @@ public class ValidateTokenController {
 	@Autowired
 	private MailServiceIF mailService;
 	
-	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
 	/**
 	 * トークン検証
@@ -39,13 +40,14 @@ public class ValidateTokenController {
 	@GetMapping("/validate_token")
 	public String validateToken(@RequestParam("token") final String token, @RequestParam("kind") final String kind, final Model model) {
 
+		Logger.log(CLASS_NAME, "validateToken: トークン検証開始");
 		final PasswordReset passwordReset = new PasswordReset();
 		
 		// トークンの検証
 		final boolean result = passwordReset.validatePasswordResetToken(token, passwordEncoder, passwordResetTokenRepository);
 		if(!result) {
 			model.addAttribute("errorMessage", "トークンが不正です");
-			
+			Logger.log(CLASS_NAME, "validateToken: トークンが不正です");
 			return "redirect:/login";  
 		}
 		

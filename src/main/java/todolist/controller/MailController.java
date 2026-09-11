@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import common.Logger;
 import jakarta.validation.Valid;
 import todolist.entity.PasswordChange;
 import todolist.entity.PasswordReset;
@@ -46,6 +47,8 @@ public class MailController {
 	@Autowired
 	private JdbcTemplate jdbc;
 	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
+	
 
 	// application.propertiesに設定した送信元メールアドレスを取得
 	@Value("${app.mail.from}")
@@ -55,8 +58,9 @@ public class MailController {
 	@PostMapping("/send")
 	public String sendMail(@ModelAttribute final PasswordChange mail, final BindingResult bindingResult, final Model model) {
 
+		Logger.log(CLASS_NAME, "sendMail: メール送信処理開始");
 		if (bindingResult.hasErrors()) {
-	        System.out.println("Validation Errors: " + bindingResult.getAllErrors());
+			Logger.log(CLASS_NAME, "sendMail: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 	        return "index"; 
 	    }
 		
@@ -79,7 +83,9 @@ public class MailController {
 			final Model model
 			) {
 		
+		Logger.log(CLASS_NAME, "resetPassword: パスワード再設定処理開始");
 		if(bindingResult.hasErrors()) {
+			Logger.log(CLASS_NAME, "resetPassword: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
 			return "resetPassword";
 		}
 		
@@ -103,7 +109,7 @@ public class MailController {
 		final boolean result = passwordResetService.passwordResetTransaction(rawToken, passwordReset.getNewPassword(), model);
 
 		if(!result) {
-
+			Logger.log(CLASS_NAME, "resetPassword: パスワードの再設定に失敗しました。");
 			model.addAttribute("error-reset-pw", "パスワードの再設定に失敗しました。");
 			return "error";  
 		}
@@ -118,6 +124,7 @@ public class MailController {
 	 */
 	@GetMapping("/complete")
 	public String resetComplete() {
+		Logger.log(CLASS_NAME, "resetComplete: パスワード再設定完了画面へ遷移");
 		return "complete";
 	}
 	
@@ -128,6 +135,7 @@ public class MailController {
 	 */
 	@GetMapping("/error")
 	public String moveToError() {
+		Logger.log(CLASS_NAME, "moveToError: エラー画面へ遷移");
 		return "error";
 	}
 	

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import common.Logger;
 import todolist.repository.ToDoRepositoryIF;
 import todolist.service.MailServiceIF;
 
@@ -21,6 +22,8 @@ public class MailScheduler {
 	@Autowired
 	private MailServiceIF mailService;
 	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
+	
 	
 	// 毎日6時間ごとに処理を実施
 	@Scheduled(cron = "${cron.task:0 0 */6 * * *}", zone = "Asia/Tokyo")
@@ -28,11 +31,11 @@ public class MailScheduler {
 //	@Scheduled(fixedDelay = 20000) // 20秒ごとに実行（テスト用）
 	public void sendTaskDeadlineEmail() {
 		
-		System.out.println("タスク期限切れ1週間前メール送信処理開始");
+		Logger.log(CLASS_NAME, "sendTaskDeadlineEmail: 期限切れ1週間前のタスクはありません");
 		List<Map<String, Object>> taskListWeek = toDoRepository.getTasksDueInOneWeek();
 		
 		if(taskListWeek.isEmpty()) {
-			System.out.println("期限切れ1週間前のタスクはありません");
+			Logger.log(CLASS_NAME, "sendTaskDeadlineEmail: 期限切れ1週間前のタスクはありません");
 			return;
 		}
 		
@@ -42,7 +45,7 @@ public class MailScheduler {
 
 	            String deadline = deadlineConvert(Objects.toString(task.get("deadline"), ""));
 
-	            System.out.println("タスク期限切れタスク %s %s %s".formatted(email, taskName, deadline));
+				Logger.log(CLASS_NAME, "sendTaskDeadlineEmail: タスク期限切れタスク %s %s %s".formatted(email, taskName, deadline));
 	            mailService.sendTaskDeadlineEmail(email, taskName, deadline);
 	        }
 	    });

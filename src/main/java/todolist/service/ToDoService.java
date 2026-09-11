@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import common.Logger;
 import todolist.entity.ToDo;
 import todolist.repository.ToDoRepositoryIF;
 
@@ -32,6 +33,7 @@ public class ToDoService implements ToDoServiceIF {
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
+		Logger.log(this.getClass().getSimpleName(), "findAllToDo: ToDo全件取得");
 		return toDoRepository.findAllToDo(userDetails)
 				.stream()
 				.map(m -> toDo.mapToEntity(m))
@@ -39,7 +41,7 @@ public class ToDoService implements ToDoServiceIF {
 	}
 	
 	/**
-	 * 完了済みToDoの全件取得
+	 * 完了ToDoの全件取得
 	 * @param UserDetails userDetails
 	 * @return List<ToDo>
 	 */
@@ -47,6 +49,7 @@ public class ToDoService implements ToDoServiceIF {
 	@Transactional(readOnly = true)
 	public List<ToDo> findAllCompletedToDo(@AuthenticationPrincipal final UserDetails userDetails){
 		
+		Logger.log(this.getClass().getSimpleName(), "findAllCompletedToDo: 完了ToDo全件取得");
 		return toDoRepository.findAllCompletedToDo(userDetails)
 				.stream()
 				.map(m -> toDo.mapToEntity(m))
@@ -62,6 +65,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean completeTask(final ToDo todo) throws DataAccessException {
+		Logger.log(this.getClass().getSimpleName(), "completeTask: タスク完了処理");
 		return toDoRepository.completeTask(todo) > 0;
 	}
 	
@@ -74,6 +78,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean undoCompletedTask(final ToDo todo) throws DataAccessException {
+		Logger.log(this.getClass().getSimpleName(), "undoCompletedTask: タスク完了取消処理");
 		return toDoRepository.undoCompletedTask(todo) > 0;
 	}
 	
@@ -86,6 +91,7 @@ public class ToDoService implements ToDoServiceIF {
 	@Override
 	@Transactional(readOnly = true)
 	public Map<String, Object> getUserInfo(@AuthenticationPrincipal final UserDetails userDetails){
+		Logger.log(this.getClass().getSimpleName(), "getUserInfo: ログインユーザー情報取得処理");
 		return toDoRepository.getUserInfo(userDetails);
 	}
 	
@@ -97,6 +103,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean insertRecord(final ToDo todo) {
+		Logger.log(this.getClass().getSimpleName(), "insertRecord: ToDo作成処理");
 		return toDoRepository.insertRecord(todo) > 0;
 	}
 	
@@ -109,6 +116,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean updateRecord(final ToDo todo) throws DataAccessException {
+		Logger.log(this.getClass().getSimpleName(), "updateRecord: ToDo編集処理");
 		return toDoRepository.updateRecord(todo) > 0;
 	}
 	
@@ -120,6 +128,7 @@ public class ToDoService implements ToDoServiceIF {
 	 */
 	@Override
 	public boolean deleteRecord(final Long id) throws DataAccessException {
+		Logger.log(this.getClass().getSimpleName(), "deleteRecord: ToDo削除処理");
 		return toDoRepository.deleteRecord(id) > 0;
 	}
 		
