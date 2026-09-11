@@ -38,29 +38,29 @@ cron.task=0 0 */6 * * *
 #cron.task=*/1 * * * * *
 
 ### ログ出力
-# Webリクエストの詳細（HTTPメソッド、URL、パラメータなど）を出力
+#### Webリクエストの詳細（HTTPメソッド、URL、パラメータなど）を出力
 logging.level.org.springframework.web=DEBUG
 
-# データベース操作（SQL文）のログを出力（JPA/Hibernate使用時）
+#### データベース操作（SQL文）のログを出力（JPA/Hibernate使用時）
 logging.level.org.hibernate.SQL=DEBUG
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 
-# 現在書き込み中のログファイル名
+#### 現在書き込み中のログファイル名
 logging.file.name=logs/app.log
 logging.file.path=logs
 
-# ローテーション（退避）時のファイル名パターン（日時を付与）
-# 例: logs/app-2026-09-12.0.log などのように保存されます
-# 日付が変わった時のログファイル退避パターン (%d{yyyy-MM-dd} で日付ごとに分割)
+#### ローテーション（退避）時のファイル名パターン（日時を付与）
+#### 例: logs/app-2026-09-12.0.log などのように保存されます
+#### 日付が変わった時のログファイル退避パターン (%d{yyyy-MM-dd} で日付ごとに分割)
 logging.logback.rollingpolicy.file-name-pattern=logs/app-%d{yyyy-MM-dd}.%i.log
 
-# 1ファイルあたりの最大サイズ（到達すると自動で新しいファイルが作成される）
+#### 1ファイルあたりの最大サイズ（到達すると自動で新しいファイルが作成される）
 logging.logback.rollingpolicy.max-file-size=10MB
 
-# 保存しておく過去ログファイルの最大世代数（日・世代）
+#### 保存しておく過去ログファイルの最大世代数（日・世代）
 logging.logback.rollingpolicy.max-history=30
 
-# ログアーカイブの総容量上限
+#### ログアーカイブの総容量上限
 logging.logback.rollingpolicy.total-size-cap=1GB
 
 
