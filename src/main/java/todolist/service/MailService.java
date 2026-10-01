@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.entity.MailSendFactory;
 import todolist.entity.PasswordChange;
 import todolist.entity.PasswordReset;

@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.repository.PasswordResetRepositoryIF;
 import todolist.repository.PasswordResetTokenRepositoryIF;
 

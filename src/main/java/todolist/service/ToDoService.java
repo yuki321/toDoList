@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.entity.ToDo;
 import todolist.repository.ToDoRepositoryIF;
 

@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.entity.ToDo;
 import todolist.service.UserService;
 

@@ -3,7 +3,7 @@ package todolist.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.service.MailService;
 
 public class MailSendFactory {

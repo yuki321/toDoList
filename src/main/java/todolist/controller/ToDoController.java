@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import common.Logger;
+import todolist.common.Logger;
 import jakarta.validation.Valid;
 import todolist.entity.PasswordChange;
 import todolist.entity.ToDo;

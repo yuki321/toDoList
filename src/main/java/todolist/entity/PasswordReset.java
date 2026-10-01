@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import common.Logger;
+import todolist.common.Logger;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

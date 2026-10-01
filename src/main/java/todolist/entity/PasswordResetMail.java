@@ -1,6 +1,6 @@
 package todolist.entity;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.service.MailService;
 
 public class PasswordResetMail implements MailSend {

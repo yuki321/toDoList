@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import org.springframework.data.relational.core.mapping.Table;
 
-import common.Logger;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;

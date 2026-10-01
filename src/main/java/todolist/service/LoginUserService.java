@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import common.Logger;
+import todolist.common.Logger;
 import todolist.entity.User;
 import todolist.repository.UserRepository;
 
