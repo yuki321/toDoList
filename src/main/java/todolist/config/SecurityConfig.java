@@ -52,8 +52,14 @@ public class SecurityConfig {
             .deleteCookies("JSESSIONID")
             .permitAll()
             
-        );
-		
+        )
+        .sessionManagement(session -> session
+        		// 同時ログインを1に制限
+				.maximumSessions(1)
+				// trueの場合、既存のセッションが有効な場合、新しいログインを拒否する
+				// falseの場合、既存のセッションを無効化して新しいログインを許可する
+				.maxSessionsPreventsLogin(false) 
+				.expiredUrl("/login")); // セッションが期限切れになった場合のリダイレクト先
 		
 		return http.build();
 	}
@@ -68,6 +74,5 @@ public class SecurityConfig {
 		);
     }
 	
-	
-	
 }
+
