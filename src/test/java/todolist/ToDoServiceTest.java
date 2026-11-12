@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import todolist.entity.ToDo;
 import todolist.repository.ToDoRepositoryIF;
 import todolist.service.ToDoService;
+import todolist.service.ToDoUpdateService;
 
 @ExtendWith(MockitoExtension.class)
 class ToDoServiceTest {
@@ -33,6 +34,9 @@ class ToDoServiceTest {
 
     @InjectMocks
     private ToDoService toDoService;
+    
+    @InjectMocks
+    private ToDoUpdateService toDoUpdateService;
 
     private ToDo toDo;
     
@@ -107,7 +111,7 @@ class ToDoServiceTest {
         void testCompleteTask_Success() {
             when(toDoRepository.completeTask(toDo)).thenReturn(1);
 
-            boolean result = toDoService.completeTask(toDo);
+            boolean result = toDoUpdateService.completeTask(toDo);
 
 			assertThat(result).isTrue();
             verify(toDoRepository, times(1)).completeTask(toDo);
@@ -118,7 +122,7 @@ class ToDoServiceTest {
         void testCompleteTask_Failure() {
             when(toDoRepository.completeTask(toDo)).thenReturn(0);
 
-            boolean result = toDoService.completeTask(toDo);
+            boolean result = toDoUpdateService.completeTask(toDo);
 
             assertThat(result).isFalse();
             verify(toDoRepository, times(1)).completeTask(toDo);
@@ -133,7 +137,7 @@ class ToDoServiceTest {
         void testUndoCompletedTask_Success() {
             when(toDoRepository.undoCompletedTask(toDo)).thenReturn(1);
 
-            boolean result = toDoService.undoCompletedTask(toDo);
+            boolean result = toDoUpdateService.undoCompletedTask(toDo);
 
             assertThat(result).isTrue();
             verify(toDoRepository, times(1)).undoCompletedTask(toDo);
@@ -144,7 +148,7 @@ class ToDoServiceTest {
         void testUndoCompletedTask_Failure() {
             when(toDoRepository.undoCompletedTask(toDo)).thenReturn(0);
 
-            boolean result = toDoService.undoCompletedTask(toDo);
+            boolean result = toDoUpdateService.undoCompletedTask(toDo);
 
             assertThat(result).isFalse();
             verify(toDoRepository, times(1)).undoCompletedTask(toDo);
@@ -175,7 +179,7 @@ class ToDoServiceTest {
         void testInsertRecord_Success() {
             when(toDoRepository.insertRecord(toDo)).thenReturn(1);
 
-            boolean result = toDoService.insertRecord(toDo);
+            boolean result = toDoUpdateService.insertRecord(toDo);
 
             assertThat(result).isTrue();
             verify(toDoRepository, times(1)).insertRecord(toDo);
@@ -186,7 +190,7 @@ class ToDoServiceTest {
         void testInsertRecord_Failure() {
             when(toDoRepository.insertRecord(toDo)).thenReturn(0);
 
-            boolean result = toDoService.insertRecord(toDo);
+            boolean result = toDoUpdateService.insertRecord(toDo);
 
             assertThat(result).isFalse();
             verify(toDoRepository, times(1)).insertRecord(toDo);
@@ -201,7 +205,7 @@ class ToDoServiceTest {
         void testUpdateRecord_Success() {
             when(toDoRepository.updateRecord(toDo)).thenReturn(1);
 
-            boolean result = toDoService.updateRecord(toDo);
+            boolean result = toDoUpdateService.updateRecord(toDo);
 
             assertThat(result).isTrue();
             verify(toDoRepository, times(1)).updateRecord(toDo);
@@ -212,7 +216,7 @@ class ToDoServiceTest {
         void testUpdateRecord_Failure() {
             when(toDoRepository.updateRecord(toDo)).thenReturn(0);
 
-            boolean result = toDoService.updateRecord(toDo);
+            boolean result = toDoUpdateService.updateRecord(toDo);
 
             assertThat(result).isFalse();
             verify(toDoRepository, times(1)).updateRecord(toDo);
@@ -229,7 +233,7 @@ class ToDoServiceTest {
         void testDeleteRecord_Success() {
             when(toDoRepository.deleteRecord(targetId)).thenReturn(1);
 
-            boolean result = toDoService.deleteRecord(targetId);
+            boolean result = toDoUpdateService.deleteRecord(targetId);
 
             assertThat(result).isTrue();
             verify(toDoRepository, times(1)).deleteRecord(targetId);
@@ -240,7 +244,7 @@ class ToDoServiceTest {
         void testDeleteRecord_Failure() {
             when(toDoRepository.deleteRecord(targetId)).thenReturn(0);
 
-            boolean result = toDoService.deleteRecord(targetId);
+            boolean result = toDoUpdateService.deleteRecord(targetId);
 
             assertThat(result).isFalse();
             verify(toDoRepository, times(1)).deleteRecord(targetId);

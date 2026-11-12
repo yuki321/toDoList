@@ -24,6 +24,7 @@ import todolist.entity.PasswordChange;
 import todolist.entity.ToDo;
 import todolist.entity.User;
 import todolist.service.ToDoServiceIF;
+import todolist.service.ToDoUpdateServiceIF;
 import todolist.service.UserServiceIF;
 import todolist.service.UserUpdateServiceIF;
 
@@ -33,6 +34,9 @@ public class ToDoController {
 
 	@Autowired
 	private ToDoServiceIF toDoService;
+	
+	@Autowired
+	private ToDoUpdateServiceIF toDoUpdateService;
 	
 	@Autowired
 	private UserServiceIF userService;
@@ -108,7 +112,7 @@ public class ToDoController {
 		model.addAttribute("todo", todo);
 		
 		try {
-			final boolean result = toDoService.completeTask(todo);
+			final boolean result = toDoUpdateService.completeTask(todo);
 			if (result) {
 				Logger.log(CLASS_NAME, "getTaskCompleted: タスク完了処理成功");
 			} else {
@@ -148,7 +152,7 @@ public class ToDoController {
 		model.addAttribute("todo", todo);
 		
 		try {
-			final boolean result = toDoService.undoCompletedTask(todo);
+			final boolean result = toDoUpdateService.undoCompletedTask(todo);
 			if (result) {
 				Logger.log(CLASS_NAME, "undoCompletedTask: タスク完了の取り消し処理成功");
 			} else {
@@ -335,7 +339,7 @@ public class ToDoController {
 		todo.setStatus(true);
 
 		try {
-			final boolean result = toDoService.insertRecord(todo);
+			final boolean result = toDoUpdateService.insertRecord(todo);
 
 			if (result) {
 				Logger.log(CLASS_NAME, "createToDo: タスク作成処理成功");
@@ -382,7 +386,7 @@ public class ToDoController {
 		model.addAttribute("todo", todo);
 		
 		try {
-			final boolean result = toDoService.updateRecord(todo);
+			final boolean result = toDoUpdateService.updateRecord(todo);
 			if (result) {
 				Logger.log(CLASS_NAME, "editToDo: タスク編集処理成功");
 			} else {
@@ -409,7 +413,7 @@ public class ToDoController {
 		
 		Logger.log(CLASS_NAME, "deleteToDo: タスク削除処理開始");
 		try {
-			toDoService.deleteRecord(Long.parseLong(id));
+			toDoUpdateService.deleteRecord(Long.parseLong(id));
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
 			Logger.log(CLASS_NAME, e + " [Error] deleteToDo: タスク削除処理失敗");
