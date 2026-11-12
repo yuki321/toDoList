@@ -25,6 +25,7 @@ import todolist.entity.ToDo;
 import todolist.entity.User;
 import todolist.service.ToDoServiceIF;
 import todolist.service.UserServiceIF;
+import todolist.service.UserUpdateServiceIF;
 
 @Controller
 @RequestMapping("/")
@@ -35,6 +36,9 @@ public class ToDoController {
 	
 	@Autowired
 	private UserServiceIF userService;
+	
+	@Autowired
+	private UserUpdateServiceIF userUpdateService;
 	
 	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
@@ -266,7 +270,7 @@ public class ToDoController {
 			}
 			
 			final String newPassword = passwordChange.getNewPassword();
-			userService.savePassword(user, newPassword);
+			userUpdateService.savePassword(user, newPassword);
 			
 			return "redirect:/";
 		}catch(IllegalArgumentException e) {
@@ -289,7 +293,7 @@ public class ToDoController {
 
 		Logger.log(CLASS_NAME, "deleteUserAccount: ユーザーアカウント削除処理開始");
 		try {
-            userService.deleteUser(id);
+            userUpdateService.deleteUser(id);
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
         	Logger.log(CLASS_NAME, e + " [Error] deleteUserAccount: ユーザーアカウント削除処理失敗");

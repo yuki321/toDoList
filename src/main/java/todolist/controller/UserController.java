@@ -31,6 +31,7 @@ import todolist.entity.PasswordChange;
 import todolist.entity.User;
 import todolist.service.ToDoServiceIF;
 import todolist.service.UserServiceIF;
+import todolist.service.UserUpdateServiceIF;
 
 @Controller
 @RequestMapping("/api/users")
@@ -38,6 +39,9 @@ public class UserController {
 
 	@Autowired
 	private UserServiceIF userService;
+	
+	@Autowired
+	private UserUpdateServiceIF userUpdateService;
 	
 	@Autowired
 	private ToDoServiceIF toDoService;
@@ -216,7 +220,7 @@ public class UserController {
 		}
 
 		try {
-			final User createdUser = userService.createUser(user);
+			final User createdUser = userUpdateService.createUser(user);
 			
 			model.addAttribute(createdUser);
 			Logger.log(CLASS_NAME, "createUser: ユーザー作成処理が完了しました。");
@@ -251,7 +255,7 @@ public class UserController {
 		}
 
 		try {
-			final User updatedUser = userService.updateUser(id, user);
+			final User updatedUser = userUpdateService.updateUser(id, user);
 			model.addAttribute("user", updatedUser);
 			
 			Logger.log(CLASS_NAME, "updateUser: ユーザー更新処理が完了しました。");
@@ -275,7 +279,7 @@ public class UserController {
     public String deleteUser(@PathVariable final Long id) {
 		Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理開始");
         try {
-            userService.deleteUser(id);
+            userUpdateService.deleteUser(id);
             Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理が完了しました。");
             return "redirect:/api/users/user?page=0";
         } catch (IllegalArgumentException e) {
@@ -325,7 +329,7 @@ public class UserController {
 			}
 			
 			final String newPassword = passwordChange.getNewPassword();
-			userService.savePassword(user, newPassword);
+			userUpdateService.savePassword(user, newPassword);
 			
 			Logger.log(CLASS_NAME, "changePassword: パスワード変更処理が完了しました。");
 			return "redirect:/api/users/user?page=0";
@@ -347,7 +351,7 @@ public class UserController {
 	public String uploadCsvFile(@RequestParam("file") final MultipartFile file, final RedirectAttributes redirectAttributes) {
 		Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード処理開始");
 	    try {
-	    	final List<String> errors = userService.uploadCsvFile(file);
+	    	final List<String> errors = userUpdateService.uploadCsvFile(file);
 	        
 	        if(!errors.isEmpty()) {
 	        	Logger.log(CLASS_NAME, "[Error] uploadCsvFile: CSVファイルのアップロード処理中にエラーが発生しました。" + errors);
@@ -373,7 +377,7 @@ public class UserController {
 	public String downloadCsvFile(final Model model) {
 		Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード処理開始");
 		try {
-			userService.downloadCsvFile();
+			userUpdateService.downloadCsvFile();
 			Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード処理が完了しました。");
 			return "redirect:/api/users/user?page=0";
 	    } catch (Exception e) {

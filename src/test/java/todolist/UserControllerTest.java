@@ -31,6 +31,7 @@ import todolist.controller.UserController;
 import todolist.entity.User;
 import todolist.service.ToDoService;
 import todolist.service.UserService;
+import todolist.service.UserUpdateService;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -51,6 +52,9 @@ public class UserControllerTest {
 
 	@Mock
 	private UserService userService;
+	
+	@Mock
+	private UserUpdateService userUpdateService;
 	
 	@Mock
 	private User user;
@@ -175,7 +179,7 @@ public class UserControllerTest {
 		@DisplayName("userCreate　のテスト")
 		void userCreateTest_Success() throws Exception {
 			
-			when(userService.createUser(user1)).thenReturn(user1);
+			when(userUpdateService.createUser(user1)).thenReturn(user1);
 	        String viewName = userController.userCreate("true", model);
 	        
 	        // 検証

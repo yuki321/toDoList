@@ -30,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import todolist.entity.User;
 import todolist.repository.UserRepository;
 import todolist.service.UserService;
+import todolist.service.UserUpdateService;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -42,6 +43,9 @@ public class UserServiceTest {
 	
     @InjectMocks
     private UserService userService;
+    
+    @InjectMocks
+    private UserUpdateService userUpdateService;
         
     
 	@Test
@@ -174,7 +178,7 @@ public class UserServiceTest {
 	    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 	    // 3. テスト対象の実行
-	    User result = userService.createUser(inputUser);
+	    User result = userUpdateService.createUser(inputUser);
 	    
 	    // 4. アサーション（結果検証）
 		assertNotNull(result);
@@ -216,7 +220,7 @@ public class UserServiceTest {
 	    
 	    IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
-            () -> userService.createUser(inputUser)
+            () -> userUpdateService.createUser(inputUser)
         );
 	    
 	    
@@ -246,7 +250,7 @@ public class UserServiceTest {
 	    
 	    IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
-            () -> userService.createUser(inputUser)
+            () -> userUpdateService.createUser(inputUser)
         );
 	    
 	    
