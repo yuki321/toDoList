@@ -1,11 +1,9 @@
 package todolist.controller;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -26,10 +24,10 @@ import todolist.common.Logger;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import todolist.entity.Pager;
 import todolist.entity.PasswordChange;
 import todolist.entity.User;
 import todolist.service.ToDoServiceIF;
+import todolist.service.UserScenario;
 import todolist.service.UserServiceIF;
 import todolist.service.UserUpdateServiceIF;
 
@@ -46,6 +44,9 @@ public class UserController {
 	@Autowired
 	private ToDoServiceIF toDoService;
 	
+	@Autowired
+	private UserScenario userScenario;
+	
 	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
 	/**
@@ -57,38 +58,15 @@ public class UserController {
 	 * @return String
 	 */
 	@GetMapping("user")
-	public String getAllUsers(@AuthenticationPrincipal final UserDetails userDetails, final Model model, 
+	public String getAllUsers(
+			@AuthenticationPrincipal final UserDetails userDetails, 
+			final Model model, 
 			@PageableDefault(page = 0, size = 10) final Pageable pageable, 
 			@RequestParam(name = "page") final int page){
 		
 		Logger.log(CLASS_NAME, "getAllUsers: ユーザー一覧表示");
 		
-		final Map<String, Object> userIfo = toDoService.getUserInfo(userDetails);
-		final String role = (String) userIfo.get("role");
-		
-		if(!"Admin".equals(role)) {
-			return "redirect:/";
-		}
-		
-		final List<User> users = userService.getAllUsers();
-		final Page<User> usersPerPage = userService.getAllUsers(pageable);
-		
-		// 表示するユーザーデータ
-		model.addAttribute("users", usersPerPage.getContent());
-		model.addAttribute("userCount", users.size());
-		model.addAttribute("user", new User());
-
-		// ページャー関連のデータ
-		final Pager pager = new Pager();
-		int topIndex = pager.getTopIndex(page, usersPerPage.getSize());
-		int lastIndex = pager.getLastIndex(page, usersPerPage.getSize());
-		
-		model.addAttribute("pages", usersPerPage);
-		model.addAttribute("topIndex", topIndex);
-		model.addAttribute("lastIndex", lastIndex);
-		
-		// データ件数・ページャーの表示
-		model.addAttribute("display", true);
+		userScenario.getAllUsersData(userDetails, model, pageable, page);
 		
 		return "user";
 	}
@@ -98,37 +76,18 @@ public class UserController {
 	 * ユーザー検索
 	 * @param User user
 	 * @param Model model
+	 * @param Pageable pageable
 	 * @return
 	 */
 	@GetMapping("search")
-	public String searchUsers(@ModelAttribute("user") final User user, final Model model
-			, @PageableDefault(page = 0, size = 10) final Pageable pageable){
+	public String searchUsers(
+			@ModelAttribute("user") final User user, 
+			final Model model, 
+			@PageableDefault(page = 0, size = 10) final Pageable pageable){
 
 		Logger.log(CLASS_NAME, "searchUsers: ユーザー検索");
 		
-		final Page<User> users = userService.searchUsers(user, pageable);
-		final int userCount = users.getContent().size();
-
-
-		if(userCount < 0) return "redirect:/api/users/user?page=0";
-
-		model.addAttribute("users", users.getContent());
-		model.addAttribute("user", new User());
-		model.addAttribute("userCount", userCount);
-		
-		
-		// ページャー関連のデータ
-		final Pager pager = new Pager();
-		final int topIndex = pager.getTopIndex(0, users.getSize());
-		final int lastIndex = pager.getLastIndex(0, users.getSize());
-		
-		model.addAttribute("pages", users);
-		model.addAttribute("topIndex", topIndex);
-		model.addAttribute("lastIndex", lastIndex);
-		
-		// データ件数・ページャーの非表示
-		model.addAttribute("display", false);
-		
+		userScenario.searchUsersData(user, model, pageable);
 		
 		return "user";
 	}
