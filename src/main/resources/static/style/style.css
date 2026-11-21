@@ -323,6 +323,13 @@ select {
 	background-color: white;
 }
 
+#profile-image-list {
+	width: 30px;
+	height: 30px;
+	padding: 20px;
+	background-color: white;
+}
+
 /** バリデーションエラー **/
 .error {
 	display: block;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import todolist.common.Logger;
 import todolist.entity.Pager;
+import todolist.entity.ProfileImage;
 import todolist.entity.User;
 import todolist.repository.UserRepository;
 
@@ -31,6 +34,15 @@ public class UserScenario {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Value("${aws.s3.region}")
+	private String region;
+	
+	@Value("${aws.s3.bucket-name}")
+	private String bucketName;
+	
+	@Value("${aws.s3.default-image-key}")
+	private String objectKey;
 	
 	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
@@ -54,6 +66,21 @@ public class UserScenario {
 		
 		if(!role.equals("Admin")) {
 			return "redirect:/";
+		}
+		
+		/**
+		 * TODO: アップロードした画像を取得できた場合、objectKeyをユーザーのプロフィール画像のキーに置き換える
+		 */
+		/**
+		 * FIXME: プリサインドURLの生成に失敗した場合の処理を追加する必要があります。
+		 */
+		ProfileImage profileImage = new ProfileImage();
+		
+		String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
+		if(presignedUrl != null) {
+			model.addAttribute("profileImageUrl", presignedUrl);
+		} else {
+			Logger.log(CLASS_NAME, "[Error] getUserById: プリサインドURLの生成に失敗しました。");
 		}
 		
 		final List<User> users = userService.getAllUsers();

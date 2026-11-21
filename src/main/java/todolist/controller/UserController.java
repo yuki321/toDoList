@@ -128,6 +128,12 @@ public class UserController {
 				ProfileImage profileImage = new ProfileImage();
 				
 				// TODO 今後この部分は修正
+				/**
+				 * TODO: アップロードした画像を取得できた場合、objectKeyをユーザーのプロフィール画像のキーに置き換える
+				 */
+				/**
+				 * FIXME: プリサインドURLの生成に失敗した場合の処理を追加する必要があります。
+				 */
 				String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
 				if(presignedUrl != null) {
 					model.addAttribute("profileImageUrl", presignedUrl);
