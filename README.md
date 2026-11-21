@@ -64,6 +64,13 @@ logging.logback.rollingpolicy.max-history=30
 logging.logback.rollingpolicy.total-size-cap=1GB
 
 
+# AWS関連（ローカル）
+## S3
+.aws/credentialsにアクセスキーとシークレットキーを記載
+aws_access_key_id=xxxxx
+aws_secret_access_key=xxxxx
+
+
 
 
 
