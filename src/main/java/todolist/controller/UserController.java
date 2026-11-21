@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import todolist.entity.PasswordChange;
+import todolist.entity.ProfileImage;
 import todolist.entity.User;
 import todolist.service.ToDoServiceIF;
 import todolist.service.UserScenario;
@@ -47,6 +49,16 @@ public class UserController {
 	@Autowired
 	private UserScenario userScenario;
 	
+	@Value("${aws.s3.region}")
+	private String region;
+	
+	@Value("${aws.s3.bucket-name}")
+	private String bucketName;
+	
+	@Value("${aws.s3.default-image-key}")
+	private String objectKey;
+	
+		
 	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
 	/**
@@ -113,6 +125,16 @@ public class UserController {
 			final Optional<User> user = userService.getUserById(id);
 			
 			if(user.isPresent()) {
+				ProfileImage profileImage = new ProfileImage();
+				
+				// TODO 今後この部分は修正
+				String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
+				if(presignedUrl != null) {
+					model.addAttribute("profileImageUrl", presignedUrl);
+				} else {
+					Logger.log(CLASS_NAME, "[Error] getUserById: プリサインドURLの生成に失敗しました。");
+				}
+				
 				model.addAttribute("user", user.orElse(null));
 	            Logger.log(CLASS_NAME, "getUserById: 指定したIDのユーザーを取得しました。");
 				return "userDetail";

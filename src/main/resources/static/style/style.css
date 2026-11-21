@@ -315,6 +315,14 @@ select {
 	font-weight: bold;
 }
 
+#profile-image {
+	width: 200px;
+	height: 200px;
+	margin: 20px;
+	padding: 20px;
+	background-color: white;
+}
+
 /** バリデーションエラー **/
 .error {
 	display: block;
