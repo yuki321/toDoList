@@ -74,6 +74,7 @@ public class UserScenario {
 		/**
 		 * FIXME: プリサインドURLの生成に失敗した場合の処理を追加する必要があります。
 		 */
+		// S3から画像URLを取得
 		ProfileImage profileImage = new ProfileImage();
 		
 		String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);

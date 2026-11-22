@@ -8,17 +8,18 @@ import jakarta.persistence.Table;
 
 import java.time.Duration;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import todolist.common.Logger;
 
 @Entity
 @Table(name = "users")
 public class ProfileImage {
 
+	private final String CLASS_NAME = this.getClass().getSimpleName();
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -41,6 +42,11 @@ public class ProfileImage {
 	            .build();
 
 	        return presigner.presignGetObject(presignRequest).url().toString();
+	    
+	    }catch (Exception e) {
+			Logger.log(CLASS_NAME, "[Error] ProfileImage: " + e.getMessage());
+	        e.printStackTrace();
+	        return null;
 	    }
 	}
 
