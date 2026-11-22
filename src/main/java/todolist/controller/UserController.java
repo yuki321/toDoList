@@ -58,7 +58,7 @@ public class UserController {
 	private String bucketName;
 	
 	@Value("${aws.s3.default-image-key}")
-	private String objectKey;
+	private String objectKey = "defaultUserImage.png";
 	
 		
 	private final String CLASS_NAME = this.getClass().getSimpleName();
@@ -135,15 +135,18 @@ public class UserController {
 	             * DBにS3 image URLが保存されている場合はそれを使用し、
 	             * 保存されていない場合はS3から署名付きURLを生成して使用する
 	             */
-	            ProfileImage profileImage = new ProfileImage();	
-	            String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
-
-	            Logger.log(CLASS_NAME, "__objectKey: " + objectKey);	            
 
 	            // DBにS3 image URLが保存されている場合はそれを使用する
-	            String S3ImageUrlFromDb = user.get().getS3ImageUrl();
-	            if(S3ImageUrlFromDb != null && !S3ImageUrlFromDb.isEmpty()) {
-
+	            String S3ImageUrlFromDb = userService.getS3ImageUrlByUserId(id);
+	            Logger.log(CLASS_NAME, "__S3ImageUrlFromDb: " + S3ImageUrlFromDb);
+	            Logger.log(CLASS_NAME, "__id: " + id);
+	            Logger.log(CLASS_NAME, "__objectKey: " + objectKey);	            
+	            
+	            ProfileImage profileImage = new ProfileImage();	
+	            String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
+	            
+	            if(S3ImageUrlFromDb != null) {
+	            	
 	            	Logger.log(CLASS_NAME, "__presignedUrl: " + presignedUrl);
 	            	
 					objectKey = "images/" + id + "/" + S3ImageUrlFromDb;
@@ -152,6 +155,10 @@ public class UserController {
 	            	Logger.log(CLASS_NAME, "getUserById: DBにS3 image URLが保存されているため、それを使用します。");
 	            	Logger.log(CLASS_NAME, "getUserById: presignedUrl=" + presignedUrl);
 	            	model.addAttribute("profileImageUrl", presignedUrl);
+	            	
+	            	// デフォルト設定に戻す（そうしないと他の画像もアップロードした画像が表示される）
+	            	objectKey = "defaultUserImage.png";
+	            	
 	            	return "userDetail";
 	            }
 	            
