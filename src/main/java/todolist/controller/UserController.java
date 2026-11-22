@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ import todolist.entity.ProfileImage;
 import todolist.entity.User;
 import todolist.service.ToDoServiceIF;
 import todolist.service.UserScenario;
+import todolist.service.UserScenario.PresignedUrlResponse;
 import todolist.service.UserServiceIF;
 import todolist.service.UserUpdateServiceIF;
 
@@ -125,24 +127,43 @@ public class UserController {
 			final Optional<User> user = userService.getUserById(id);
 			
 			if(user.isPresent()) {
-				ProfileImage profileImage = new ProfileImage();
-				
-				// TODO 今後この部分は修正
-				/**
-				 * TODO: アップロードした画像を取得できた場合、objectKeyをユーザーのプロフィール画像のキーに置き換える
-				 */
-				/**
-				 * FIXME: プリサインドURLの生成に失敗した場合の処理を追加する必要があります。
-				 */
-				String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
-				if(presignedUrl != null) {
-					model.addAttribute("profileImageUrl", presignedUrl);
-				} else {
-					Logger.log(CLASS_NAME, "[Error] getUserById: プリサインドURLの生成に失敗しました。");
-				}
 				
 				model.addAttribute("user", user.orElse(null));
 	            Logger.log(CLASS_NAME, "getUserById: 指定したIDのユーザーを取得しました。");
+
+	            /**
+	             * DBにS3 image URLが保存されている場合はそれを使用し、
+	             * 保存されていない場合はS3から署名付きURLを生成して使用する
+	             */
+	            ProfileImage profileImage = new ProfileImage();	
+	            String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
+
+	            Logger.log(CLASS_NAME, "__objectKey: " + objectKey);	            
+
+	            // DBにS3 image URLが保存されている場合はそれを使用する
+	            String S3ImageUrlFromDb = user.get().getS3ImageUrl();
+	            if(S3ImageUrlFromDb != null && !S3ImageUrlFromDb.isEmpty()) {
+
+	            	Logger.log(CLASS_NAME, "__presignedUrl: " + presignedUrl);
+	            	
+					objectKey = "images/" + id + "/" + S3ImageUrlFromDb;
+					presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
+
+	            	Logger.log(CLASS_NAME, "getUserById: DBにS3 image URLが保存されているため、それを使用します。");
+	            	Logger.log(CLASS_NAME, "getUserById: presignedUrl=" + presignedUrl);
+	            	model.addAttribute("profileImageUrl", presignedUrl);
+	            	return "userDetail";
+	            }
+	            
+	            if(presignedUrl != null) {
+	            	
+	            	Logger.log(CLASS_NAME, "getUserById: DBにS3 image URLが保存されていないため、S3から署名付きURLを生成して使用します。");
+	            	Logger.log(CLASS_NAME, "getUserById: presignedUrl=" + presignedUrl);
+	            	model.addAttribute("profileImageUrl", presignedUrl);
+	            } else {
+	            	Logger.log(CLASS_NAME, "[Error] getUserById: プリサインドURLの生成に失敗しました。");
+	            }
+	            
 				return "userDetail";
 			}else {
 				Logger.log(CLASS_NAME, "[Error] getUserById: 指定したIDのユーザーが存在しません。");
@@ -381,6 +402,61 @@ public class UserController {
 	    }
 		
 	}
+	
+	
+	/**
+	 * プロフィール画像アップロード前のAPI
+	 * フロントエンドに「アップロード用URL」と「後でDB保存に使うキー」を返す
+	 * @param Long userId
+	 * @param MultipartFile file
+	 * @param RedirectAttributes redirectAttributes
+	 * @return ResponseEntity
+	 * @throws Exception
+	 */
+	@PostMapping("/user/{id}/presigned-url")
+	public ResponseEntity<PresignedUrlResponse> getPresignedUrl(@RequestParam final Long userId,
+			@RequestParam("file") final MultipartFile file, 
+			final RedirectAttributes redirectAttributes) {
+		
+		Logger.log(CLASS_NAME, "uploadProfileImage: プロフィール画像のアップロード処理開始");
+
+		PresignedUrlResponse response = null;
+		try {
+			response = userScenario.generateUploadUrl(userId, file.getOriginalFilename(), file.getContentType());
+	        Logger.log(CLASS_NAME, "uploadProfileImage: プロフィール画像のアップロード処理が完了しました。");
+	    } catch (Exception e) {
+	    	Logger.log(CLASS_NAME, "[Error] uploadProfileImage: プロフィール画像のアップロード中にエラーが発生しました。" + e.getMessage());
+	    	redirectAttributes.addFlashAttribute("errorMessage", "プロフィール画像のアップロード中にエラーが発生しました: " + e.getMessage());
+	    }
+	    
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	/**
+	 * S3へのアップロード完了後、画像ファイル名を users.s3_image_url に保存する
+	 * @param Long userId
+	 * @param String keyName
+	 * @return ResponseEntity
+	 */
+	@PostMapping("/complete")
+    public ResponseEntity<Void> completeUpload(@RequestParam final Long userId,
+    		@RequestParam final String keyName) {
+		
+		Logger.log(CLASS_NAME, "completeUpload: 画像ファイル名の保存を開始します。");
+		try {
+			userScenario.saveS3ImageFileName(userId, keyName);
+			Logger.log(CLASS_NAME, "completeUpload: 画像ファイル名の保存が完了しました。");
+			return ResponseEntity.ok().build();
+		} catch (IllegalArgumentException e) {
+			Logger.log(CLASS_NAME, "[Error] completeUpload: " + e.getMessage());
+			return ResponseEntity.badRequest().build();
+		} catch (Exception e) {
+			Logger.log(CLASS_NAME, "[Error] completeUpload: 画像ファイル名の保存中にエラーが発生しました。" + e.getMessage());
+			return ResponseEntity.internalServerError().build();
+		}
+    }
+	
 	
 	
 }

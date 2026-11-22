@@ -1,7 +1,9 @@
 package todolist.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,25 +70,6 @@ public class UserScenario {
 			return "redirect:/";
 		}
 		
-		/**
-		 * TODO: アップロードした画像を取得できた場合、objectKeyをユーザーのプロフィール画像のキーに置き換える
-		 */
-		/**
-		 * FIXME: プリサインドURLの生成に失敗した場合の処理を追加する必要があります。
-		 */
-		// S3から画像URLを取得
-		String presignedUrl = getS3PresignedUrl();
-
-		// DBでS3 image URLを取得できない場合、デフォルト画像のS3 image URLを使用する
-		if(getS3UrlFromDb((Long) userIfo.get("id")) != null) {
-			presignedUrl = getS3UrlFromDb((Long) userIfo.get("id"));
-		}
-		
-		if(presignedUrl != null) {
-			model.addAttribute("profileImageUrl", presignedUrl);
-		} else {
-			Logger.log(CLASS_NAME, "[Error] getUserById: プリサインドURLの生成に失敗しました。");
-		}
 		
 		final List<User> users = userService.getAllUsers();
 		final Page<User> usersPerPage = userService.getAllUsers(pageable);
@@ -126,6 +109,97 @@ public class UserScenario {
 			Logger.log(CLASS_NAME, "[Error] getS3PresignedUrl: プリサインドURLの生成に失敗しました。");
 			return null;
 		}
+	}
+	
+	
+	/**
+	 * S3の署名付きURLを返すためのレスポンス用レコード
+	 * @param String presignedUrl
+	 * @param String keyName
+	 * @return PresignedUrlResponse
+	 */
+	public record PresignedUrlResponse(String presignedUrl, String keyName) {}
+	
+	
+	/**
+	 * S3の署名付きURLを生成するメソッド（アップロード用）
+	 * @param Long userId
+	 * @param String originalFileName
+	 * @return PresignedUrlResponse
+	 */
+	public PresignedUrlResponse generateUploadUrl(final Long userId, final String originalFileName,
+			final String contentType) {
+        
+		String fileName = extractImageFileName(originalFileName);
+		if (contentType == null || contentType.isBlank()) {
+			throw new IllegalArgumentException("画像のContent-Typeがありません");
+		}
+		
+        String keyName = "images/" + userId + "/" + fileName;
+
+		ProfileImage profileImage = new ProfileImage();
+        String presignedUrl = profileImage.createPresignedUrl(
+        		bucketName, 
+                keyName,
+                contentType
+        );
+
+        // フロントエンドには「アップロード用URL」と「後でDB保存に使うキー」を返す。
+        // キーはフロントエンドでDB保存する際に使うため、フロントエンドに返す
+        return new PresignedUrlResponse(presignedUrl, keyName);
+    }
+
+
+	/**
+	 * S3アップロード完了後、画像ファイル名を users.s3_image_url に保存する
+	 * @param Long userId
+	 * @param String keyName
+	 */
+	public void saveS3ImageFileName(final Long userId, final String keyName) {
+
+		String prefix = "images/" + userId + "/";
+		if (keyName == null) {
+			throw new IllegalArgumentException("画像ファイル名が不正です");
+		}
+
+		String fileName = extractImageFileName(keyName.substring(prefix.length()));
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
+		user.setS3ImageUrl(fileName);
+		user.setUpdatedAt(LocalDateTime.now());
+		userRepository.save(user);
+		Logger.log(CLASS_NAME, "saveS3ImageFileName: 画像ファイル名を保存しました。fileName=" + fileName);
+	}
+
+
+	/**
+	 * オブジェクトキー、または元ファイル名から画像ファイル名（xxx.png など）を取り出す
+	 * @param String value
+	 * @return String
+	 */
+	private String extractImageFileName(final String value) {
+		if (value == null || value.isBlank()) {
+			throw new IllegalArgumentException("画像ファイル名がありません");
+		}
+
+		String name = value.replace('\\', '/');
+		int slash = name.lastIndexOf('/');
+		if (slash >= 0) {
+			name = name.substring(slash + 1);
+		}
+
+		int underscore = name.indexOf('_');
+		if (underscore >= 0 && underscore < name.length() - 1) {
+			String prefix = name.substring(0, underscore);
+			if (prefix.length() == 36 && prefix.chars().filter(ch -> ch == '-').count() == 4) {
+				name = name.substring(underscore + 1);
+			}
+		}
+
+		if (name.isBlank() || name.contains("..") || name.indexOf('/') >= 0) {
+			throw new IllegalArgumentException("画像ファイル名が不正です");
+		}
+		return name;
 	}
 	
 	

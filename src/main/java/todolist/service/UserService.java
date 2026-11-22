@@ -230,6 +230,7 @@ public class UserService implements UserServiceIF {
     	
     	final String sql = "SELECT s3_image_url FROM users WHERE id = " + id;
     	try {
+    		Logger.log(this.getClass().getSimpleName(), "getS3ImageUrlByUserId: ユーザーIDでS3の画像URLを取得する処理");
 			final Map<String, Object> result = jdbc.queryForMap(sql);
 			
 			String s3ImageUrl = (String) result.get("s3_image_url");

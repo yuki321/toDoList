@@ -60,7 +60,6 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th></th>
 								<th>ユーザー名</th>
 								<th>メールアドレス</th>
 								<th>ロール</th>
@@ -70,10 +69,6 @@
 						</thead>
 						<tbody th:each="user: ${users}">
 							<th><a class="link-edit" th:href="@{user/{id}(id=${user?.id})}">編集</a></th>	
-							<th>
-								<img th:src="@{${profileImageUrl}}" alt="ユーザー画像" width="100" height="100"
-								id="profile-image-list" />
-							</th>			
 							<th><span th:text="${user?.userName}"></span></th>
 							<th><span th:text="${user?.email}"></span></th>
 							<th>

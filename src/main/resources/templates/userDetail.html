@@ -8,6 +8,104 @@
 	<link href="http://fonts.googleapis.com/earlyaccess/notosansjp.css">
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
+<script th:inline="javascript">
+	const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+	const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+	const userId = /*[[${user.id}]]*/ null;
+	const csrfToken = /*[[${_csrf.token}]]*/ '';
+	const csrfHeader = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
+
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('uploadBtn').addEventListener('click', async function() {
+			const fileInput = document.getElementById('imageInput');
+			const file = fileInput.files[0];
+			const statusMsg = document.getElementById('statusMsg');
+			const uploadBtn = document.getElementById('uploadBtn');
+
+			if (!file) {
+				statusMsg.textContent = 'ファイルが選択されていません。';
+				return;
+			}
+
+			if (!ALLOWED_TYPES.includes(file.type)) {
+				statusMsg.textContent = 'JPEG、PNG、WebP形式の画像を選択してください。';
+				return;
+			}
+
+			if (file.size > MAX_FILE_SIZE) {
+				statusMsg.textContent = 'ファイルサイズは5MB以下にしてください。';
+				return;
+			}
+
+			const formData = new FormData();
+			formData.append('file', file);
+			formData.append('userId', userId);
+
+			uploadBtn.disabled = true;
+			statusMsg.textContent = 'アップロード中...';
+
+			try {
+				const response = await fetch('/api/users/user/' + userId + '/presigned-url', {
+					method: 'POST',
+					headers: {
+						[csrfHeader]: csrfToken
+					},
+					body: formData
+				});
+
+				if (!response.ok) {
+					statusMsg.textContent = 'アップロード用URLの取得に失敗しました。';
+					return;
+				}
+
+				const { presignedUrl, keyName } = await response.json();
+				if (!presignedUrl || !keyName) {
+					statusMsg.textContent = 'アップロード用URLの取得に失敗しました。';
+					return;
+				}
+
+				const uploadResponse = await fetch(presignedUrl, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': file.type
+					},
+					body: file
+				});
+
+				if (!uploadResponse.ok) {
+					statusMsg.textContent = 'アップロード失敗';
+					return;
+				}
+
+				const completeResponse = await fetch('/api/users/complete', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						[csrfHeader]: csrfToken
+					},
+					body: new URLSearchParams({
+						userId: String(userId),
+						keyName: keyName
+					})
+				});
+
+				if (!completeResponse.ok) {
+					statusMsg.textContent = '画像情報の保存に失敗しました。';
+					return;
+				}
+
+				statusMsg.textContent = 'アップロード成功';
+				const profileImage = document.getElementById('profile-image');
+				profileImage.src = URL.createObjectURL(file);
+				fileInput.value = '';
+			} catch (e) {
+				statusMsg.textContent = 'アップロード失敗';
+			} finally {
+				uploadBtn.disabled = false;
+			}
+		});
+	});
+</script>
 <body>
 	<main>
 		<div class="container">
@@ -57,8 +155,12 @@
 								<th>ユーザー画像</th>
 								<th>
 									<img th:src="@{${profileImageUrl}}" alt="ユーザー画像" id="profile-image" />
+									<div>
+										<input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" /><br>
+										<button type="button" id="uploadBtn" class="link-update">アップロード</button>
+									</div>
+									<p id="statusMsg"></p>
 								</th>
-								<!-- ここに画像アップロードボタン実装 -->
 							</tr>
 							<tr>
 								<th>作成日時</th>
@@ -87,7 +189,7 @@
 			</form>			
 		</div>
 	</dialog>
-	
 </body>
-
 </html>
+
+
