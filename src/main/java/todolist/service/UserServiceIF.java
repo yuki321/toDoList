@@ -25,5 +25,7 @@ public interface UserServiceIF {
 
 	void restoreUserDisplayFields(final Long id, final User user);
 	
+	String getS3ImageUrlByUserId(final Long id);
+	
 
 }

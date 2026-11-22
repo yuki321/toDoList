@@ -58,6 +58,9 @@ public class User {
 
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
+	
+	@Column(name = "s3_image_url", nullable = true)
+	private String s3ImageUrl;
 
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
@@ -85,13 +88,14 @@ public class User {
 	public User() {}
 
 	public User(Long id, String userName, String email, String password, String role, Boolean enabled,
-			LocalDateTime createdAt, LocalDateTime updatedAt) {
+			String s3ImageUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
 		this.role = role;
 		this.enabled = enabled;
+		this.s3ImageUrl = s3ImageUrl;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -156,6 +160,14 @@ public class User {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getS3ImageUrl() {
+		return s3ImageUrl;
+	}
+
+	public void setS3ImageUrl(String s3ImageUrl) {
+		this.s3ImageUrl = s3ImageUrl;
 	}
 
 	public boolean isAccountNonExpired() {

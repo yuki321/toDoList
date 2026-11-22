@@ -220,6 +220,33 @@ public class UserService implements UserServiceIF {
 	}
 	
 	
+	/**
+	 * ユーザーIDでS3の画像URLを取得する
+	 * @param Long id
+	 * @return
+	 */
+	@Override
+    public String getS3ImageUrlByUserId(final Long id) {
+    	
+    	final String sql = "SELECT s3_image_url FROM users WHERE id = " + id;
+    	try {
+			final Map<String, Object> result = jdbc.queryForMap(sql);
+			
+			String s3ImageUrl = (String) result.get("s3_image_url");
+			// S3の画像URLが存在しない場合はnullを返す
+			if (s3ImageUrl == null || s3ImageUrl.isEmpty()) {
+				return null; 
+			}
+			return result.get("s3_image_url").toString();
+		} catch (Exception e) {
+			Logger.log(this.getClass().getSimpleName(), "getS3ImageUrlByUserId: ユーザーIDでS3の画像URLを取得する処理でエラーが発生しました。");
+			Logger.log(this.getClass().getSimpleName(), "Error: " + e.getMessage());
+			return null;
+		}
+    	
+    }
+	
+	
 }
 
 

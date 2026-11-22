@@ -75,9 +75,13 @@ public class UserScenario {
 		 * FIXME: プリサインドURLの生成に失敗した場合の処理を追加する必要があります。
 		 */
 		// S3から画像URLを取得
-		ProfileImage profileImage = new ProfileImage();
+		String presignedUrl = getS3PresignedUrl();
+
+		// DBでS3 image URLを取得できない場合、デフォルト画像のS3 image URLを使用する
+		if(getS3UrlFromDb((Long) userIfo.get("id")) != null) {
+			presignedUrl = getS3UrlFromDb((Long) userIfo.get("id"));
+		}
 		
-		String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
 		if(presignedUrl != null) {
 			model.addAttribute("profileImageUrl", presignedUrl);
 		} else {
@@ -106,6 +110,32 @@ public class UserScenario {
 		
 		
 		return "";
+	}
+	
+	
+	/**
+	 * S3からデフォルト画像のURLを取得
+	 * @return String
+	 */
+	public String getS3PresignedUrl() {
+		ProfileImage profileImage = new ProfileImage();
+		String presignedUrl = profileImage.createViewPresignedUrl(region, bucketName, objectKey);
+		if(presignedUrl != null) {
+			return presignedUrl;
+		} else {
+			Logger.log(CLASS_NAME, "[Error] getS3PresignedUrl: プリサインドURLの生成に失敗しました。");
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * ユーザーIDからS3の画像URLを取得
+	 * @param id
+	 * @return
+	 */
+	public String getS3UrlFromDb(final Long id) {
+		return userService.getS3ImageUrlByUserId(id);
 	}
 	
 	
