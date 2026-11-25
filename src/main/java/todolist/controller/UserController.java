@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import todolist.common.Logger;
+import todolist.common.OperationType;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import todolist.entity.PasswordChange;
 import todolist.entity.ProfileImage;
 import todolist.entity.User;
+import todolist.repository.ManagementConsoleOperationRepository;
 import todolist.service.ToDoServiceIF;
 import todolist.service.UserScenario;
 import todolist.service.UserScenario.PresignedUrlResponse;
@@ -50,6 +52,11 @@ public class UserController {
 	
 	@Autowired
 	private UserScenario userScenario;
+	
+	@Autowired
+	private ManagementConsoleOperationRepository managementConsoleOperationRepository;
+	
+	
 	
 	@Value("${aws.s3.region}")
 	private String region;
@@ -88,6 +95,7 @@ public class UserController {
 	
 	/**
 	 * ユーザー検索
+	 * @param UserDetails userDetails
 	 * @param User user
 	 * @param Model model
 	 * @param Pageable pageable
@@ -95,6 +103,7 @@ public class UserController {
 	 */
 	@GetMapping("search")
 	public String searchUsers(
+			@AuthenticationPrincipal final UserDetails userDetails,
 			@ModelAttribute("user") final User user, 
 			final Model model, 
 			@PageableDefault(page = 0, size = 10) final Pageable pageable){
@@ -103,23 +112,32 @@ public class UserController {
 		
 		userScenario.searchUsersData(user, model, pageable);
 		
+		// 操作ログ
+		managementConsoleOperationRepository.insertOperationLog(OperationType.SEARCH_USER.name(), userDetails.getUsername(), "ユーザー情報検索");
+		
 		return "user";
 	}
 	
 	
 	/**
 	 * IDで指定したユーザーを取得
+	 * @param UserDetails userDetails
 	 * @param Long id
 	 * @param Madel model
 	 * @return String
 	 */
 	@GetMapping("user/{id}")
-	public String getUserById(@PathVariable final Long id, final Model model){
+	public String getUserById(
+			@AuthenticationPrincipal final UserDetails userDetails,
+			@PathVariable final Long id, final Model model){
 		
 		Logger.log(CLASS_NAME, "getUserById: ユーザー詳細表示");
 		// idがLong型でない場合
 		if(!(id instanceof Long)) {
 			Logger.log(CLASS_NAME, "[Error] getUserById: idがLong型ではありません。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.EDIT_BUTTON.name(), userDetails.getUsername(), "編集ボタン押下");
+			
 			return "redirect:/api/users/user?page=0";
 		}
 
@@ -158,6 +176,8 @@ public class UserController {
 	            	
 	            	// デフォルト設定に戻す（そうしないと他の画像もアップロードした画像が表示される）
 	            	objectKey = "defaultUserImage.png";
+	    			// 操作ログ
+	    			managementConsoleOperationRepository.insertOperationLog(OperationType.EDIT_BUTTON.name(), userDetails.getUsername(), "編集ボタン押下");
 	            	
 	            	return "userDetail";
 	            }
@@ -166,19 +186,30 @@ public class UserController {
 	            	
 	            	Logger.log(CLASS_NAME, "getUserById: DBにS3 image URLが保存されていないため、S3から署名付きURLを生成して使用します。");
 	            	Logger.log(CLASS_NAME, "getUserById: presignedUrl=" + presignedUrl);
+	    			// 操作ログ
+	    			managementConsoleOperationRepository.insertOperationLog(OperationType.EDIT_BUTTON.name(), userDetails.getUsername(), "編集ボタン押下");
+	    			
 	            	model.addAttribute("profileImageUrl", presignedUrl);
 	            } else {
 	            	Logger.log(CLASS_NAME, "[Error] getUserById: プリサインドURLの生成に失敗しました。");
+	    			// 操作ログ
+	    			managementConsoleOperationRepository.insertOperationLog(OperationType.EDIT_BUTTON.name(), userDetails.getUsername(), "編集ボタン押下");
 	            }
 	            
 				return "userDetail";
 			}else {
 				Logger.log(CLASS_NAME, "[Error] getUserById: 指定したIDのユーザーが存在しません。");
+				// 操作ログ
+				managementConsoleOperationRepository.insertOperationLog(OperationType.EDIT_BUTTON.name(), userDetails.getUsername(), "編集ボタン押下");
+				
 				return "redirect:/api/users/user?page=0";
 			}
 			
 		}catch(IllegalArgumentException e) {
 			Logger.log(CLASS_NAME, "[Error] getUserById: 指定したIDのユーザーが存在しません。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.EDIT_BUTTON.name(), userDetails.getUsername(), "編集ボタン押下");
+			
 			return "redirect:/api/users/user?page=0";
 		}
 		
@@ -220,13 +251,17 @@ public class UserController {
 	
 	/**
 	 * ユーザー作成
+	 * @param UserDetials userDetails
 	 * @param User user
 	 * @param Model model
 	 * @return String
 	 */
 	@PostMapping("create")
-	public String createUser(@Validated(User.Create.class) @ModelAttribute final User user,
-			BindingResult bindingResult, Model model){
+	public String createUser(
+			@AuthenticationPrincipal final UserDetails userDetails,
+			@Validated(User.Create.class) @ModelAttribute final User user,
+			BindingResult bindingResult, 
+			Model model){
 
 		Logger.log(CLASS_NAME, "createUser: ユーザー作成処理開始");
 		if (bindingResult.hasErrors()) {
@@ -239,10 +274,16 @@ public class UserController {
 			
 			model.addAttribute(createdUser);
 			Logger.log(CLASS_NAME, "createUser: ユーザー作成処理が完了しました。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.SEARCH_USER.name(), userDetails.getUsername(), "[成功]ユーザー情報検索");
+			
 			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.create", e.getMessage());
 			Logger.log(CLASS_NAME, "[Error] createUser: ユーザー作成処理中にエラーが発生しました。" + e.getMessage());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.SEARCH_USER.name(), userDetails.getUsername(), "[失敗]ユーザー情報検索");
+
 			return "userCreate";
 		}
 		
@@ -251,6 +292,7 @@ public class UserController {
 	
 	/**
 	 * ユーザー更新
+	 * @param UserDetails userDetails
 	 * @param Long id
 	 * @param User user
 	 * @param BindingResult bindingResult
@@ -258,7 +300,9 @@ public class UserController {
 	 * @return String
 	 */
 	@PostMapping("user/{id}")
-	public String updateUser(@PathVariable final Long id,
+	public String updateUser(
+			@AuthenticationPrincipal final UserDetails userDetails,
+			@PathVariable final Long id,
 			@Validated(User.Update.class) @ModelAttribute final User user,
 			final BindingResult bindingResult, final Model model){
 
@@ -274,11 +318,17 @@ public class UserController {
 			model.addAttribute("user", updatedUser);
 			
 			Logger.log(CLASS_NAME, "updateUser: ユーザー更新処理が完了しました。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.UPDATE_USER.name(), userDetails.getUsername(), "[成功]ユーザー情報更新");
+
 			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			bindingResult.reject("error.update", e.getMessage());
 			userService.restoreUserDisplayFields(id, user);
 			Logger.log(CLASS_NAME, "[Error] updateUser: ユーザー更新処理中にエラーが発生しました。" + e.getMessage());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.UPDATE_USER.name(), userDetails.getUsername(), "[失敗]ユーザー情報更新");
+
 			return "userDetail";
 		}
 		
@@ -287,18 +337,26 @@ public class UserController {
 	
 	/**
 	 * ユーザー削除
+	 * @param userDetails userDetails
 	 * @param Long id
 	 * @return String
 	 */
 	@PostMapping("user/{id}/delete")
-    public String deleteUser(@PathVariable final Long id) {
+    public String deleteUser(
+			@AuthenticationPrincipal final UserDetails userDetails,
+    		@PathVariable final Long id) {
 		Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理開始");
         try {
             userUpdateService.deleteUser(id);
             Logger.log(CLASS_NAME, "deleteUser: ユーザー削除処理が完了しました。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.DELETE_USER.name(), userDetails.getUsername(), "[成功]ユーザー削除");
+            
             return "redirect:/api/users/user?page=0";
         } catch (IllegalArgumentException e) {
         	Logger.log(CLASS_NAME, "[Error] deleteUser: ユーザー削除処理中にエラーが発生しました。" + e.getMessage());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.DELETE_USER.name(), userDetails.getUsername(), "[失敗]ユーザー削除");
         	return "redirect:/api/users/user?page=0";
         }
     }
@@ -327,6 +385,9 @@ public class UserController {
 		Logger.log(CLASS_NAME, "changePassword: パスワード変更処理開始");
 		if(bindingResult.hasErrors()) {
 			Logger.log(CLASS_NAME, "[Error] changePassword: バリデーションエラーが発生しました。" + bindingResult.getAllErrors());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.CHANGE_PASSWORD.name(), userDetails.getUsername(), "[失敗]パスワード変更");
+			
 			return "changePassword";
 		}
 		
@@ -340,6 +401,8 @@ public class UserController {
 					bindingResult.reject("error.passwordChange", error);
 					Logger.log(CLASS_NAME, "changePassword: パスワード変更処理中にエラーが発生しました。" + error);
 				}
+				// 操作ログ
+				managementConsoleOperationRepository.insertOperationLog(OperationType.CHANGE_PASSWORD.name(), userDetails.getUsername(), "[失敗]パスワード変更");
 				return "changePassword";
 			}
 			
@@ -347,9 +410,15 @@ public class UserController {
 			userUpdateService.savePassword(user, newPassword);
 			
 			Logger.log(CLASS_NAME, "changePassword: パスワード変更処理が完了しました。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.CHANGE_PASSWORD.name(), userDetails.getUsername(), "[成功]パスワード変更");
+			
 			return "redirect:/api/users/user?page=0";
 		}catch(IllegalArgumentException e) {
 			Logger.log(CLASS_NAME, "[Error] changePassword: パスワード変更処理中にエラーが発生しました。" + e.getMessage());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.CHANGE_PASSWORD.name(), userDetails.getUsername(), "[失敗]パスワード変更");
+			
 			return "redirect:/api/users/user?page=0";
 		}
 		
@@ -358,42 +427,61 @@ public class UserController {
 	
 	/**
 	 * CSVアップロード
+	 * @param UserDetails userDetails
 	 * @param MultipartFile file
 	 * @RedirectAttributes redirectAttributes
 	 * @return String
 	 */
 	@PostMapping("/upload")
-	public String uploadCsvFile(@RequestParam("file") final MultipartFile file, final RedirectAttributes redirectAttributes) {
+	public String uploadCsvFile(
+			@AuthenticationPrincipal final UserDetails userDetails,
+			@RequestParam("file") final MultipartFile file, 
+			final RedirectAttributes redirectAttributes) {
 		Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード処理開始");
 	    try {
 	    	final List<String> errors = userUpdateService.uploadCsvFile(file);
 	        
 	        if(!errors.isEmpty()) {
 	        	Logger.log(CLASS_NAME, "[Error] uploadCsvFile: CSVファイルのアップロード処理中にエラーが発生しました。" + errors);
+				// 操作ログ
+				managementConsoleOperationRepository.insertOperationLog(OperationType.CSV_UPLOAD.name(), userDetails.getUsername(), "[失敗]CSVアップロード");
+	        	
 	        	redirectAttributes.addFlashAttribute("CSV_errors", errors);	        	
 	        }
 	        
 	    } catch (Exception e) {
 	    	Logger.log(CLASS_NAME, "[Error] uploadCsvFile: CSVファイルのアップロード中にエラーが発生しました。" + e.getMessage());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.CSV_UPLOAD.name(), userDetails.getUsername(), "[失敗]CSVアップロード");
+	    	
 	    	redirectAttributes.addFlashAttribute("errorMessage", "CSVファイルのインポート中にエラーが発生しました: " + e.getMessage());
 	    }
 	    
 	    Logger.log(CLASS_NAME, "uploadCsvFile: CSVファイルのアップロード処理が完了しました。");
+		// 操作ログ
+		managementConsoleOperationRepository.insertOperationLog(OperationType.CSV_UPLOAD.name(), userDetails.getUsername(), "[成功]CSVアップロード");
+	    
         return "redirect:/api/users/user?page=0";
 	}
 	
 	
 	/**
 	 * CSVダウンロード
-	 * @param model
+	 * @param userDetails userDetails
+	 * @param Model model
 	 * @return String
 	 */
 	@PostMapping("/download")
-	public String downloadCsvFile(final Model model) {
+	public String downloadCsvFile(
+			@AuthenticationPrincipal final UserDetails userDetails,
+			final Model model) {
 		Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード処理開始");
 		try {
 			userUpdateService.downloadCsvFile();
 			Logger.log(CLASS_NAME, "downloadCsvFile: CSVファイルのダウンロード処理が完了しました。");
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.CSV_DOWNLOAD.name(), userDetails.getUsername(), "[成功]CSVダウンロード");
+			
 			return "redirect:/api/users/user?page=0";
 	    } catch (Exception e) {
 	        model.addAttribute("errorMessage", "CSVファイルのダウンロード中にエラーが発生しました: " + e.getMessage());
@@ -405,6 +493,9 @@ public class UserController {
 	        model.addAttribute("userCount", userCount); 
 	        
 	        Logger.log(CLASS_NAME, "[Error] downloadCsvFile: CSVファイルのダウンロード中にエラーが発生しました。" + e.getMessage());
+			// 操作ログ
+			managementConsoleOperationRepository.insertOperationLog(OperationType.CSV_DOWNLOAD.name(), userDetails.getUsername(), "[失敗]CSVダウンロード");
+	        
 	        return "user";
 	    }
 		

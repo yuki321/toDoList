@@ -2,12 +2,19 @@ package todolist.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import todolist.common.Logger;
+import todolist.entity.OperationTypeLog;
 
+@Repository
 public class ManagementConsoleOperationRepository implements ManagementConsoleOperationRepositoryIF {
 
 	@Autowired
 	JdbcTemplate jdbc;
+	
+	
+	private final String CLASS_NAME = this.getClass().getSimpleName();
 	
 	/**
 	 * 管理画面で操作した情報を記録する
@@ -28,8 +35,27 @@ public class ManagementConsoleOperationRepository implements ManagementConsoleOp
 	 * 	j. ユーザー情報検索
 	 * 
 	 */
-
 	
+	/**
+	 * 管理画面の操作ログを記録する
+	 * @param String operationType
+	 * @param String userName
+	 * @param String content
+	 */
+	@Override
+	public void insertOperationLog(final String operationType, final String userName, final String content) {
+		
+		OperationTypeLog log = new OperationTypeLog();
+		// 引数チェック
+		if(!log.checkInput(operationType, userName, content)) {
+			Logger.log(CLASS_NAME, "[Warning]操作履歴処理の引数に抜けがあります");
+		}
+		
+		Logger.log(this.getClass().getSimpleName(), "insertOperationLog: 管理画面操作履歴の記録");
+		final String sql = "INSERT INTO operation_history (operation_type, user_name, content, operation_time ) VALUES (?, ?, ?, NOW())";
+		jdbc.update(sql, operationType, userName, content);
+	}
+
     
 }
 
