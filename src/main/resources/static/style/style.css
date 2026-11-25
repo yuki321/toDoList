@@ -11,6 +11,9 @@ main {
 }
 h1 {
 	margin-bottom: -50px;
+	margin-top: 20px;
+	font-size: 2em;
+	font-weight: bold;
 }
 #header-content {
 	padding: 10px;
